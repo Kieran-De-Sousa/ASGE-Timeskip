@@ -7,6 +7,8 @@
 
 /**
  * @brief Base sprite class that is inherited by any object requiring ASGE Sprites
+ * @details
+ * @author Kieran
  */
 class Sprite
 {
@@ -14,7 +16,7 @@ class Sprite
   /**
    * @details Renderer required to be passed into constructor for creation of any Sprite related
    * objects
-   * @param rendererRef
+   * @param rendererRef Required for all objects using ASGE Sprites
    */
   explicit Sprite(ASGE::Renderer& rendererRef);
   virtual ~Sprite();
@@ -23,7 +25,6 @@ class Sprite
    * @details Pass filename in std::string to initialise a ASGE sprite with default values
    * @see setPosition
    * @param filename
-   * @return
    */
   bool initialiseSprite(std::string& filename);
   ASGE::Sprite* getSprite();
@@ -45,5 +46,4 @@ class Sprite
   std::array<float, 2> defaultSpriteVariables{ 16, 16 };
   int16_t defaultZOrder = 0;
 };
-
 #endif // ASGEGAME_SPRITE_H

@@ -21,6 +21,12 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({ 960, 55 }).setScale(1.5);
 
   initAudio();
+
+  /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
+  /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
+  testSprite = std::make_unique<Sprite>(*renderer);
+  testEntity = std::make_unique<Entity>(*renderer);
+  testPlayer = std::make_unique<Player>(*renderer);
 }
 
 void ASGENetGame::initAudio()

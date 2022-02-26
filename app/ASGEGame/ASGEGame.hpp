@@ -4,6 +4,10 @@
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 #include <map>
+
+#include "Entity.h"
+#include "Player.h"
+#include "Sprite.h"
 #include <soloud.h>
 #include <soloud_wav.h>
 
@@ -39,4 +43,10 @@ class ASGENetGame : public ASGE::OGLGame
   ASGE::Camera camera_one{ 960, 1080 };
   ASGE::Camera camera_two{ 960, 1080 };
   void initAudio();
+
+  /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
+  /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
+  std::unique_ptr<Sprite> testSprite;
+  std::unique_ptr<Entity> testEntity;
+  std::unique_ptr<Player> testPlayer;
 };

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
- <tileset firstgid="1" source="../../../../../../../star destoyer.tsx"/>
+ <tileset firstgid="1" name="star destoyer" tilewidth="32" tileheight="32" tilecount="1550" columns="50">
+  <image source="star destoyer.jpg" width="1600" height="993"/>
+ </tileset>
+ <tileset firstgid="1551" name="star destoyer" tilewidth="32" tileheight="32" tilecount="1550" columns="50">
+  <image source="star destoyer.jpg" width="1600" height="993"/>
+ </tileset>
  <layer id="1" name="Tile Layer 1" width="16" height="16">
   <data encoding="csv">
 290,290,290,290,290,290,290,290,290,290,290,290,290,290,290,290,

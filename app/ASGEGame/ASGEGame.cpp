@@ -22,6 +22,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   //  960, 55 }).setScale(1.5);
 
   initAudio();
+  loadTiles();
 
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
@@ -34,8 +35,16 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   {
     Logging::ERRORS("didnt load player");
   }
-  player->width(64);
-  player->height(64);
+  floor = renderer->createUniqueSprite();
+  if (!floor->loadTexture("/data/sprites/floor.png"))
+  {
+  }
+  player->width(32);
+  player->height(32);
+  player->xPos(64);
+  player->yPos(64);
+
+  camera_one.setZoom(3.0f);
 }
 
 void ASGENetGame::initAudio()
@@ -126,6 +135,11 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     player->yPos(player->yPos() + yStep);
     player->xPos(player->xPos() + xStep);
   }
+  focus.x = player->xPos();
+  focus.y = player->yPos();
+  camera_one.lookAt(focus);
+  // resolveCollision();
+  // raycastControl();
 
   //  // process single gamepad
   //  if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
@@ -161,11 +175,12 @@ void ASGENetGame::update(const ASGE::GameTime& us)
  */
 void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 {
+  renderTileMap();
   renderer->render(*player);
   //  // example of split screen. just remove viewports and use
   //  // a single camera if you don't require the use of split screen
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 960, 1080 });
-  //  renderer->setProjectionMatrix(camera_one.getView());
+  renderer->setProjectionMatrix(camera_one.getView());
   //  renderer->render(*ship);
   //  renderer->setViewport(ASGE::Viewport{ 960, 0, 960, 1080 });
   //  renderer->setProjectionMatrix(camera_two.getView());
@@ -177,3 +192,177 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   //  renderer->render(camera_one_label);
   //  renderer->render(camera_two_label);
 }
+void ASGENetGame::loadTiles()
+{
+  ASGE::FILEIO::File tile_map;
+  if (tile_map.open("data/testmapforraycast.tmx"))
+  {
+    ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+    std::string file_string(buffer.as_char(), buffer.length);
+    map.loadFromString(file_string, ".");
+  }
+}
+void ASGENetGame::renderTileMap()
+{
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      for (unsigned int row = 0; row < layer->getSize().y; ++row)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; ++col)
+        {
+          auto tile_info   = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          const auto* tile = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
+            if (sprite->loadTexture(tile->imagePath))
+            {
+              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+              sprite->width(static_cast<float>(tile->imageSize.x));
+              sprite->height(static_cast<float>(tile->imageSize.y));
+
+              sprite->scale(1);
+              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+
+              renderer->render(*sprite);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+void ASGENetGame::resolveCollision()
+{
+  for (const auto& layer : map.getLayers())
+  {
+    auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+    for (unsigned int row = 0; row < layer->getSize().y; ++row)
+    {
+      for (unsigned int col = 0; col < layer->getSize().x; ++col)
+      {
+        auto tile_info   = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+        const auto* tile = map.getTilesets()[0].getTile(tile_info.ID);
+        if (tile != nullptr)
+        {
+          auto tile_rect = TileRect(
+            tile->imageSize.x * col, tile->imageSize.y * row, tile->imageSize.x, tile->imageSize.y);
+          auto player_rect = TileRect(
+            static_cast<unsigned int>(player->xPos()),
+            static_cast<unsigned int>(player->yPos()),
+            static_cast<unsigned int>(player->width()),
+            static_cast<unsigned int>(player->height()));
+          if (
+            ((static_cast<float>(player_rect.left()) > static_cast<float>(tile_rect.left())) &&
+             (static_cast<float>(player_rect.left()) <
+              static_cast<float>(tile_rect.left() + tile_rect.width()))) &&
+            ((static_cast<float>(player_rect.top()) >= static_cast<float>(tile_rect.top())) &&
+             (static_cast<float>(player_rect.top() + player_rect.height())) <=
+               static_cast<float>((tile_rect.top() + tile_rect.height()))))
+          {
+            // Logging::DEBUG("left collision");
+            player->xPos(static_cast<float>(tile_rect.left() + tile_rect.width()));
+          }
+          if (
+            ((static_cast<float>(player_rect.top() + player_rect.height()) >
+              static_cast<float>(tile_rect.top())) &&
+             (static_cast<float>(player_rect.top() + player_rect.height()) <
+              static_cast<float>(tile_rect.top() + tile_rect.height()))) &&
+            (((static_cast<float>(player_rect.left()) >= static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left()) <=
+               static_cast<float>(tile_rect.left() + tile_rect.width()))) ||
+             ((static_cast<float>(player_rect.left() + player_rect.width()) >=
+               static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left() + player_rect.width()) <=
+               static_cast<float>(tile_rect.left() + tile_rect.width())))))
+          {
+            // Logging::DEBUG("colliding");
+            //              isGround = true;
+            player->yPos(
+              static_cast<float>(tile_rect.top()) - static_cast<float>(player_rect.height()));
+          }
+          //            if((playerRect.top + playerRect.height < tileRect.top) &&
+          //                (((playerRect.left > tileRect.left)
+          //                   && (playerRect.left < tileRect.left + tileRect.width))
+          //                  || ((playerRect.left + playerRect.width > tileRect.left) &&
+          //                  (playerRect.left + playerRect.width < tileRect.left +
+          //                  tileRect.width))))
+          //            {
+          //              //Logging::DEBUG("falling");
+          //              isGround = false;
+          //            }
+          if (
+            (static_cast<float>(player_rect.top() + player_rect.height()) <
+             static_cast<float>(tile_rect.top())) &&
+            (((static_cast<float>(player_rect.left()) > static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left()) <
+               static_cast<float>(tile_rect.left() + tile_rect.width()))) ||
+             ((static_cast<float>(player_rect.left() + player_rect.width()) >
+               static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left() + player_rect.width()) <
+               static_cast<float>(tile_rect.left() + tile_rect.width())))))
+          {
+            // Logging::DEBUG("colliding");
+          }
+          if (
+            ((static_cast<float>(player_rect.top() + player_rect.height()) >
+              static_cast<float>(tile_rect.top())) &&
+             (static_cast<float>(player_rect.top() + player_rect.height()) <
+              static_cast<float>(tile_rect.top() + tile_rect.height()))) &&
+            (((static_cast<float>(player_rect.left()) >= static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left()) <=
+               static_cast<float>(tile_rect.left() + tile_rect.width()))) ||
+             ((static_cast<float>(player_rect.left() + player_rect.width()) >=
+                 static_cast<float>(tile_rect.left()) &&
+               (static_cast<float>(player_rect.left() + player_rect.width()) <=
+                static_cast<float>(tile_rect.left() + tile_rect.width()))))))
+          {
+            // Logging::DEBUG("colliding");
+            player->yPos(
+              static_cast<float>(tile_rect.top()) - static_cast<float>(player_rect.height()));
+          }
+          if (
+            (static_cast<float>(player_rect.top()) <
+             static_cast<float>(tile_rect.top() + tile_rect.height())) &&
+            (static_cast<float>(player_rect.top() + player_rect.height()) >
+             static_cast<float>(tile_rect.top() + tile_rect.height())) &&
+            (((static_cast<float>(player_rect.left()) >= static_cast<float>(tile_rect.left())) &&
+              (static_cast<float>(player_rect.left()) <=
+               static_cast<float>(tile_rect.left() + tile_rect.width()))) ||
+             ((static_cast<float>(player_rect.left() + player_rect.width()) >=
+                 static_cast<float>(tile_rect.left()) &&
+               (static_cast<float>(player_rect.left() + player_rect.width()) <=
+                static_cast<float>(tile_rect.left() + tile_rect.width()))))))
+          {
+            // Logging::DEBUG("colliding 2");
+            player->yPos(static_cast<float>(tile_rect.top() + tile_rect.height()));
+          }
+          if (
+            ((static_cast<float>(player_rect.left() + player_rect.width()) >
+              static_cast<float>(tile_rect.left())) &&
+             (static_cast<float>(player_rect.left() + player_rect.width()) <
+              static_cast<float>(tile_rect.left() + tile_rect.width()))) &&
+            ((static_cast<float>(player_rect.top()) >= static_cast<float>(tile_rect.top())) &&
+             (static_cast<float>(player_rect.top() + player_rect.height())) <=
+               (static_cast<float>(tile_rect.top() + tile_rect.height()))))
+          {
+            // Logging::DEBUG("right collision");
+            player->xPos(
+              static_cast<float>(tile_rect.left()) - static_cast<float>(player_rect.width()));
+          }
+        }
+      }
+    }
+  }
+}
+void ASGENetGame::raycastControl() {}

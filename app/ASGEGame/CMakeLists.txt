@@ -18,7 +18,8 @@ set(GAME_SOURCES
         ASGEGame.cpp
         Sprite.cpp
         Entity.cpp
-        Player.cpp)
+        Player.cpp
+        TileRect.cpp)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

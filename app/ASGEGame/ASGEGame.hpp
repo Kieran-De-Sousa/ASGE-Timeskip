@@ -5,11 +5,14 @@
 #include <Engine/Sprite.hpp>
 #include <map>
 
+#include <soloud.h>
+#include <soloud_wav.h>
+#include <tmxlite/Map.hpp>
+#include <tmxlite/TileLayer.hpp>
+
 #include "Entity.h"
 #include "Player.h"
 #include "Sprite.h"
-#include <soloud.h>
-#include <soloud_wav.h>
 
 class ASGENetGame : public ASGE::OGLGame
 {
@@ -49,4 +52,9 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Sprite> testSprite;
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
+
+  //  /// TILED - TILEMAP VECTORS
+  //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
+  //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
+  //  tmx::Map map;
 };

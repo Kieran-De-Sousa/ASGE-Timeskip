@@ -24,7 +24,7 @@ set(GAME_SOURCES
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})
 
 ## configure the target. Dependency targets go in the LIBS variable i.e. soloud ##
-list(APPEND LIBS "soloud" "magic_enum::magic_enum")
+list(APPEND LIBS "soloud" "magic_enum::magic_enum" "tmxlite")
 target_include_directories(${GAME} PRIVATE ${HEADER_FOLDER})
 configure_target(${GAME} "${HEADER_FOLDER}" "${HEADER_LIST}" "${LIBS}")
 add_asge_dependency(${GAME})

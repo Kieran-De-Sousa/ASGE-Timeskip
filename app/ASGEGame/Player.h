@@ -9,7 +9,6 @@
 
 /**
  * @brief Player class shared for both players
- * @details Player ID required for instantiation to draw distinction between two players
  * @author Kieran
  */
 class Player : public Entity

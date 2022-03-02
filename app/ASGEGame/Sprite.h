@@ -20,7 +20,6 @@ class Sprite
    */
   explicit Sprite(ASGE::Renderer& rendererRef);
   virtual ~Sprite();
-
   /**
    * @details Pass filename in std::string to initialise a ASGE sprite with default values
    * @see setPosition
@@ -28,7 +27,6 @@ class Sprite
    */
   bool initialiseSprite(std::string& filename);
   ASGE::Sprite* getSprite();
-
   /**
    * @brief MAYBE NOT NEEDED DUE TO ASGE SPRITES HAVING xPos() AND yPos()
    * @param x

@@ -10,7 +10,7 @@ set(ENABLE_KISSNET       OFF CACHE BOOL "Adds Kissnet Sockets to Project" FORCE)
 set(ENABLE_LIVE_ANALYSIS OFF CACHE BOOL "Adds live Clang-Tidy static analysis" FORCE)
 set(ENABLE_MAGIC_ENUM    ON  CACHE BOOL "Adds reflection support for ENUMS" FORCE)
 set(ENABLE_SOUND         ON  CACHE BOOL "Adds SoLoud Audio" FORCE)
-set(ENABLE_TMXLITE       OFF CACHE BOOL "Adds TmxLite library" FORCE)
+set(ENABLE_TMXLITE       ON CACHE BOOL "Adds TmxLite library" FORCE)
 
 
 #------------------------------------------------------------------------------

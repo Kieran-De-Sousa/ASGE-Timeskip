@@ -13,8 +13,16 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Sprite.h"
+<<<<<<< Updated upstream
+== == == =
+#  include <chrono>
+#  include <soloud.h>
+#  include <soloud_wav.h>
+#  include <tmxlite/Map.hpp>
+#  include <tmxlite/TileLayer.hpp>
+>>>>>>> Stashed changes
 
-class ASGENetGame : public ASGE::OGLGame
+           class ASGENetGame : public ASGE::OGLGame
 {
  public:
   explicit ASGENetGame(const ASGE::GameSettings& settings);
@@ -36,6 +44,7 @@ class ASGENetGame : public ASGE::OGLGame
   std::map<int, ASGE::GamePadData> gamepad_state{};
   std::unique_ptr<ASGE::Sprite> ship{ nullptr };
   ASGE::Point2D velocity{ 0, 0 };
+  std::unique_ptr<ASGE::Sprite> player;
 
   // Font
   const ASGE::Font* game_font = nullptr;
@@ -53,8 +62,11 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
 
+<<<<<<< Updated upstream
   //  /// TILED - TILEMAP VECTORS
   //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
   //  tmx::Map map;
+  == == == =
+>>>>>>> Stashed changes
 };

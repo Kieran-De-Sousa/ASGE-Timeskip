@@ -28,6 +28,14 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   //  testSprite = std::make_unique<Sprite>(*renderer);
   //  testEntity = std::make_unique<Entity>(*renderer);
   //  testPlayer = std::make_unique<Player>(*renderer);
+
+  player = renderer->createUniqueSprite();
+  if (!player->loadTexture("/data/sprites/player_ship.jpg"))
+  {
+    Logging::ERRORS("didnt load player");
+  }
+  player->width(64);
+  player->height(64);
 }
 
 void ASGENetGame::initAudio()
@@ -96,6 +104,29 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
  */
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
+  float playerRotation = player->rotationInRadians() * 57.8570f;
+  float xStep          = cos(player->rotationInRadians()) * 5;
+  float yStep          = sin(player->rotationInRadians()) * 5;
+  Logging::ERRORS(std::to_string(playerRotation));
+  if (keymap[ASGE::KEYS::KEY_RIGHT])
+  {
+    player->rotationInRadians(player->rotationInRadians() + 0.03f);
+  }
+  if (keymap[ASGE::KEYS::KEY_LEFT])
+  {
+    player->rotationInRadians(player->rotationInRadians() - 0.03f);
+  }
+  if (keymap[ASGE::KEYS::KEY_DOWN])
+  {
+    player->yPos(player->yPos() - yStep);
+    player->xPos(player->xPos() - xStep);
+  }
+  if (keymap[ASGE::KEYS::KEY_UP])
+  {
+    player->yPos(player->yPos() + yStep);
+    player->xPos(player->xPos() + xStep);
+  }
+
   //  // process single gamepad
   //  if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   //  {
@@ -130,6 +161,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
  */
 void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 {
+  renderer->render(*player);
   //  // example of split screen. just remove viewports and use
   //  // a single camera if you don't require the use of split screen
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 960, 1080 });

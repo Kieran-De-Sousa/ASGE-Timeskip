@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="180" columns="18">
+  <image source="Tileset.png" width="576" height="320"/>
+ </tileset>
+ <layer id="1" name="ground" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxTY2BgUBtALMowcEB41P5R+0ftH7V/1P5R+0ftH7V/1P5R+0ftH7V/BNkvAsReUMxEZyxCZeyFAxOr3wIPpoUbqeE3cs2DYQCqYhY1
+  </data>
+ </layer>
+ <layer id="2" name="foliage" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKaA/8gNgfyk4C4mAsarCJUQICgDgQyk4A4kQi9IDUB2ERT8YhjgxAftQi1nE0ANZAbINDDgA7IwVP
+  </data>
+ </layer>
+</map>

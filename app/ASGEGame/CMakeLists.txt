@@ -18,10 +18,10 @@ set(GAME_SOURCES
         ASGEGame.cpp
         Sprite.cpp
         Entity.cpp
-        Player.cpp)
+        Player.cpp Physics.cpp Physics.h HitBox.cpp HitBox.h)
 
 ## the ASGE Game, which spawns the Game window ##
-add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})
+add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES} Physics.cpp Physics.h HitBox.cpp HitBox.h)
 
 ## configure the target. Dependency targets go in the LIBS variable i.e. soloud ##
 list(APPEND LIBS "soloud" "magic_enum::magic_enum" "tmxlite")

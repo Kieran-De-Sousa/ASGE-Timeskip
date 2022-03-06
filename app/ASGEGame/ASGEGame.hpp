@@ -14,6 +14,8 @@
 #include "Player.h"
 #include "Sprite.h"
 
+#include "Physics.h"
+
 class ASGENetGame : public ASGE::OGLGame
 {
  public:
@@ -53,8 +55,25 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
 
+  std::shared_ptr<ASGE::Sprite> player;
+
   //  /// TILED - TILEMAP VECTORS
   //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
   //  tmx::Map map;
+
+  /// Demo Map Remove for actual design
+  int mapX    = 8;
+  int mapY    = 8;
+  int map[64] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+                  0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0,
+                  0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+  void drawMap();
+  std::vector<std::shared_ptr<ASGE::Sprite>> mapTiles;
+
+  /// Raycaster Attempt
+  void rayCast3D();
+
+  std::vector<std::shared_ptr<ASGE::Sprite>> v_RigidBodies;
+  Physics::PhysicsManager Physics;
 };

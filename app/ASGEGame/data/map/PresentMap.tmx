@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="180" columns="18">
   <image source="Tileset.png" width="576" height="320"/>
  </tileset>
+ <layer id="6" name="Bushes" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjILhA0yB2AyNz4eEzbBpGgWjYBTQHSDnS/4BdssoGAXUBLwMqOkbGx4Fwx+IoGF0gCtdEEo7o2lrFFAKAIxmAy0=
+  </data>
+ </layer>
+ <layer id="5" name="Trees, rocks etc" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjILhBwKAOBCIg4A4GAt/qIDigXbAKBgFNASwfDlUQRHD4MyjpUBchoemNWgH4g48NK3BTCCehYemNVgNxGvw0IMFkJouqF2P4koX9Kqj6Z0u0AGhdFFCpDkgdYO1LBoFgxMAAOZcIwQ=
+  </data>
+ </layer>
+ <layer id="4" name="backgroundWalls" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2BggR8QM2HB/nSyPwGI1bDgRDrZPwqGB9BkwJ6O8WFiQSAQBwFxMB411gzY0zE+TI6ftEhwN6UAm59s6Gj/KBjeQIRhYNM3tjxJSvpGzp/0dDcMIOfP0Xw5eAAjA+G6R4SG9gtDzYdhViSMLE4qMAdiCzRsSYT94kDsBcQSRNiPHHbMZLgRZr84kn3RQBwDxLFE2I/sdlEK7BdBw3lYxEbByAYA3moPVw==
+  </data>
+ </layer>
  <layer id="1" name="ground" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxTY2BgUBtALMowcEB41P5R+0ftH7V/1P5R+0ftH7V/1P5R+0ftH7V/BNkvAsReUMxEZyxCZeyFAxOr3wIPpoUbqeE3cs2DYQCqYhY1
+   eJztlmEKgCAMRldXyK4g1AmCOoH3P1D+KBBx4eRrijh4P+05+4ZaIrIVWaleLcPfhH/zzAl2Jf9J6WxeSv5aNfxYP5djDrSfyzFHjj/VE2ouc/ypnlBz2Vv+hr/Mr33vxP4435IK51O6b8T5h/MpnctW/n+P/on07x9plfrjPrT9qGrBbzzuQfJ2QWDAOIbc9ccHf+wR0Vvp915uFSYdSg==
   </data>
  </layer>
  <layer id="2" name="foliage" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKaA/8gNgfyk4C4mAsarCJUQICgDgQyk4A4kQi9IDUB2ERT8YhjgxAftQi1nE0ANZAbINDDgA7IwVP
+   eJxjY2BgYMOCWRmIA9j0koPV0LANkfZbY9FLDEa2m1i7qAmsoXaPglEwCkbBKBgFo2AUjIJRMApGwUgBfkDsD2UnAXEwFjXYxCgBAUAcCGUnAHEiEXpA6oOwiCfjEEcGID9qEes4GgBQXxNXHxcAKKwJcA==
   </data>
  </layer>
 </map>

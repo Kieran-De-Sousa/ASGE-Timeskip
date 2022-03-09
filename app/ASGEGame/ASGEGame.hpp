@@ -27,6 +27,7 @@ class ASGENetGame : public ASGE::OGLGame
   void update(const ASGE::GameTime& us) override;
   void render(const ASGE::GameTime& us) override;
   void fixedUpdate(const ASGE::GameTime& us) override;
+  void renderMap();
 
  private:
   SoLoud::Soloud audio_engine;
@@ -43,7 +44,7 @@ class ASGENetGame : public ASGE::OGLGame
   ASGE::Text camera_two_label{};
 
   // some cameras
-  ASGE::Camera camera_one{ 960, 1080 };
+  ASGE::Camera camera_one{ 1920, 1080 };
   ASGE::Camera camera_two{ 960, 1080 };
   void initAudio();
 
@@ -54,7 +55,13 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Player> testPlayer;
 
   //  /// TILED - TILEMAP VECTORS
-  //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
   //  tmx::Map map;
+  bool gravity     = true;
+  bool hasPeaked   = false;
+  bool jump        = false;
+  bool groundCheck = false;
+  float newPos     = 0;
+  float g_s = 0, j_s = 0;
 };

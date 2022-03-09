@@ -15,33 +15,35 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   inputs->use_threads = false;
 
   ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/player_ship.png");
+  ship->loadTexture("/data/sprites/Black.png");
 
-  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55 }).setScale(1.5);
-  camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({ 960, 55 }).setScale(1.5);
-
-  initAudio();
+  renderMap();
+  //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
+  //  }).setScale(1.5); camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({
+  //  960, 55 }).setScale(1.5);
+  //
+  //  initAudio();
 
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
-  testSprite = std::make_unique<Sprite>(*renderer);
-  testEntity = std::make_unique<Entity>(*renderer);
-  testPlayer = std::make_unique<Player>(*renderer);
+  //  testSprite = std::make_unique<Sprite>(*renderer);
+  //  testEntity = std::make_unique<Entity>(*renderer);
+  //  testPlayer = std::make_unique<Player>(*renderer);
 }
 
-void ASGENetGame::initAudio()
-{
-  audio_engine.init();
-  ASGE::FILEIO::File bg_audio_file;
-  if (bg_audio_file.open("/data/audio/cyberpunk.mp3"))
-  {
-    auto buffer = bg_audio_file.read();
-    auto length = static_cast<unsigned int>(buffer.length);
-    background_audio.loadMem(buffer.as_unsigned_char(), length, false, false);
-    background_audio.setLooping(true);
-    audio_engine.play(background_audio);
-  }
-}
+// void ASGENetGame::initAudio()
+//{
+//  audio_engine.init();
+//  ASGE::FILEIO::File bg_audio_file;
+//  if (bg_audio_file.open("/data/audio/cyberpunk.mp3"))
+//  {
+//    auto buffer = bg_audio_file.read();
+//    auto length = static_cast<unsigned int>(buffer.length);
+//    background_audio.loadMem(buffer.as_unsigned_char(), length, false, false);
+//    background_audio.setLooping(true);
+//    audio_engine.play(background_audio);
+//  }
+//}
 
 /**
  * Destroys the game.
@@ -98,30 +100,80 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   {
-    velocity.x = gamepad.axis[ASGE::GAMEPAD::AXIS_LEFT_X] * 500;
-    velocity.y = gamepad.axis[ASGE::GAMEPAD::AXIS_LEFT_Y] * 500;
-
-    if (gamepad_state.contains(gamepad.idx))
+    if (((gamepad.buttons[0]) != 0u) && !gravity && groundCheck)
     {
-      if (
-        ((gamepad.buttons[ASGE::GAMEPAD::BUTTON_X]) == 0U) &&
-        ((gamepad_state.at(gamepad.idx).buttons[ASGE::GAMEPAD::BUTTON_X]) != 0U))
-      {
-        Logging::DEBUG("X PRESSED");
-        testPlayer->setVelocity(velocity.x, velocity.y);
-      }
+      j_s = 3.0f;
+      g_s = 0;
+      Logging::DEBUG("jump");
+      newPos      = ship->yPos() - 200;
+      jump        = true;
+      groundCheck = false;
+    }
+    if (abs(gamepad.axis[0]) > 0.1)
+    {
+      ship->xPos(ship->xPos() + 5 * gamepad.axis[0]);
     }
   }
 
-  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
-  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
-
-  // retrieve all connected gamepads and store their states
-  for (auto& gamepad : inputs->getGamePads())
+  if (keymap[ASGE::KEYS::KEY_A])
   {
-    gamepad_state.insert_or_assign(gamepad.idx, gamepad);
+    ship->xPos(ship->xPos() - 5);
+  }
+  if (keymap[ASGE::KEYS::KEY_D])
+  {
+    ship->xPos(ship->xPos() + 5);
+  }
+  if (keymap[ASGE::KEYS::KEY_A])
+  {
+    ship->xPos(ship->xPos() - 5);
+  }
+  if (keymap[ASGE::KEYS::KEY_D])
+  {
+    ship->xPos(ship->xPos() + 5);
+  }
+  if (keymap[ASGE::KEYS::KEY_W] && !gravity && groundCheck)
+  {
+    j_s = 3.0f;
+    g_s = 0;
+    Logging::DEBUG("jump");
+    newPos = ship->yPos() - 200;
+    jump   = true;
+  }
+  if (keymap[ASGE::KEYS::KEY_S])
+  {
+    ship->yPos(ship->yPos() + 5);
+  }
+  if ((ship->yPos()) > 640 - ship->height())
+  {
+    groundCheck = true;
+    ship->yPos(640 - ship->height());
+    hasPeaked = false;
+    gravity   = false;
+  }
+  if (gravity)
+  {
+    g_s += 0.3f;
+    ship->yPos(ship->yPos() + g_s);
+  }
+  if (jump && !gravity)
+  {
+    j_s += 3.0f;
+    j_s -= 0.3f;
+    ship->yPos(ship->yPos() - j_s);
+    if (ship->yPos() < newPos)
+    {
+      jump      = false;
+      hasPeaked = true;
+    }
+  }
+  if (hasPeaked)
+  {
+    g_s += 0.3f;
+    ship->yPos(ship->yPos() + g_s);
   }
 }
+//  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
+//  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
 
 /**
  * @brief Render your game and its scenes here.
@@ -131,18 +183,39 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 {
   // example of split screen. just remove viewports and use
   // a single camera if you don't require the use of split screen
-  renderer->setViewport(ASGE::Viewport{ 0, 0, 960, 1080 });
-  renderer->setProjectionMatrix(camera_one.getView());
+  // renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
+  // renderer->setProjectionMatrix(camera_one.getView());
+  for (unsigned int i = 0; i < tiles.size(); ++i)
+  {
+    renderer->render(*tiles[i]);
+    // Logging::DEBUG("rendering tiles");
+  }
   renderer->render(*ship);
-  renderer->setViewport(ASGE::Viewport{ 960, 0, 960, 1080 });
-  renderer->setProjectionMatrix(camera_two.getView());
-  renderer->render(*ship);
+  //  renderer->setViewport(ASGE::Viewport{ 960, 0, 960, 1080 });
+  //  renderer->setProjectionMatrix(camera_two.getView());
+  //  renderer->render(*ship);
 
   // reset the view and don't use a camera, useful for HUD
-  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
-  renderer->setProjectionMatrix(0, 0, 1920, 1080);
-  renderer->render(camera_one_label);
-  renderer->render(camera_two_label);
+  //  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
+  //  renderer->setProjectionMatrix(0, 0, 1920, 1080);
+  //  renderer->render(camera_one_label);
+  //  renderer->render(camera_two_label);
 
-  renderer->render(*testPlayer);
+  // renderer->render(*testPlayer->getSprite());
+}
+void ASGENetGame::renderMap()
+{
+  for (unsigned int i = 0; i < 100; ++i)
+  {
+    tiles.emplace_back(renderer->createUniqueSprite());
+    if (tiles[i]->loadTexture("data/sprites/Black.png"))
+    {
+      // Logging::DEBUG("loaded tile");
+      tiles[i]->width(32);
+      tiles[i]->height(32);
+      tiles[i]->xPos(tiles[i]->width() * static_cast<float>(i));
+      tiles[i]->yPos(640);
+      tiles[i]->setGlobalZOrder(3);
+    }
+  }
 }

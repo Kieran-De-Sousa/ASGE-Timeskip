@@ -35,6 +35,9 @@ class Player : public Entity
   // Player ID
   void setPlayerID(int id);
   [[nodiscard]] int getPlayerID() const;
+  ASGE::Point2D getVelocity();
+  void setVelocity(float _x, float _y);
+  void updatePlayer();
 
  private:
   // ID
@@ -42,5 +45,7 @@ class Player : public Entity
   // Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
+
+  ASGE::Point2D velocity = { 0, 0 };
 };
 #endif // ASGEGAME_PLAYER_H

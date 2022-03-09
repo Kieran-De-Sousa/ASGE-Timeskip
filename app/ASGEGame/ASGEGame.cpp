@@ -108,7 +108,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
         ((gamepad_state.at(gamepad.idx).buttons[ASGE::GAMEPAD::BUTTON_X]) != 0U))
       {
         Logging::DEBUG("X PRESSED");
-        velocity.y *= 10;
+        testPlayer->setVelocity(velocity.x, velocity.y);
       }
     }
   }
@@ -143,4 +143,6 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   renderer->setProjectionMatrix(0, 0, 1920, 1080);
   renderer->render(camera_one_label);
   renderer->render(camera_two_label);
+
+  renderer->render(*testPlayer);
 }

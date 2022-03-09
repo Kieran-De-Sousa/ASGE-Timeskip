@@ -29,7 +29,7 @@ class Entity : public Sprite
    * @note Possibly unneeded, however the option is presented
    */
   explicit Entity(ASGE::Renderer& rendererRef);
-  ~Entity() override;
+  ~Entity() override = default;
 
   /// SETTER & GETTER FUNCTIONS
   // Health
@@ -40,7 +40,7 @@ class Entity : public Sprite
   [[nodiscard]] int getAttack() const;
 
  private:
-  int entityHealth;
-  int entityAttack;
+  int entityHealth = 0;
+  int entityAttack = 0;
 };
 #endif // ASGEGAME_ENTITY_H

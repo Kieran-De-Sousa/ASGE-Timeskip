@@ -7,7 +7,6 @@ Entity::Entity(ASGE::Renderer& rendererRef, int health, int attack) :
 }
 /// Default Constructor
 Entity::Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef) {}
-Entity::~Entity() {}
 
 /// SETTER & GETTER FUNCTIONS
 // Health

@@ -1,7 +1,6 @@
 #include "Sprite.h"
 
 Sprite::Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
-Sprite::~Sprite() {}
 
 bool Sprite::initialiseSprite(std::string& filename)
 {

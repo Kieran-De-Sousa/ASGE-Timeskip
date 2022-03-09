@@ -1,10 +1,12 @@
 #include "Player.h"
 
 /// Constructor w/Param
-Player::Player(ASGE::Renderer& rendererRef, int id) : Entity(rendererRef), playerID(id) {}
+Player::Player(ASGE::Renderer& rendererRef, int id) :
+  Entity(rendererRef), playerID(id), powerUpTimer(powerUpDuration)
+{
+}
 /// Default Constructor
-Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef) {}
-Player::~Player() {}
+Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef), powerUpTimer(powerUpDuration) {}
 
 /// SETTER & GETTER FUNCTIONS
 // Player ID

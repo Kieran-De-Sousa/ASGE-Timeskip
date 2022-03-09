@@ -28,6 +28,9 @@ class ASGENetGame : public ASGE::OGLGame
   void render(const ASGE::GameTime& us) override;
   void fixedUpdate(const ASGE::GameTime& us) override;
 
+  bool initMap();
+  void renderMap();
+
  private:
   SoLoud::Soloud audio_engine;
   SoLoud::Wav background_audio;
@@ -53,8 +56,8 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
 
-  //  /// TILED - TILEMAP VECTORS
-  //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
-  //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
-  //  tmx::Map map;
+  /// TILED - TILEMAP VECTORS
+  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
+  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
+  tmx::Map map;
 };

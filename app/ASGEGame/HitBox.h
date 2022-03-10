@@ -21,11 +21,4 @@
 #ifndef ASGEGAME_HITBOX_H
 #  define ASGEGAME_HITBOX_H
 
-class HitBox
-{
- public:
-  std::vector<float> getHitBox(std::shared_ptr<ASGE::Sprite> _sprite);
-  std::vector<float> hitBoxRect;
-};
-
 #endif // ASGEGAME_HITBOX_H

@@ -55,7 +55,7 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
 
-  std::shared_ptr<ASGE::Sprite> player;
+  // std::shared_ptr<ASGE::Sprite> player;
 
   //  /// TILED - TILEMAP VECTORS
   //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
@@ -70,6 +70,7 @@ class ASGENetGame : public ASGE::OGLGame
                   0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
   void drawMap();
   std::vector<std::shared_ptr<ASGE::Sprite>> mapTiles;
+  std::vector<std::shared_ptr<Entity>> colBods;
 
   /// Raycaster Attempt
   void rayCast3D();

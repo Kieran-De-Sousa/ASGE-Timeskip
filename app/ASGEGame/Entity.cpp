@@ -28,3 +28,17 @@ int Entity::getAttack() const
 {
   return entityAttack;
 }
+void Entity::Update()
+{
+  getSprite()->xPos(getSprite()->xPos() + velocity.x);
+  getSprite()->yPos(getSprite()->yPos() + velocity.y);
+}
+ASGE::Point2D Entity::getVelocity()
+{
+  return velocity;
+}
+void Entity::setVelocity(float x, float y)
+{
+  velocity.x = x;
+  velocity.y = y;
+}

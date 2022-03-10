@@ -38,9 +38,14 @@ class Entity : public Sprite
   // Attack
   void setAttack(int attack);
   [[nodiscard]] int getAttack() const;
+  // Movement
+  void setVelocity(float x, float y);
+  ASGE::Point2D getVelocity();
+  void Update();
 
  private:
   int entityHealth;
   int entityAttack;
+  ASGE::Point2D velocity = { 0, 0 };
 };
 #endif // ASGEGAME_ENTITY_H

@@ -13,14 +13,14 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   renderer->setBaseResolution(1920, 1080, ASGE::Resolution::Policy::MAINTAIN);
   key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   inputs->use_threads = false;
-  player              = renderer->createUniqueSprite();
-  player->loadTexture("data/sprites/TommyIdle.png");
-  player->xPos(64);
-  player->yPos(64);
-  player->width(64);
-  player->height(64);
-  player->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  v_RigidBodies.push_back(player);
+  //  player              = renderer->createUniqueSprite();
+  //  player->loadTexture("data/sprites/TommyIdle.png");
+  //  player->xPos(64);
+  //  player->yPos(64);
+  //  player->width(64);
+  //  player->height(64);
+  //  player->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  //  v_RigidBodies.push_back(player);
   Physics.setCollisions(true);
   //
   //  ship = renderer->createUniqueSprite();
@@ -105,7 +105,7 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
  */
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
-  Physics.collisionController(v_RigidBodies, mapTiles);
+  Physics.collisionController(colBods, mapTiles);
   // process single gamepad
   //  if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   //  {
@@ -134,19 +134,19 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   //  }
   if (keymap[ASGE::KEYS::KEY_A] || keymap[ASGE::KEYS::KEY_LEFT])
   {
-    player->xPos(player->xPos() - 5);
+    //    player->xPos(player->xPos() - 5);
   }
   if (keymap[ASGE::KEYS::KEY_D] || keymap[ASGE::KEYS::KEY_RIGHT])
   {
-    player->xPos(player->xPos() + 5);
+    //    player->xPos(player->xPos() + 5);
   }
   if (keymap[ASGE::KEYS::KEY_W] || keymap[ASGE::KEYS::KEY_UP])
   {
-    player->yPos(player->yPos() - 5);
+    //    player->yPos(player->yPos() - 5);
   }
   if (keymap[ASGE::KEYS::KEY_S] || keymap[ASGE::KEYS::KEY_DOWN])
   {
-    player->yPos(player->yPos() + 5);
+    //    player->yPos(player->yPos() + 5);
   }
 }
 
@@ -157,7 +157,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
 void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 {
   drawMap();
-  renderer->render(*player);
+  //  renderer->render(*player);
   // example of split screen. just remove viewports and use
   // a single camera if you don't require the use of split screen
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 960, 1080 });
@@ -196,52 +196,52 @@ void ASGENetGame::drawMap()
     }
   }
 }
-void ASGENetGame::rayCast3D()
-{
-  int r = 0, mx = 0, my = 0, mp = 0, dof = 0;
-  float rx = 0.0f, ry = 0.0f, ra = 0.0f, xo = 0.0f, yo = 0.0f;
-  ra = player->rotationInRadians();
-  for (r = 0; r < 1920; r++)
-  {
-    // check horizontal
-    dof        = 0;
-    float aTan = -1 / tan(ra);
-    if (ra > 3.14)
-    {
-      ry = static_cast<float>(static_cast<int>((player->yPos() / 64) * 64) - 0.0001);
-      rx = (player->yPos() - ry) * aTan + player->xPos();
-      yo = -64;
-      xo = -yo * aTan;
-    }
-    if (ra < 3.14)
-    {
-      ry = static_cast<float>((static_cast<int>(player->yPos() / 64) * 64) + 64);
-      rx = (player->yPos() - ry) * aTan + player->xPos();
-      yo = 64;
-      xo = -yo * aTan;
-    }
-    if ((ra < 0.01f || ra > -0.01f) || (ra > 3.13f || ra < 3.15f))
-    {
-      rx  = player->xPos();
-      ry  = player->yPos();
-      dof = 8;
-    }
-    if (dof < 8)
-    {
-      mx = static_cast<int>(rx) / 64;
-      my = static_cast<int>(ry) / 64;
-      mp = my * mapX * 128 + mx;
-      if (mp < mapX * mapY * 128 && map[mp] == 1)
-      {
-        Logging::ERRORS("Hit Wall");
-        dof = 8;
-      }
-      else
-      {
-        rx += xo;
-        ry += yo;
-        dof += 1;
-      }
-    }
-  }
-}
+// void ASGENetGame::rayCast3D()
+//{
+//   int r = 0, mx = 0, my = 0, mp = 0, dof = 0;
+//   float rx = 0.0f, ry = 0.0f, ra = 0.0f, xo = 0.0f, yo = 0.0f;
+//   ra = player->rotationInRadians();
+//   for (r = 0; r < 1920; r++)
+//   {
+//     // check horizontal
+//     dof        = 0;
+//     float aTan = -1 / tan(ra);
+//     if (ra > 3.14)
+//     {
+//       ry = static_cast<float>(static_cast<int>((player->yPos() / 64) * 64) - 0.0001);
+//       rx = (player->yPos() - ry) * aTan + player->xPos();
+//       yo = -64;
+//       xo = -yo * aTan;
+//     }
+//     if (ra < 3.14)
+//     {
+//       ry = static_cast<float>((static_cast<int>(player->yPos() / 64) * 64) + 64);
+//       rx = (player->yPos() - ry) * aTan + player->xPos();
+//       yo = 64;
+//       xo = -yo * aTan;
+//     }
+//     if ((ra < 0.01f || ra > -0.01f) || (ra > 3.13f || ra < 3.15f))
+//     {
+//       rx  = player->xPos();
+//       ry  = player->yPos();
+//       dof = 8;
+//     }
+//     if (dof < 8)
+//     {
+//       mx = static_cast<int>(rx) / 64;
+//       my = static_cast<int>(ry) / 64;
+//       mp = my * mapX * 128 + mx;
+//       if (mp < mapX * mapY * 128 && map[mp] == 1)
+//       {
+//         Logging::ERRORS("Hit Wall");
+//         dof = 8;
+//       }
+//       else
+//       {
+//         rx += xo;
+//         ry += yo;
+//         dof += 1;
+//       }
+//     }
+//   }
+// }

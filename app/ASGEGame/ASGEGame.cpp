@@ -151,7 +151,7 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 bool ASGENetGame::initMap()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/map/PresentMap.tmx"))
+  if (!tile_map.open("/data/map/PresentMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;

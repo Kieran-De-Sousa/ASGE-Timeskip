@@ -6,7 +6,7 @@ Sprite::~Sprite() {}
 bool Sprite::initialiseSprite(std::string& filename)
 {
   sprite = renderer->createUniqueSprite();
-  if (!sprite->loadTexture(filename))
+  if (!sprite->loadTexture("data/sprite/Player1.png"))
   {
     Logging::WARN("Could not load file: " + filename);
     return false;
@@ -17,6 +17,8 @@ bool Sprite::initialiseSprite(std::string& filename)
   setPosition(defaultSpritePosition[0], defaultSpritePosition[1]);
   setSpriteVariables(defaultSpriteVariables[0], defaultSpriteVariables[1], defaultZOrder);
   sprite->scale(1);
+
+
 
   return true;
 }

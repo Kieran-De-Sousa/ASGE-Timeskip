@@ -32,16 +32,16 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
 
 void ASGENetGame::initAudio()
 {
-  audio_engine.init();
-  ASGE::FILEIO::File bg_audio_file;
-  if (bg_audio_file.open("/data/audio/cyberpunk.mp3"))
-  {
-    auto buffer = bg_audio_file.read();
-    auto length = static_cast<unsigned int>(buffer.length);
-    background_audio.loadMem(buffer.as_unsigned_char(), length, false, false);
-    background_audio.setLooping(true);
-    audio_engine.play(background_audio);
-  }
+  //audio_engine.init();
+  //ASGE::FILEIO::File bg_audio_file;
+  //if (bg_audio_file.open("/data/audio/cyberpunk.mp3"))
+  //{
+   // auto buffer = bg_audio_file.read();
+    //auto length = static_cast<unsigned int>(buffer.length);
+    //background_audio.loadMem(buffer.as_unsigned_char(), length, false, false);
+    //background_audio.setLooping(true);
+    //audio_engine.play(background_audio);
+  //}
 }
 
 /**
@@ -178,7 +178,7 @@ bool ASGENetGame::initMap()
           {
             /// All contactable objects can be checked within this if statement, currently only
             /// walls but easily expandable with additional || / or
-            if (tile_layer.getName() == "Walls")
+            if (tile_layer.getName() == "Ground")
             {
               auto& colliders = collidables.emplace_back(renderer->createUniqueSprite());
               if (colliders->loadTexture(tile->imagePath))
@@ -210,39 +210,26 @@ void ASGENetGame::renderMap()
   /// Casting tile map layers to TileLayer
   for (const auto& layer : map.getLayers())
   {
-    if (layer->getType() == tmx::Layer::Type::Tile)
+    if (layer->getType() == tmx::Layer::Type::Object)
     {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tiles from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      auto object_layer = layer->getLayerAs<tmx::ObjectGroup>();
+      for (const auto& object : object_layer.getObjects())
       {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        if (object.getName() == "StartPoint")
         {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
+          // Only sets Mario's position to the spawn position on the first frame of the game's
+          // render
+          if (!player1Spawned)
           {
-            /// Create a ASGE sprite from a tile
-            auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-
-              renderer->render(*sprite);
-            }
+            spawnPos = object.getPosition();
+            player1->getSprite()->xPos((spawnPos.x - player1->getSprite()->width()));
+            player1->getSprite()->yPos((spawnPos.y - player1->getSprite()->height()));
+            player1Spawned = true;
           }
+        }
+        else if (object.getName() == "EndPoint")
+        {
+          exitPos = object.getPosition();
         }
       }
     }

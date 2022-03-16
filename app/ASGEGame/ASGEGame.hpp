@@ -40,6 +40,12 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<ASGE::Sprite> ship{ nullptr };
   ASGE::Point2D velocity{ 0, 0 };
 
+  tmx::Vector2<float>spawnPos;
+  tmx::Vector2<float>exitPos;
+
+  std::unique_ptr<Entity> player1;
+  bool player1Spawned;
+
   // Font
   const ASGE::Font* game_font = nullptr;
   ASGE::Text camera_one_label{};

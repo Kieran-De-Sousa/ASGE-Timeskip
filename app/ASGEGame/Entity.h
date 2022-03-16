@@ -39,8 +39,19 @@ class Entity : public Sprite
   void setAttack(int attack);
   [[nodiscard]] int getAttack() const;
 
+  virtual void update (const ASGE::GameTime& us);
+  bool entityPlayer();
+
  private:
   int entityHealth;
   int entityAttack;
+
+  std::unique_ptr<ASGE::Sprite> player1;
+
+  ObjRect animation_frames[4];
+  unsigned int animation_index = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer = 0.0f;
+  enum entityState{IDLE, RUNNING, JUMPING, ATTACKING};
 };
 #endif // ASGEGAME_ENTITY_H

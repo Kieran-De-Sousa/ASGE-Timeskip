@@ -10,6 +10,13 @@
  * @details
  * @author Kieran
  */
+
+struct ObjRect
+{
+  // object rectangle
+  float x, y, w, h;
+};
+
 class Sprite
 {
  public:
@@ -35,9 +42,15 @@ class Sprite
   void setPosition(float x, float y);
   void setSpriteVariables(float width, float height, int16_t z_order);
 
- private:
+
+ protected:
+  /**
+   * Can only be used if inherited from class or are class
+   * */
   std::unique_ptr<ASGE::Sprite> sprite;
   std::unique_ptr<ASGE::Renderer> renderer;
+
+
 
   /// Would be const due to not needing to be changed, however this results in compiler errors.
   std::array<float, 2> defaultSpritePosition{ 0, 0 };

@@ -16,6 +16,10 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
 
   ship = renderer->createUniqueSprite();
   ship->loadTexture("/data/sprites/Black.png");
+  ship->width(64);
+  ship->height(64);
+  ship->xPos(256);
+  ship->yPos(128);
 
   renderMap();
   //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
@@ -100,12 +104,12 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   {
-    if (((gamepad.buttons[0]) != 0u) && !gravity && groundCheck)
+    if (((gamepad.buttons[0]) != 0u) && groundCheck)
     {
       j_s = 3.0f;
       g_s = 0;
       Logging::DEBUG("jump");
-      newPos      = ship->yPos() - 200;
+      newPos      = ship->yPos() - 128;
       jump        = true;
       groundCheck = false;
     }
@@ -131,33 +135,20 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   {
     ship->xPos(ship->xPos() + 5);
   }
-  if (keymap[ASGE::KEYS::KEY_W] && !gravity && groundCheck)
+  if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
   {
-    j_s = 3.0f;
-    g_s = 0;
-    Logging::DEBUG("jump");
-    newPos = ship->yPos() - 200;
-    jump   = true;
+    // Logging::DEBUG("jump");
+    newPos      = ship->yPos() - 256;
+    jump        = true;
+    groundCheck = false;
   }
-  if (keymap[ASGE::KEYS::KEY_S])
+  //  if (keymap[ASGE::KEYS::KEY_S])
+  //  {
+  //    ship->yPos(ship->yPos() + 5);
+  //  }
+  if (jump /*&& groundCheck*/)
   {
-    ship->yPos(ship->yPos() + 5);
-  }
-  if ((ship->yPos()) > 640 - ship->height())
-  {
-    groundCheck = true;
-    ship->yPos(640 - ship->height());
-    hasPeaked = false;
-    gravity   = false;
-  }
-  if (gravity)
-  {
-    g_s += 0.3f;
-    ship->yPos(ship->yPos() + g_s);
-  }
-  if (jump && !gravity)
-  {
-    j_s += 3.0f;
+    j_s = 7.0f;
     j_s -= 0.3f;
     ship->yPos(ship->yPos() - j_s);
     if (ship->yPos() < newPos)
@@ -166,10 +157,84 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       hasPeaked = true;
     }
   }
-  if (hasPeaked)
+  if ((!groundCheck || hasPeaked) && !jump)
   {
-    g_s += 0.3f;
-    ship->yPos(ship->yPos() + g_s);
+    ship->yPos(ship->yPos() + 7);
+  }
+  for (unsigned long long i = 0; i < tiles.size(); i++)
+  {
+    if (ship->xPos() >= tiles[i]->xPos() && ship->xPos() <= tiles[i]->xPos() + tiles[i]->width())
+    {
+      if (
+        ship->yPos() + ship->height() >= tiles[i]->yPos() &&
+        ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+      {
+        groundCheck = true;
+        ship->yPos(tiles[i]->yPos() - ship->height());
+      }
+      if (
+        ship->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
+        ship->yPos() + ship->height() > tiles[i]->yPos() + tiles[i]->height())
+      {
+        jump      = false;
+        hasPeaked = true;
+      }
+    }
+    if (
+      ship->xPos() + ship->width() >= tiles[i]->xPos() &&
+      ship->xPos() + ship->width() <= tiles[i]->xPos() + tiles[i]->width())
+    {
+      if (
+        ship->yPos() + ship->height() >= tiles[i]->yPos() &&
+        ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+      {
+        groundCheck = true;
+        ship->yPos(tiles[i]->yPos() - ship->height());
+      }
+      if (
+        ship->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
+        ship->yPos() + ship->height() > tiles[i]->yPos() + tiles[i]->height())
+      {
+        jump      = false;
+        hasPeaked = true;
+      }
+    }
+    if (ship->yPos() >= tiles[i]->yPos() && ship->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (ship->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship->xPos() > tiles[i]->xPos())
+      {
+        ship->xPos(tiles[i]->xPos() + tiles[i]->width());
+      }
+    }
+    if (
+      ship->yPos() + ship->height() >= tiles[i]->yPos() + tiles[i]->height() &&
+      ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (ship->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship->xPos() > tiles[i]->xPos())
+      {
+        ship->xPos(tiles[i]->xPos() + tiles[i]->width());
+      }
+    }
+    if (ship->yPos() >= tiles[i]->yPos() && ship->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (
+        ship->xPos() + ship->width() > tiles[i]->xPos() &&
+        ship->xPos() + ship->width() < tiles[i]->xPos() + tiles[i]->width())
+      {
+        ship->xPos(tiles[i]->xPos() - ship->width());
+      }
+    }
+    if (
+      ship->yPos() + ship->height() >= tiles[i]->yPos() + tiles[i]->height() &&
+      ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (
+        ship->xPos() + ship->width() > tiles[i]->xPos() &&
+        ship->xPos() + ship->width() < tiles[i]->xPos() + tiles[i]->width())
+      {
+        ship->xPos(tiles[i]->xPos() - ship->width());
+      }
+    }
   }
 }
 //  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
@@ -205,17 +270,27 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 }
 void ASGENetGame::renderMap()
 {
-  for (unsigned int i = 0; i < 100; ++i)
+  for (int i = 0; i < height; i++)
   {
-    tiles.emplace_back(renderer->createUniqueSprite());
-    if (tiles[i]->loadTexture("data/sprites/Black.png"))
+    for (int j = 0; j < width; j++)
     {
-      // Logging::DEBUG("loaded tile");
-      tiles[i]->width(32);
-      tiles[i]->height(32);
-      tiles[i]->xPos(tiles[i]->width() * static_cast<float>(i));
-      tiles[i]->yPos(640);
-      tiles[i]->setGlobalZOrder(3);
+      if (testMap[static_cast<unsigned int>(j + i * width)] == 1)
+      {
+        auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
+        if (sprite->loadTexture("data/sprites/Black.png"))
+        {
+          sprite->width(64);
+          sprite->height(64);
+          sprite->scale(1);
+          sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+          sprite->xPos(
+            static_cast<float>(j) * sprite->width() + 1200 -
+            static_cast<float>(width) * sprite->width());
+          sprite->yPos(
+            static_cast<float>(i) * sprite->height() + 700 -
+            static_cast<float>(height) * sprite->height());
+        }
+      }
     }
   }
 }

@@ -28,6 +28,7 @@ class ASGENetGame : public ASGE::OGLGame
   void render(const ASGE::GameTime& us) override;
   void fixedUpdate(const ASGE::GameTime& us) override;
   void renderMap();
+  void Camera();
 
  private:
   SoLoud::Soloud audio_engine;
@@ -36,6 +37,7 @@ class ASGENetGame : public ASGE::OGLGame
   std::map<int, bool> keymap{};
   std::map<int, ASGE::GamePadData> gamepad_state{};
   std::unique_ptr<ASGE::Sprite> ship{ nullptr };
+  std::unique_ptr<ASGE::Sprite> ship2{ nullptr };
   ASGE::Point2D velocity{ 0, 0 };
 
   // Font
@@ -44,15 +46,20 @@ class ASGENetGame : public ASGE::OGLGame
   ASGE::Text camera_two_label{};
 
   // some cameras
-  ASGE::Camera camera_one{ 1920, 1080 };
-  ASGE::Camera camera_two{ 960, 1080 };
+  ASGE::Camera camera_one{ 1920, 560 };
+  ASGE::Camera camera_two{ 1920, 560 };
   void initAudio();
+
+  ASGE::Point2D ship_look{ 0, 120 };
+  ASGE::Point2D ship2_look{ 0, 120 };
 
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
   std::unique_ptr<Sprite> testSprite;
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
+
+  std::unique_ptr<Entity> player1;
 
   //  /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
@@ -72,4 +79,11 @@ class ASGENetGame : public ASGE::OGLGame
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   };
+
+  bool gravity2     = true;
+  bool hasPeaked2   = false;
+  bool jump2        = false;
+  bool groundCheck2 = false;
+  float newPos2     = 0;
+  float g_s2 = 0, j_s2 = 0;
 };

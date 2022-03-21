@@ -21,7 +21,12 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   ship->xPos(256);
   ship->yPos(128);
 
+  ship2 = renderer->createUniqueSprite();
+  ship2->loadTexture("/data/sprites/Black.png");
+
   renderMap();
+  Camera();
+  camera_two.lookAt({ ship->xPos(), ship->yPos() + 100 });
   //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
   //  }).setScale(1.5); camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({
   //  960, 55 }).setScale(1.5);
@@ -104,12 +109,12 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   {
-    if (((gamepad.buttons[0]) != 0u) && groundCheck)
+    if (((gamepad.buttons[0]) != 0u) && !gravity && groundCheck)
     {
       j_s = 3.0f;
       g_s = 0;
       Logging::DEBUG("jump");
-      newPos      = ship->yPos() - 128;
+      newPos      = ship->yPos() - 200;
       jump        = true;
       groundCheck = false;
     }
@@ -141,12 +146,58 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     newPos      = ship->yPos() - 256;
     jump        = true;
     groundCheck = false;
+    j_s         = 3.0f;
+    g_s         = 0;
+    Logging::DEBUG("jump");
+    newPos = ship->yPos() - 200;
+    jump   = true;
+  }
+  if (keymap[ASGE::KEYS::KEY_S])
+  {
+    ship->yPos(ship->yPos() + 5);
+  }
+  if ((ship->yPos()) > 320 - ship->height())
+  {
+    groundCheck = true;
+    ship->yPos(320 - ship->height());
+    hasPeaked = false;
+    gravity   = false;
   }
   //  if (keymap[ASGE::KEYS::KEY_S])
   //  {
   //    ship->yPos(ship->yPos() + 5);
   //  }
   if (jump /*&& groundCheck*/)
+
+    if (keymap[ASGE::KEYS::KEY_LEFT])
+    {
+      ship2->xPos(ship2->xPos() - 5);
+    }
+  if (keymap[ASGE::KEYS::KEY_RIGHT])
+  {
+    ship2->xPos(ship2->xPos() + 5);
+  }
+  if (keymap[ASGE::KEYS::KEY_UP] && !gravity2 && groundCheck2)
+  {
+    j_s2 = 3.0f;
+    g_s2 = 0;
+    Logging::DEBUG("jump");
+    newPos2 = ship2->yPos() - 200;
+    jump2   = true;
+  }
+  if (keymap[ASGE::KEYS::KEY_DOWN])
+  {
+    ship2->yPos(ship2->yPos() + 5);
+  }
+  if ((ship2->yPos()) > 320 - ship2->height())
+  {
+    groundCheck2 = true;
+    ship2->yPos(320 - ship2->height());
+    hasPeaked2 = false;
+    gravity2   = false;
+  }
+
+  if (gravity)
   {
     j_s = 7.0f;
     j_s -= 0.3f;
@@ -236,6 +287,53 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       }
     }
   }
+
+  if (gravity2)
+  {
+    g_s2 += 0.3f;
+    ship2->yPos(ship2->yPos() + g_s2);
+  }
+  if (jump2 && !gravity2)
+  {
+    j_s2 += 3.0f;
+    j_s2 -= 0.3f;
+    ship2->yPos(ship2->yPos() - j_s2);
+    if (ship2->yPos() < newPos2)
+    {
+      jump2      = false;
+      hasPeaked2 = true;
+    }
+  }
+  if (hasPeaked2)
+  {
+    g_s2 += 0.3f;
+    ship2->yPos(ship2->yPos() + g_s2);
+  }
+
+  // moving the camera
+  if (ship->xPos() > ship_look.x)
+  {
+    ship_look.x = ship->xPos();
+  }
+  // stopping player exit
+  if (ship->xPos() < ship_look.x - 960)
+  {
+    ship->xPos(ship_look.x - 960);
+  }
+  camera_one.lookAt(ship_look);
+  camera_one.setZoom(0.9F);
+
+  if (ship2->xPos() > ship2_look.x)
+  {
+    ship2_look.x = ship2->xPos();
+  }
+  // stopping player exit
+  if (ship2->xPos() < ship2_look.x - 960)
+  {
+    ship2->xPos(ship2_look.x - 960);
+  }
+  camera_two.lookAt(ship2_look);
+  camera_two.setZoom(0.9F);
 }
 //  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
 //  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
@@ -250,15 +348,29 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   // a single camera if you don't require the use of split screen
   // renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
   // renderer->setProjectionMatrix(camera_one.getView());
+
+  // bottom view
+  renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
+  renderer->setProjectionMatrix(camera_two.getView());
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
     renderer->render(*tiles[i]);
     // Logging::DEBUG("rendering tiles");
   }
   renderer->render(*ship);
-  //  renderer->setViewport(ASGE::Viewport{ 960, 0, 960, 1080 });
-  //  renderer->setProjectionMatrix(camera_two.getView());
+  renderer->render(*ship2);
+
+  // top view
+  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
+  renderer->setProjectionMatrix(camera_one.getView());
   //  renderer->render(*ship);
+  for (unsigned int i = 0; i < tiles.size(); ++i)
+  {
+    renderer->render(*tiles[i]);
+    // Logging::DEBUG("rendering tiles");
+  }
+  renderer->render(*ship);
+  renderer->render(*ship2);
 
   // reset the view and don't use a camera, useful for HUD
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
@@ -267,6 +379,8 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   //  renderer->render(camera_two_label);
 
   // renderer->render(*testPlayer->getSprite());
+
+  // renderer->setProjectionMatrix(camera_one.getView());
 }
 void ASGENetGame::renderMap()
 {
@@ -291,6 +405,18 @@ void ASGENetGame::renderMap()
             static_cast<float>(height) * sprite->height());
         }
       }
+      // Logging::DEBUG("loaded tile");
+      tiles[i]->width(32);
+      tiles[i]->height(32);
+      tiles[i]->xPos(tiles[i]->width() * static_cast<float>(i));
+      tiles[i]->yPos(320);
+      tiles[i]->setGlobalZOrder(3);
     }
   }
+}
+
+void ASGENetGame::Camera()
+{
+  camera_one.lookAt(ASGE::Point2D(1920.0f * 0.5F * 0.3F, 1080 * 0.5F * 0.3F));
+  camera_one.setZoom(0.3F);
 }

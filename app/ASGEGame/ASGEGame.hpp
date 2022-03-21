@@ -71,7 +71,7 @@ class ASGENetGame : public ASGE::OGLGame
   bool groundCheck = false;
   float newPos     = 0;
   float g_s = 0, j_s = 0;
-  int width = 16, height = 10;
+  unsigned long long width = 16, height = 10;
   std::vector<int> testMap = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,

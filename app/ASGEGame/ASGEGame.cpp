@@ -23,6 +23,10 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
 
   ship2 = renderer->createUniqueSprite();
   ship2->loadTexture("/data/sprites/Black.png");
+  ship2->width(64);
+  ship2->height(64);
+  ship2->xPos(256);
+  ship2->yPos(128);
 
   renderMap();
   Camera();
@@ -132,18 +136,9 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   {
     ship->xPos(ship->xPos() + 5);
   }
-  if (keymap[ASGE::KEYS::KEY_A])
-  {
-    ship->xPos(ship->xPos() - 5);
-  }
-  if (keymap[ASGE::KEYS::KEY_D])
-  {
-    ship->xPos(ship->xPos() + 5);
-  }
   if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
   {
     // Logging::DEBUG("jump");
-    newPos      = ship->yPos() - 256;
     jump        = true;
     groundCheck = false;
     j_s         = 3.0f;
@@ -152,49 +147,27 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     newPos = ship->yPos() - 200;
     jump   = true;
   }
-  if (keymap[ASGE::KEYS::KEY_S])
-  {
-    ship->yPos(ship->yPos() + 5);
-  }
-  if ((ship->yPos()) > 320 - ship->height())
-  {
-    groundCheck = true;
-    ship->yPos(320 - ship->height());
-    hasPeaked = false;
-    gravity   = false;
-  }
   //  if (keymap[ASGE::KEYS::KEY_S])
   //  {
   //    ship->yPos(ship->yPos() + 5);
   //  }
-  if (jump /*&& groundCheck*/)
-
-    if (keymap[ASGE::KEYS::KEY_LEFT])
-    {
-      ship2->xPos(ship2->xPos() - 5);
-    }
+  if (keymap[ASGE::KEYS::KEY_LEFT])
+  {
+    ship2->xPos(ship2->xPos() - 5);
+  }
   if (keymap[ASGE::KEYS::KEY_RIGHT])
   {
     ship2->xPos(ship2->xPos() + 5);
   }
-  if (keymap[ASGE::KEYS::KEY_UP] && !gravity2 && groundCheck2)
+  if (keymap[ASGE::KEYS::KEY_UP] && groundCheck2)
   {
-    j_s2 = 3.0f;
-    g_s2 = 0;
+    jump2        = true;
+    groundCheck2 = false;
+    j_s2         = 3.0f;
+    g_s2         = 0;
     Logging::DEBUG("jump");
     newPos2 = ship2->yPos() - 200;
     jump2   = true;
-  }
-  if (keymap[ASGE::KEYS::KEY_DOWN])
-  {
-    ship2->yPos(ship2->yPos() + 5);
-  }
-  if ((ship2->yPos()) > 320 - ship2->height())
-  {
-    groundCheck2 = true;
-    ship2->yPos(320 - ship2->height());
-    hasPeaked2 = false;
-    gravity2   = false;
   }
 
   if (gravity)
@@ -210,7 +183,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   }
   if ((!groundCheck || hasPeaked) && !jump)
   {
-    ship->yPos(ship->yPos() + 7);
+    ship->yPos(ship->yPos() + 10);
   }
   for (unsigned long long i = 0; i < tiles.size(); i++)
   {
@@ -288,14 +261,87 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     }
   }
 
+  /// ship 2 logic
+  for (unsigned long long i = 0; i < tiles.size(); i++)
+  {
+    if (ship2->xPos() >= tiles[i]->xPos() && ship2->xPos() <= tiles[i]->xPos() + tiles[i]->width())
+    {
+      if (
+        ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
+        ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+      {
+        groundCheck2 = true;
+        ship2->yPos(tiles[i]->yPos() - ship2->height());
+      }
+      if (
+        ship2->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
+        ship2->yPos() + ship2->height() > tiles[i]->yPos() + tiles[i]->height())
+      {
+        jump2      = false;
+        hasPeaked2 = true;
+      }
+    }
+    if (
+      ship2->xPos() + ship2->width() >= tiles[i]->xPos() &&
+      ship2->xPos() + ship2->width() <= tiles[i]->xPos() + tiles[i]->width())
+    {
+      if (
+        ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
+        ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+      {
+        std::cout << "ass phat";
+        groundCheck2 = true;
+        ship2->yPos(tiles[i]->yPos() - ship2->height());
+      }
+      if (
+        ship2->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
+        ship2->yPos() + ship2->height() > tiles[i]->yPos() + tiles[i]->height())
+      {
+        jump2      = false;
+        hasPeaked2 = true;
+      }
+    }
+    if (ship2->yPos() >= tiles[i]->yPos() && ship2->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (ship2->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship2->xPos() > tiles[i]->xPos())
+      {
+        ship2->xPos(tiles[i]->xPos() + tiles[i]->width());
+      }
+    }
+    if (
+      ship2->yPos() + ship2->height() >= tiles[i]->yPos() + tiles[i]->height() &&
+      ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (ship2->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship2->xPos() > tiles[i]->xPos())
+      {
+        ship2->xPos(tiles[i]->xPos() + tiles[i]->width());
+      }
+    }
+    if (ship2->yPos() >= tiles[i]->yPos() && ship2->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (
+        ship2->xPos() + ship2->width() > tiles[i]->xPos() &&
+        ship2->xPos() + ship2->width() < tiles[i]->xPos() + tiles[i]->width())
+      {
+        ship2->xPos(tiles[i]->xPos() - ship2->width());
+      }
+    }
+    if (
+      ship2->yPos() + ship2->height() >= tiles[i]->yPos() + tiles[i]->height() &&
+      ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+    {
+      if (
+        ship2->xPos() + ship2->width() > tiles[i]->xPos() &&
+        ship2->xPos() + ship2->width() < tiles[i]->xPos() + tiles[i]->width())
+      {
+        ship2->xPos(tiles[i]->xPos() - ship2->width());
+      }
+    }
+  }
+
   if (gravity2)
   {
-    g_s2 += 0.3f;
-    ship2->yPos(ship2->yPos() + g_s2);
-  }
-  if (jump2 && !gravity2)
-  {
-    j_s2 += 3.0f;
+    j_s2 = 7.0f;
     j_s2 -= 0.3f;
     ship2->yPos(ship2->yPos() - j_s2);
     if (ship2->yPos() < newPos2)
@@ -304,10 +350,9 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       hasPeaked2 = true;
     }
   }
-  if (hasPeaked2)
+  if ((!groundCheck2 || hasPeaked2) && !jump2)
   {
-    g_s2 += 0.3f;
-    ship2->yPos(ship2->yPos() + g_s2);
+    ship2->yPos(ship2->yPos() + 10);
   }
 
   // moving the camera
@@ -315,6 +360,8 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   {
     ship_look.x = ship->xPos();
   }
+  ship_look.y  = ship->yPos();
+  ship2_look.y = ship2->yPos();
   // stopping player exit
   if (ship->xPos() < ship_look.x - 960)
   {
@@ -384,9 +431,9 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 }
 void ASGENetGame::renderMap()
 {
-  for (int i = 0; i < height; i++)
+  for (unsigned long long i = 0; i < height; i++)
   {
-    for (int j = 0; j < width; j++)
+    for (unsigned long long j = 0; j < width; j++)
     {
       if (testMap[static_cast<unsigned int>(j + i * width)] == 1)
       {
@@ -405,12 +452,6 @@ void ASGENetGame::renderMap()
             static_cast<float>(height) * sprite->height());
         }
       }
-      // Logging::DEBUG("loaded tile");
-      tiles[i]->width(32);
-      tiles[i]->height(32);
-      tiles[i]->xPos(tiles[i]->width() * static_cast<float>(i));
-      tiles[i]->yPos(320);
-      tiles[i]->setGlobalZOrder(3);
     }
   }
 }

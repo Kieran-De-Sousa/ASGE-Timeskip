@@ -51,7 +51,6 @@ class Sprite
   std::unique_ptr<ASGE::Renderer> renderer;
 
 
-
   /// Would be const due to not needing to be changed, however this results in compiler errors.
   std::array<float, 2> defaultSpritePosition{ 0, 0 };
   std::array<float, 2> defaultSpriteVariables{ 16, 16 };

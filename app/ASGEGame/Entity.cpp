@@ -13,31 +13,13 @@ bool Entity::entityPlayer()
 {
   player1 = renderer->createUniqueSprite();
 
-  if(!player1->loadTexture("/data/img/mario-luigi-bordered.png"))
+  if(!player1->loadTexture("/data/sprites/player1.png"))
   {
-    Logging::ERRORS("init::Failed to load mario");
+    Logging::ERRORS("init::Failed to load player1");
 
     return false;
   }
 
-  for(int i = 0; i < 4; i ++)
-  {
-    //animation_frames[i].x = 80 + i * 17;
-    animation_frames[i].y = 1;
-  }
-
-  /// animation_index 0 is for idle state, whereas 1, 2, and 3 are for running state
-  player1->srcRect()[0] = animation_frames[animation_index].x;
-  player1->srcRect()[1] = animation_frames[animation_index].y;
-  player1->srcRect()[2] = 16;
-  player1->srcRect()[3] = 32;
-
-  player1->xPos(10);
-  player1->yPos(175);
-  player1->width(16);
-  player1->height(32);
-  player1->setGlobalZOrder(2);
-  player1->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
   return true;
 }

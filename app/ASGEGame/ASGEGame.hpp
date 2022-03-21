@@ -30,6 +30,13 @@ class ASGENetGame : public ASGE::OGLGame
 
   bool initMap();
   void renderMap();
+  bool initSprites();
+
+  ObjRect animation_frames[5];
+  unsigned int animation_index = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer = 0.0f;
+  enum entityState{IDLE, RUNNING, JUMPING, ATTACKING};
 
  private:
   SoLoud::Soloud audio_engine;
@@ -44,7 +51,9 @@ class ASGENetGame : public ASGE::OGLGame
   tmx::Vector2<float>exitPos;
 
   std::unique_ptr<Entity> player1;
+  std::unique_ptr<Entity>player2;
   bool player1Spawned;
+  bool player2Spawned;
 
   // Font
   const ASGE::Font* game_font = nullptr;

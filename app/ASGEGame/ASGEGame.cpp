@@ -17,11 +17,14 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   ship = renderer->createUniqueSprite();
   ship->loadTexture("/data/sprites/player_ship.png");
 
+
+
   camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55 }).setScale(1.5);
   camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({ 960, 55 }).setScale(1.5);
 
   initMap();
   initAudio();
+  initSprites();
 
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
@@ -146,6 +149,46 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   //  renderer->render(camera_two_label);
 
   renderMap();
+}
+bool ASGENetGame::initSprites()
+{
+  std::string filename = "data/sprite/player1.png";
+
+  if(player1->initialiseSprite(filename) == true)
+  {
+    auto sprite = player1->getSprite();
+
+    sprite->srcRect()[0] = 0;
+    sprite->srcRect()[1] = 0;
+    sprite->srcRect()[2] = 32;
+    sprite->srcRect()[3] = 32;
+
+    sprite->xPos(10);
+    sprite->yPos(175);
+    sprite->width(32);
+    sprite->height(32);
+    sprite->setGlobalZOrder(2);
+    sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  }
+  /*
+  if(player1->initialiseSprite(filename) == true)
+  {
+    auto sprite = player1->getSprite();
+
+    sprite->srcRect()[0] = 0;
+    sprite->srcRect()[1] = 0;
+    sprite->srcRect()[2] = 32;
+    sprite->srcRect()[3] = 32;
+
+    sprite->xPos(10);
+    sprite->yPos(175);
+    sprite->width(32);
+    sprite->height(32);
+    sprite->setGlobalZOrder(2);
+    sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  }
+   */
+  return true;
 }
 
 bool ASGENetGame::initMap()

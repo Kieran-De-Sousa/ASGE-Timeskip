@@ -41,6 +41,8 @@ class Entity : public Sprite
 
   virtual void update (const ASGE::GameTime& us);
   bool entityPlayer();
+  bool initSprite(std::string& filename, int index);
+
 
  private:
   int entityHealth;
@@ -48,10 +50,7 @@ class Entity : public Sprite
 
   std::unique_ptr<ASGE::Sprite> player1;
 
-  ObjRect animation_frames[4];
-  unsigned int animation_index = 0;
-  const float ANIMATION_FRAME_RATE = 0.1f;
-  float animation_timer = 0.0f;
-  enum entityState{IDLE, RUNNING, JUMPING, ATTACKING};
+  Sprite sprites[5];
+
 };
 #endif // ASGEGAME_ENTITY_H

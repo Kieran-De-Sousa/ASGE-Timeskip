@@ -6,11 +6,13 @@ Sprite::~Sprite() {}
 bool Sprite::initialiseSprite(std::string& filename)
 {
   sprite = renderer->createUniqueSprite();
+
   if (!sprite->loadTexture("data/sprite/Player1.png"))
   {
     Logging::WARN("Could not load file: " + filename);
     return false;
   }
+
   /**
    * @details Sets default values for sprite initialisation
    */
@@ -18,10 +20,9 @@ bool Sprite::initialiseSprite(std::string& filename)
   setSpriteVariables(defaultSpriteVariables[0], defaultSpriteVariables[1], defaultZOrder);
   sprite->scale(1);
 
-
-
   return true;
 }
+
 ASGE::Sprite* Sprite::getSprite()
 {
   return sprite.get();

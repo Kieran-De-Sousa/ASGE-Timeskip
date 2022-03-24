@@ -4,6 +4,7 @@
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 #include <map>
+#include <vector>
 
 #include <soloud.h>
 #include <soloud_wav.h>
@@ -13,6 +14,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Sprite.h"
+#include "Timer.h"
 
 class ASGENetGame : public ASGE::OGLGame
 {
@@ -52,6 +54,9 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Sprite> testSprite;
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
+  std::unique_ptr<Timer> testTimer;
+
+  std::vector<std::unique_ptr<Sprite>> sprites;
 
   //  /// TILED - TILEMAP VECTORS
   //  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;

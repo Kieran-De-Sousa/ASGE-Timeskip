@@ -1,8 +1,5 @@
 #include "Timer.h"
 
-/// Constructor w/Param
-Timer::Timer(float& timerDuration) : timerLength(timerDuration) {}
-
 void Timer::startTimer()
 {
   active = true;

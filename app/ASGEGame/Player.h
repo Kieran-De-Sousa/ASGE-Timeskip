@@ -1,11 +1,15 @@
 #ifndef ASGEGAME_PLAYER_H
 #define ASGEGAME_PLAYER_H
 
+/// Game Engine
 #include <Engine/Logger.hpp>
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
+/// Base Class
 #include "Entity.h"
+
+/// Helper Classes
 #include "Timer.h"
 
 /**
@@ -31,12 +35,14 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
+  virtual void update() override = 0;
+
   /// SETTER & GETTER FUNCTIONS
   // Player ID
-  void setPlayerID(int id);
-  [[nodiscard]] int getPlayerID() const;
+  void setPlayerID(const int& id) { playerID = id; };
+  [[nodiscard]] int getPlayerID() const { return playerID; };
 
- private:
+ protected:
   // ID
   int playerID = 0;
   // Timers

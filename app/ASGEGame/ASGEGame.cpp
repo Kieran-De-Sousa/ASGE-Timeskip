@@ -25,8 +25,11 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
   testSprite = std::make_unique<Sprite>(*renderer);
+  //  testSprite->initialiseSprite("/data/sprites/player_ship.png");
+  //  sprites.emplace_back(testSprite.get());
   testEntity = std::make_unique<Entity>(*renderer);
   testPlayer = std::make_unique<Player>(*renderer);
+  testTimer  = std::make_unique<Timer>();
 }
 
 void ASGENetGame::initAudio()
@@ -87,6 +90,7 @@ void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 {
   Game::fixedUpdate(us);
+  //  std::cout << testTimer->getTimerStatus();
 }
 
 /**
@@ -143,4 +147,9 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   renderer->setProjectionMatrix(0, 0, 1920, 1080);
   renderer->render(camera_one_label);
   renderer->render(camera_two_label);
+
+  //  for (auto& sprite : sprites)
+  //  {
+  //    renderer->render(*sprite->getSprite());
+  //  }
 }

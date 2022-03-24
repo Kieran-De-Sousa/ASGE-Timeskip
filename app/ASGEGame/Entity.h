@@ -1,10 +1,12 @@
 #ifndef ASGEGAME_ENTITY_H
 #define ASGEGAME_ENTITY_H
 
+/// Game Engine
 #include <Engine/Logger.hpp>
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
+/// Base Class
 #include "Sprite.h"
 
 /**
@@ -28,18 +30,20 @@ class Entity : public Sprite
    * @param rendererRef
    * @note Possibly unneeded, however the option is presented
    */
-  explicit Entity(ASGE::Renderer& rendererRef);
+  explicit Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef){};
   ~Entity() override = default;
+
+  virtual void update() override = 0;
 
   /// SETTER & GETTER FUNCTIONS
   // Health
-  void setHealth(int health);
-  int getHealth();
+  void setHealth(int health) { entityHealth = health; };
+  [[nodiscard]] int getHealth() const { return entityHealth; }
   // Attack
-  void setAttack(int attack);
-  [[nodiscard]] int getAttack() const;
+  void setAttack(int attack) { entityAttack = attack; };
+  [[nodiscard]] int getAttack() const { return entityAttack; };
 
- private:
+ protected:
   int entityHealth = 0;
   int entityAttack = 0;
 };

@@ -7,14 +7,3 @@ Player::Player(ASGE::Renderer& rendererRef, int id) :
 }
 /// Default Constructor
 Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef), powerUpTimer(powerUpDuration) {}
-
-/// SETTER & GETTER FUNCTIONS
-// Player ID
-void Player::setPlayerID(int id)
-{
-  playerID = id;
-}
-int Player::getPlayerID() const
-{
-  return playerID;
-}

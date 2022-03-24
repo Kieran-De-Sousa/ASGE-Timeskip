@@ -1,6 +1,7 @@
 #ifndef ASGEGAME_TIMER_H
 #define ASGEGAME_TIMER_H
 
+/// Game Engine
 #include <Engine/Logger.hpp>
 #include <Engine/OGLGame.hpp>
 
@@ -17,7 +18,7 @@ class Timer
    * @details Timer objects instantiate with their duration already set
    * @param timerDuration
    */
-  explicit Timer(float& timerDuration);
+  explicit Timer(float& timerDuration) : timerLength(timerDuration){};
   /**
    * @brief Default constructor
    * @details Use when duration length of timer is unknown during instantiation

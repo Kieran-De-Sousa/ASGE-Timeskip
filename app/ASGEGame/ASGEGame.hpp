@@ -14,6 +14,13 @@
 #include "Player.h"
 #include "Sprite.h"
 
+struct ObjRect
+{
+  //object rectangle
+
+  float x, y, w, h;
+};
+
 class ASGENetGame : public ASGE::OGLGame
 {
  public:
@@ -73,6 +80,38 @@ class ASGENetGame : public ASGE::OGLGame
 
   /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
+<<<<<<< Updated upstream
   std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
   tmx::Map map;
+=======
+  //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
+  //  tmx::Map map;
+  bool gravity     = true;
+  bool hasPeaked   = false;
+  bool jump        = false;
+  bool groundCheck = false;
+  float newPos     = 0;
+  float g_s = 0, j_s = 0;
+  unsigned long long width = 16, height = 10;
+  std::vector<int> testMap = {
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  };
+
+  bool gravity2     = true;
+  bool hasPeaked2   = false;
+  bool jump2        = false;
+  bool groundCheck2 = false;
+  float newPos2     = 0;
+  float g_s2 = 0, j_s2 = 0;
+
+  ObjRect animation_frames[5];
+  float animation_index = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer = 0.0f;
+  int animationState = IDLE;
+>>>>>>> Stashed changes
 };

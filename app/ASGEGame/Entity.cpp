@@ -35,6 +35,18 @@ int Entity::getHealth()
 {
   return entityHealth;
 }
+/*
+// get state
+int Entity::getState()
+{
+  return entityState;
+}
+//set state
+void Entity::setState(int state)
+{
+  entityState = state;
+}
+ */
 // Attack
 void Entity::setAttack(int attack)
 {

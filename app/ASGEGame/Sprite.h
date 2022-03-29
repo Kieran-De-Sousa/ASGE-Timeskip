@@ -10,13 +10,6 @@
  * @details
  * @author Kieran
  */
-
-struct ObjRect
-{
-  // object rectangle
-  float x, y, w, h;
-};
-
 class Sprite
 {
  public:
@@ -26,7 +19,7 @@ class Sprite
    * @param rendererRef Required for all objects using ASGE Sprites
    */
   explicit Sprite(ASGE::Renderer& rendererRef);
-  virtual ~Sprite();
+  virtual ~Sprite() = default;
   /**
    * @details Pass filename in std::string to initialise a ASGE sprite with default values
    * @see setPosition
@@ -42,14 +35,10 @@ class Sprite
   void setPosition(float x, float y);
   void setSpriteVariables(float width, float height, int16_t z_order);
 
-
- protected:
-  /**
-   * Can only be used if inherited from class or are class
-   * */
+ private:
   std::unique_ptr<ASGE::Sprite> sprite;
+  /// CAN BE REGULAR POINTER
   std::unique_ptr<ASGE::Renderer> renderer;
-
 
   /// Would be const due to not needing to be changed, however this results in compiler errors.
   std::array<float, 2> defaultSpritePosition{ 0, 0 };

@@ -7,6 +7,10 @@
 
 #include "Sprite.h"
 
+#define IDLE      0
+#define RUNNING   1
+#define JUMPING   2
+
 /**
  * @brief Shared class for player-controlled and non player-controlled objects
  * @details Entity objects (and inheriting classes) possess health, attack, [MORE ATTRIBUTES HERE]
@@ -29,28 +33,24 @@ class Entity : public Sprite
    * @note Possibly unneeded, however the option is presented
    */
   explicit Entity(ASGE::Renderer& rendererRef);
-  ~Entity() override;
+  ~Entity() override = default;
 
   /// SETTER & GETTER FUNCTIONS
   // Health
   void setHealth(int health);
   int getHealth();
+
+  //Animation
+  //int getState();
+  //void setSate(int state);
+
   // Attack
   void setAttack(int attack);
   [[nodiscard]] int getAttack() const;
 
-  virtual void update (const ASGE::GameTime& us);
-  bool entityPlayer();
-  bool initSprite(std::string& filename, int index);
-
-
  private:
-  int entityHealth;
-  int entityAttack;
-
-  std::unique_ptr<ASGE::Sprite> player1;
-
-  Sprite sprites[5];
-
+  int entityHealth = 0;
+  int entityAttack = 0;
+  //int entityState = IDLE;
 };
 #endif // ASGEGAME_ENTITY_H

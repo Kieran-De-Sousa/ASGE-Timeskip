@@ -14,6 +14,13 @@
 #include "Player.h"
 #include "Sprite.h"
 
+struct ObjRect
+{
+  //object rectangle
+
+  float x, y, w, h;
+};
+
 class ASGENetGame : public ASGE::OGLGame
 {
  public:
@@ -27,16 +34,8 @@ class ASGENetGame : public ASGE::OGLGame
   void update(const ASGE::GameTime& us) override;
   void render(const ASGE::GameTime& us) override;
   void fixedUpdate(const ASGE::GameTime& us) override;
-
-  bool initMap();
   void renderMap();
-  bool initSprites();
-
-  ObjRect animation_frames[5];
-  unsigned int animation_index = 0;
-  const float ANIMATION_FRAME_RATE = 0.1f;
-  float animation_timer = 0.0f;
-  enum entityState{IDLE, RUNNING, JUMPING, ATTACKING};
+  void Camera();
 
  private:
   SoLoud::Soloud audio_engine;
@@ -45,15 +44,8 @@ class ASGENetGame : public ASGE::OGLGame
   std::map<int, bool> keymap{};
   std::map<int, ASGE::GamePadData> gamepad_state{};
   std::unique_ptr<ASGE::Sprite> ship{ nullptr };
+  std::unique_ptr<ASGE::Sprite> ship2{ nullptr };
   ASGE::Point2D velocity{ 0, 0 };
-
-  tmx::Vector2<float>spawnPos;
-  tmx::Vector2<float>exitPos;
-
-  std::unique_ptr<Entity> player1;
-  std::unique_ptr<Entity>player2;
-  bool player1Spawned;
-  bool player2Spawned;
 
   // Font
   const ASGE::Font* game_font = nullptr;
@@ -61,9 +53,12 @@ class ASGENetGame : public ASGE::OGLGame
   ASGE::Text camera_two_label{};
 
   // some cameras
-  ASGE::Camera camera_one{ 960, 1080 };
-  ASGE::Camera camera_two{ 960, 1080 };
+  ASGE::Camera camera_one{ 1920, 560 };
+  ASGE::Camera camera_two{ 1920, 560 };
   void initAudio();
+
+  ASGE::Point2D ship_look{ 0, 120 };
+  ASGE::Point2D ship2_look{ 0, 120 };
 
   /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
   /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
@@ -71,8 +66,43 @@ class ASGENetGame : public ASGE::OGLGame
   std::unique_ptr<Entity> testEntity;
   std::unique_ptr<Player> testPlayer;
 
-  /// TILED - TILEMAP VECTORS
+  std::unique_ptr<Entity> player1;
+
+  //  /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
-  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
-  tmx::Map map;
+  //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
+  //  tmx::Map map;
+  bool gravity     = true;
+  bool hasPeaked   = false;
+  bool jump        = false;
+  bool groundCheck = false;
+  float newPos     = 0;
+  float g_s = 0, j_s = 0;
+  unsigned long long width = 16, height = 10;
+  std::vector<int> testMap = {
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  };
+
+  bool gravity2     = true;
+  bool hasPeaked2   = false;
+  bool jump2        = false;
+  bool groundCheck2 = false;
+  float newPos2     = 0;
+  float g_s2 = 0, j_s2 = 0;
+
+  ObjRect animation_frames[5];
+  float animation_index = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer = 0.0f;
+
+  ObjRect animation_frames2[5];
+  float animation_index2 = 0;
+  const float ANIMATION_FRAME_RATE2 = 0.1f;
+  float animation_timer2 = 0.0f;
+  int player1State = IDLE;
+  int player2State = IDLE;
 };

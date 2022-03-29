@@ -6,6 +6,7 @@
 #include <Engine/Sprite.hpp>
 
 #include "Entity.h"
+#include "Timer.h"
 
 /**
  * @brief Player class shared for both players
@@ -28,14 +29,23 @@ class Player : public Entity
    * @note Possibly unneeded, however the option is presented
    */
   explicit Player(ASGE::Renderer& rendererRef);
-  ~Player() override;
+  ~Player() override = default;
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
   void setPlayerID(int id);
   [[nodiscard]] int getPlayerID() const;
+  ASGE::Point2D getVelocity();
+  void setVelocity(float _x, float _y);
+  void updatePlayer();
 
  private:
-  int playerID;
+  // ID
+  int playerID = 0;
+  // Timers
+  Timer powerUpTimer;
+  float powerUpDuration = 20;
+
+  ASGE::Point2D velocity = { 0, 0 };
 };
 #endif // ASGEGAME_PLAYER_H

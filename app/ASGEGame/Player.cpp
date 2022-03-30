@@ -3,7 +3,7 @@
 
 /// Constructor w/Param
 Player::Player(ASGE::Renderer& rendererRef, int id) :
-  Entity(rendererRef), playerID(id), powerUpTimer(powerUpDuration)
+  Entity(rendererRef), playerID(static_cast<PlayerID>(id)), powerUpTimer(powerUpDuration)
 {
 }
 /// Default Constructor

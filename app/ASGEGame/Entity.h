@@ -37,7 +37,7 @@ class Entity : public Sprite
   explicit Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef){};
   ~Entity() override = default;
 
-  virtual void update() override = 0;
+  virtual void update() override{};
 
   /// SETTER & GETTER FUNCTIONS
   // Health

@@ -22,7 +22,7 @@ class Sprite
   explicit Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef){};
   virtual ~Sprite() = default;
 
-  virtual void update() = 0;
+  virtual void update(){};
 
   /**
    * @brief Initialise sprite with default values

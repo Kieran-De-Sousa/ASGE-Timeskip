@@ -36,19 +36,25 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
-  virtual void update() override = 0;
+  virtual void update() override{};
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
-  void setPlayerID(const int& id) { playerID = id; };
-  [[nodiscard]] int getPlayerID() const { return playerID; };
+  void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); };
+  [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); };
   ASGE::Point2D getVelocity();
   void setVelocity(float _x, float _y);
   void updatePlayer();
 
  protected:
   // ID
-  int playerID = 0;
+  enum class PlayerID : int
+  {
+    UNKNOWN  = 0,
+    PLAYER_1 = 1,
+    PLAYER_2 = 2
+  };
+  PlayerID playerID = PlayerID::UNKNOWN;
   // Timers
   Timer powerUpTimer;
   float powerUpDuration  = 20;

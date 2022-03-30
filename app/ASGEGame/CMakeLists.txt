@@ -23,7 +23,7 @@ set(GAME_SOURCES
         Scene.cpp
         Scene.h
         SceneManager.h
-        SceneManager.cpp Bullet.cpp Bullet.h GameComponent.cpp GameComponent.h)
+        SceneManager.cpp Bullet.cpp Bullet.h GameComponent.cpp GameComponent.h SceneMainMenu.cpp SceneMainMenu.h)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

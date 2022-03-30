@@ -2,15 +2,25 @@
 #define ASGEGAME_SCENEMANAGER_H
 
 #include "Scene.h"
-#include <memory>
 #include <vector>
 
-class SceneManager : public std::enable_shared_from_this<SceneManager>
+class SceneManager
 {
  public:
-  void createScene(std::shared_ptr<Scene> scene);
+  explicit SceneManager(std::shared_ptr<Scene> const& scene);
+
+  SceneManager()          = default;
+  virtual ~SceneManager() = default;
+
+  void setScene(const std::shared_ptr<Scene>& scene);
+  Scene* getCurrentScene();
+
+  void update();
+  void fixedupdate();
+  void render();
 
  protected:
+  std::shared_ptr<Scene> currentScene;
   std::vector<std::shared_ptr<Scene>> scenes;
 };
 

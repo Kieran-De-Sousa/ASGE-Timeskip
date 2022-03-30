@@ -1,16 +1,19 @@
 #ifndef ASGEGAME_SCENE_H
 #define ASGEGAME_SCENE_H
+
 #include <memory>
-class SceneManager; // Forward Declaring
-class Scene
+
+class Scene : public std::enable_shared_from_this<Scene>
 {
  public:
-  void setup(std::shared_ptr<SceneManager> sm);
+  Scene()          = default;
+  virtual ~Scene() = default;
 
-  std::shared_ptr<SceneManager> getSceneManager();
+  virtual bool init(){};
 
- protected:
-  std::weak_ptr<SceneManager> manager;
+  virtual void update(){};
+  virtual void fixedupdate(){};
+  virtual void render(){};
 };
 
 #endif // ASGEGAME_SCENE_H

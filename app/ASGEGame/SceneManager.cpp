@@ -1,10 +1,30 @@
 #include "SceneManager.h"
 
-void SceneManager::createScene(std::shared_ptr<Scene> scene)
+SceneManager::SceneManager(const std::shared_ptr<Scene>& scene)
 {
-  if (scene)
-  {
-    scenes.push_back(scene);
-    scene->setup(shared_from_this());
-  }
+  setScene(scene);
+}
+
+void SceneManager::setScene(const std::shared_ptr<Scene>& scene)
+{
+  currentScene = scene;
+  scene->init();
+}
+
+Scene* SceneManager::getCurrentScene()
+{
+  return currentScene.get();
+}
+
+void SceneManager::update()
+{
+  currentScene->update();
+}
+void SceneManager::render()
+{
+  currentScene->render();
+}
+void SceneManager::fixedupdate()
+{
+  currentScene->fixedupdate();
 }

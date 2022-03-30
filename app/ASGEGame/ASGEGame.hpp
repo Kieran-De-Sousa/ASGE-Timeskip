@@ -16,6 +16,10 @@
 #include "Sprite.h"
 #include "Timer.h"
 
+#include "Scene.h"
+#include "SceneMainMenu.h"
+#include "SceneManager.h"
+
 #define MAINMENU
 #define PAUSE
 #define NEXTLEVEL
@@ -78,6 +82,8 @@ class ASGENetGame : public ASGE::OGLGame
   std::vector<std::unique_ptr<Sprite>> sprites;
 
   std::unique_ptr<Entity> player1;
+
+  std::unique_ptr<SceneManager> scene_manager;
 
   //  /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;

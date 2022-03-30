@@ -28,6 +28,8 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   }
   */
 
+  scene_manager = std::make_unique<SceneManager>(std::make_shared<SceneMainMenu>());
+
   // running animation
   ship = renderer->createUniqueSprite();
   ship->loadTexture("/data/sprites/Player1Animation.png");

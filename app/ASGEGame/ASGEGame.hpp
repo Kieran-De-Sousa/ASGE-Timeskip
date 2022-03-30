@@ -14,6 +14,12 @@
 #include "Player.h"
 #include "Sprite.h"
 
+#define MAINMENU
+#define PAUSE
+#define NEXTLEVEL
+#define WIN
+#define LOSE
+
 struct ObjRect
 {
   //object rectangle
@@ -94,6 +100,7 @@ class ASGENetGame : public ASGE::OGLGame
   float newPos2     = 0;
   float g_s2 = 0, j_s2 = 0;
 
+  //Animation stuff
   ObjRect animation_frames[5];
   int animation_index1 = 0;
   int animation_index2 = 0;

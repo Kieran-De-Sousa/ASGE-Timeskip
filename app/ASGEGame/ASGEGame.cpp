@@ -342,7 +342,6 @@ void ASGENetGame::update(const ASGE::GameTime& us)
         ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
         ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
       {
-        //std::cout << "ass phat";
         groundCheck2 = true;
         ship2->yPos(tiles[i]->yPos() - ship2->height());
       }
@@ -435,26 +434,6 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   camera_two.lookAt(ship2_look);
   camera_two.setZoom(0.9F);
 
-  /*
-  // animation speed
-  if (player1State == RUNNING || player2State == RUNNING)
-  {
-    animation_timer += static_cast<float>(us.deltaInSecs());
-
-    if (animation_timer > ANIMATION_FRAME_RATE)
-    {
-      animation_index ++;
-
-      if(animation_index == 5) animation_index = 1;
-
-      animation_timer = 0.0f;
-    }
-  }
-  else
-  {
-    animation_index = 0;
-  }
-   */
 }
 //  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
 //  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
@@ -494,6 +473,7 @@ void ASGENetGame::render(const ASGE::GameTime& us
   renderer->render(*ship);
   renderer->render(*ship2);
 
+  //Makes sure the frames don't flick through too quickly, resets if not running or once the frames have finished
   animation_timer += static_cast<float>(us.deltaInSecs());
   if (animation_timer > ANIMATION_FRAME_RATE)
   {
@@ -533,8 +513,6 @@ void ASGENetGame::render(const ASGE::GameTime& us
 
     animation_timer = 0.0f;
   }
-
-
 
   // reset the view and don't use a camera, useful for HUD
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });

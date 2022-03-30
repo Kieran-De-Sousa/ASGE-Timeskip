@@ -452,7 +452,7 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 bool ASGENetGame::renderMap()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2 (1).tmx"))
+  if (!tile_map.open("/data/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;
@@ -510,7 +510,7 @@ bool ASGENetGame::renderMap()
 bool ASGENetGame::renderBackground()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2 (1).tmx"))
+  if (!tile_map.open("/data/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;

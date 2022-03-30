@@ -9,6 +9,10 @@
 /// Base Class
 #include "Sprite.h"
 
+#define IDLE 0
+#define RUNNING 1
+#define JUMPING 2
+
 /**
  * @brief Shared class for player-controlled and non player-controlled objects
  * @details Entity objects (and inheriting classes) possess health, attack, [MORE ATTRIBUTES HERE]
@@ -39,6 +43,9 @@ class Entity : public Sprite
   // Health
   void setHealth(int health) { entityHealth = health; };
   [[nodiscard]] int getHealth() const { return entityHealth; }
+  // Animation
+  // int getState();
+  // void setSate(int state);
   // Attack
   void setAttack(int attack) { entityAttack = attack; };
   [[nodiscard]] int getAttack() const { return entityAttack; };
@@ -46,5 +53,6 @@ class Entity : public Sprite
  protected:
   int entityHealth = 0;
   int entityAttack = 0;
+  // int entityState = IDLE;
 };
 #endif // ASGEGAME_ENTITY_H

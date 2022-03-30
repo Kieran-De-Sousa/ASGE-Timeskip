@@ -8,6 +8,7 @@
 
 /// Base Class
 #include "Entity.h"
+#include "Timer.h"
 
 /// Helper Classes
 #include "Timer.h"
@@ -41,12 +42,16 @@ class Player : public Entity
   // Player ID
   void setPlayerID(const int& id) { playerID = id; };
   [[nodiscard]] int getPlayerID() const { return playerID; };
+  ASGE::Point2D getVelocity();
+  void setVelocity(float _x, float _y);
+  void updatePlayer();
 
  protected:
   // ID
   int playerID = 0;
   // Timers
   Timer powerUpTimer;
-  float powerUpDuration = 20;
+  float powerUpDuration  = 20;
+  ASGE::Point2D velocity = { 0, 0 };
 };
 #endif // ASGEGAME_PLAYER_H

@@ -30,7 +30,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
 
   //running animation
   ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/Player1Run.png");
+  ship->loadTexture("/data/sprites/Player1Animation.png");
   ship->width(64);
   ship->height(64);
   ship->xPos(256);
@@ -44,25 +44,11 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   ship->setGlobalZOrder(2);
   ship->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
-  //player1 frame
-  ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/Player1.png");
-  ship->width(64);
-  ship->height(64);
-  ship->xPos(256);
-  ship->yPos(128);
 
-  //jumping frame
-  ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/Player1Jump.png");
-  ship->width(64);
-  ship->height(64);
-  ship->xPos(256);
-  ship->yPos(128);
 
   //running animation
   ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Player2Run.png");
+  ship2->loadTexture("/data/sprites/Player2Animation.png");
   ship2->width(64);
   ship2->height(64);
   ship2->xPos(256);
@@ -75,22 +61,6 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
 
   ship2->setGlobalZOrder(2);
   ship2->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-  //player1 frame
-  ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Player2.png");
-  ship2->width(64);
-  ship2->height(64);
-  ship2->xPos(256);
-  ship2->yPos(128);
-
-  //jumping frame
-  ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Player2Jump.png");
-  ship2->width(64);
-  ship2->height(64);
-  ship2->xPos(256);
-  ship2->yPos(128);
 
 
   renderMap();
@@ -178,6 +148,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   {
+
     if (((gamepad.buttons[0]) != 0u) && !gravity && groundCheck)
     {
       j_s = 3.0f;
@@ -187,7 +158,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       jump        = true;
       groundCheck = false;
 
-      //player1State = JUMPING;
+      player1State = JUMPING;
     }
     if (abs(gamepad.axis[0]) > 0.1)
     {
@@ -195,22 +166,26 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     }
   }
 
+  player1State = IDLE;
+  player2State = IDLE;
 
   if (keymap[ASGE::KEYS::KEY_A])
   {
     ship->xPos(ship->xPos() - 5);
     player1State = RUNNING;
+    ship->setFlipFlags(ASGE::Sprite::FLIP_X);
   }
   if (keymap[ASGE::KEYS::KEY_D])
   {
     ship->xPos(ship->xPos() + 5);
     player1State = RUNNING;
+    ship->setFlipFlags(ASGE::Sprite::NORMAL);
   }
-  if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
+  if (keymap[ASGE::KEYS::KEY_W])
   {
     // Logging::DEBUG("jump");
     jump        = true;
-    groundCheck = false;
+    //groundCheck = false;
     j_s         = 3.0f;
     g_s         = 0;
     Logging::DEBUG("jump");
@@ -227,16 +202,18 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   {
     ship2->xPos(ship2->xPos() - 5);
     player2State = RUNNING;
+    ship2->setFlipFlags(ASGE::Sprite::FLIP_X);
   }
   if (keymap[ASGE::KEYS::KEY_RIGHT])
   {
     ship2->xPos(ship2->xPos() + 5);
     player2State = RUNNING;
+    ship2->setFlipFlags(ASGE::Sprite::NORMAL);
   }
-  if (keymap[ASGE::KEYS::KEY_UP] && groundCheck2)
+  if (keymap[ASGE::KEYS::KEY_UP])
   {
     jump2        = true;
-    groundCheck2 = false;
+    //groundCheck2 = false;
     j_s2         = 3.0f;
     g_s2         = 0;
     Logging::DEBUG("jump");
@@ -365,7 +342,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
         ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
         ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
       {
-        std::cout << "ass phat";
+        //std::cout << "ass phat";
         groundCheck2 = true;
         ship2->yPos(tiles[i]->yPos() - ship2->height());
       }
@@ -458,6 +435,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   camera_two.lookAt(ship2_look);
   camera_two.setZoom(0.9F);
 
+  /*
   // animation speed
   if (player1State == RUNNING || player2State == RUNNING)
   {
@@ -476,6 +454,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   {
     animation_index = 0;
   }
+   */
 }
 //  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
 //  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
@@ -484,7 +463,8 @@ void ASGENetGame::update(const ASGE::GameTime& us)
  * @brief Render your game and its scenes here.
  * @param us
  */
-void ASGENetGame::render(const ASGE::GameTime& /*us*/)
+void ASGENetGame::render(const ASGE::GameTime& us
+                         )
 {
   // example of split screen. just remove viewports and use
   // a single camera if you don't require the use of split screen
@@ -514,25 +494,46 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   renderer->render(*ship);
   renderer->render(*ship2);
 
-  //player1
-  if (player1State == RUNNING)
+  animation_timer += static_cast<float>(us.deltaInSecs());
+  if (animation_timer > ANIMATION_FRAME_RATE)
   {
-    animation_index += 1;
+    //player1
+    if (player1State == RUNNING)
+    {
+      animation_index1 += 1;
+
+      if(animation_index1 > 3) animation_index1 = 0;
+    }
+    else if(player1State == IDLE)
+    {
+      animation_index1 = 4;
+    }
+    else if(player1State == JUMPING)
+    {
+      animation_index1 = 5;
+    }
+    //gets the frame according to the animation index
+    ship->srcRect()[0] = static_cast<float>(animation_index1) * 32;
+
+    if (player2State == RUNNING)
+    {
+      animation_index2 += 1;
+
+      if(animation_index2 > 3) animation_index2 = 0;
+    }
+    else if(player2State == IDLE)
+    {
+      animation_index2 = 4;
+    }
+    else if(player2State == JUMPING)
+    {
+      animation_index2 = 5;
+    }
+    ship2->srcRect()[0] = static_cast<float>(animation_index2) * 32;
+
+    animation_timer = 0.0f;
   }
 
-  if(animation_index > 5.0) animation_index = 0;
-
-  ship->srcRect()[0] = animation_index * 32;
-
-  //player2
-  if (player2State == RUNNING)
-  {
-    animation_index += 1;
-  }
-
-  if(animation_index > 5.0) animation_index = 0;
-
-  ship2->srcRect()[0] = animation_index * 32;
 
 
   // reset the view and don't use a camera, useful for HUD

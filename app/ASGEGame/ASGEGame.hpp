@@ -95,14 +95,11 @@ class ASGENetGame : public ASGE::OGLGame
   float g_s2 = 0, j_s2 = 0;
 
   ObjRect animation_frames[5];
-  float animation_index = 0;
+  int animation_index1 = 0;
+  int animation_index2 = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer = 0.0f;
 
-  ObjRect animation_frames2[5];
-  float animation_index2 = 0;
-  const float ANIMATION_FRAME_RATE2 = 0.1f;
-  float animation_timer2 = 0.0f;
   int player1State = IDLE;
   int player2State = IDLE;
 };

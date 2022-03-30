@@ -11,26 +11,30 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   OGLGame(settings), game_font(renderer->loadFont("/data/fonts/machine-gunk.ttf", 42, 5))
 {
   renderer->setBaseResolution(1920, 1080, ASGE::Resolution::Policy::MAINTAIN);
+  renderer->setClearColour({ 0, 0, 0 });
   key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   inputs->use_threads = false;
 
   ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/Black.png");
-  ship->width(64);
-  ship->height(64);
-  ship->xPos(256);
-  ship->yPos(128);
+  ship->loadTexture("/data/sprites/player1.png");
+  ship->width(32);
+  ship->height(32);
+  ship->xPos(64);
+  ship->yPos(240);
+  ship->setGlobalZOrder(3);
 
   ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Black.png");
-  ship2->width(64);
-  ship2->height(64);
-  ship2->xPos(256);
-  ship2->yPos(128);
-
+  ship2->loadTexture("/data/sprites/Player2.png");
+  ship2->width(32);
+  ship2->height(32);
+  ship2->xPos(64);
+  ship2->yPos(240);
+  ship2->setGlobalZOrder(3);
+  camera_one.lookAt(ship_look);
+  camera_two.lookAt(ship2_look);
   renderMap();
-  Camera();
-  camera_two.lookAt({ ship->xPos(), ship->yPos() + 100 });
+  renderBackground();
+  // camera_two.lookAt({ ship->xPos(), ship->yPos() + 100 });
   //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
   //  }).setScale(1.5); camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({
   //  960, 55 }).setScale(1.5);
@@ -118,7 +122,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       j_s = 3.0f;
       g_s = 0;
       Logging::DEBUG("jump");
-      newPos      = ship->yPos() - 200;
+      newPos      = ship->yPos() - 96;
       jump        = true;
       groundCheck = false;
     }
@@ -127,14 +131,19 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       ship->xPos(ship->xPos() + 5 * gamepad.axis[0]);
     }
   }
-
+  if (keymap[ASGE::KEYS::KEY_SPACE])
+  {
+    DebugInfo();
+  }
   if (keymap[ASGE::KEYS::KEY_A])
   {
     ship->xPos(ship->xPos() - 5);
+    ship->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
   }
   if (keymap[ASGE::KEYS::KEY_D])
   {
     ship->xPos(ship->xPos() + 5);
+    ship->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
   }
   if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
   {
@@ -144,7 +153,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     j_s         = 3.0f;
     g_s         = 0;
     Logging::DEBUG("jump");
-    newPos = ship->yPos() - 200;
+    newPos = ship->yPos() - 96;
     jump   = true;
   }
   //  if (keymap[ASGE::KEYS::KEY_S])
@@ -154,10 +163,12 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   if (keymap[ASGE::KEYS::KEY_LEFT])
   {
     ship2->xPos(ship2->xPos() - 5);
+    ship2->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
   }
   if (keymap[ASGE::KEYS::KEY_RIGHT])
   {
     ship2->xPos(ship2->xPos() + 5);
+    ship2->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
   }
   if (keymap[ASGE::KEYS::KEY_UP] && groundCheck2)
   {
@@ -166,7 +177,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     j_s2         = 3.0f;
     g_s2         = 0;
     Logging::DEBUG("jump");
-    newPos2 = ship2->yPos() - 200;
+    newPos2 = ship2->yPos() - 96;
     jump2   = true;
   }
 
@@ -289,7 +300,6 @@ void ASGENetGame::update(const ASGE::GameTime& us)
         ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
         ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
       {
-        std::cout << "ass phat";
         groundCheck2 = true;
         ship2->yPos(tiles[i]->yPos() - ship2->height());
       }
@@ -368,19 +378,19 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     ship->xPos(ship_look.x - 960);
   }
   camera_one.lookAt(ship_look);
-  camera_one.setZoom(0.9F);
+  camera_one.setZoom(2.0F);
 
   if (ship2->xPos() > ship2_look.x)
   {
     ship2_look.x = ship2->xPos();
   }
   // stopping player exit
-  if (ship2->xPos() < ship2_look.x - 960)
+  if (ship2->xPos() < ship2_look.x - 540)
   {
-    ship2->xPos(ship2_look.x - 960);
+    ship2->xPos(ship2_look.x - 540);
   }
   camera_two.lookAt(ship2_look);
-  camera_two.setZoom(0.9F);
+  camera_two.setZoom(2.0F);
 }
 //  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
 //  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
@@ -404,6 +414,11 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
     renderer->render(*tiles[i]);
     // Logging::DEBUG("rendering tiles");
   }
+  for (unsigned int i = 0; i < tilesB.size(); ++i)
+  {
+    renderer->render(*tilesB[i]);
+    // Logging::DEBUG("rendering tiles");
+  }
   renderer->render(*ship);
   renderer->render(*ship2);
 
@@ -414,6 +429,11 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
     renderer->render(*tiles[i]);
+    // Logging::DEBUG("rendering tiles");
+  }
+  for (unsigned int i = 0; i < tilesB.size(); ++i)
+  {
+    renderer->render(*tilesB[i]);
     // Logging::DEBUG("rendering tiles");
   }
   renderer->render(*ship);
@@ -429,35 +449,119 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 
   // renderer->setProjectionMatrix(camera_one.getView());
 }
-void ASGENetGame::renderMap()
+bool ASGENetGame::renderMap()
 {
-  for (unsigned long long i = 0; i < height; i++)
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/PastMap2 (1).tmx"))
   {
-    for (unsigned long long j = 0; j < width; j++)
+    Logging::ERRORS("init::Failed to load map");
+    return false;
+  }
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  /// All collidable objects are checked within the init function as their location is will remain
+  /// the same during gameplay, i.e: they remain static.
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
     {
-      if (testMap[static_cast<unsigned int>(j + i * width)] == 1)
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tiles from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
       {
-        auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
-        if (sprite->loadTexture("data/sprites/Black.png"))
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
         {
-          sprite->width(64);
-          sprite->height(64);
-          sprite->scale(1);
-          sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-          sprite->xPos(
-            static_cast<float>(j) * sprite->width() + 1200 -
-            static_cast<float>(width) * sprite->width());
-          sprite->yPos(
-            static_cast<float>(i) * sprite->height() + 700 -
-            static_cast<float>(height) * sprite->height());
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            /// All contactable objects can be checked within this if statement, currently only
+            /// walls but easily expandable with additional || / or
+            if (tile_layer.getName() == "Ground")
+            {
+              auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
+          }
         }
       }
     }
   }
+  return true;
 }
-
-void ASGENetGame::Camera()
+bool ASGENetGame::renderBackground()
 {
-  camera_one.lookAt(ASGE::Point2D(1920.0f * 0.5F * 0.3F, 1080 * 0.5F * 0.3F));
-  camera_one.setZoom(0.3F);
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/PastMap2 (1).tmx"))
+  {
+    Logging::ERRORS("init::Failed to load map");
+    return false;
+  }
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  /// All collidable objects are checked within the init function as their location is will remain
+  /// the same during gameplay, i.e: they remain static.
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tiles from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        {
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            /// All contactable objects can be checked within this if statement, currently only
+            /// walls but easily expandable with additional || / or
+            auto& sprite = tilesB.emplace_back(renderer->createUniqueSprite());
+            if (sprite->loadTexture(tile->imagePath))
+            {
+              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+              sprite->width(static_cast<float>(tile->imageSize.x));
+              sprite->height(static_cast<float>(tile->imageSize.y));
+
+              sprite->scale(1);
+              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+void ASGENetGame::DebugInfo()
+{
+  Logging::DEBUG(std::to_string(ship_look.x));
 }

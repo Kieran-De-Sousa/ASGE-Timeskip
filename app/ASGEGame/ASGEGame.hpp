@@ -14,9 +14,8 @@
 #include "Player.h"
 #include "Sprite.h"
 
-#define MAINMENU
+#define MAINMENU , level select, quit, play
 #define PAUSE
-#define NEXTLEVEL
 #define WIN
 #define LOSE
 

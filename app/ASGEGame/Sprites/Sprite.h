@@ -19,10 +19,10 @@ class Sprite
    * objects
    * @param rendererRef Required for all objects using ASGE Sprites
    */
-  explicit Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef){};
+  explicit Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
   virtual ~Sprite() = default;
 
-  virtual void update(){};
+  virtual void update() {}
 
   /**
    * @brief Initialise sprite with default values
@@ -49,7 +49,7 @@ class Sprite
 
  protected:
   std::unique_ptr<ASGE::Sprite> sprite;
-  /// CAN BE REGULAR POINTER
+  /// TODO: CAN BE REGULAR POINTER
   std::unique_ptr<ASGE::Renderer> renderer;
 
   const std::vector<float> DEFAULT_SPRITE_POSITION{ 0, 0 };

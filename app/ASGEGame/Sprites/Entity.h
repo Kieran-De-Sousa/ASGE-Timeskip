@@ -23,32 +23,32 @@ class Entity : public Sprite
  public:
   /**
    * @brief Constructor w/Param
-   * @details Use when initialisation variables are required in instantiation,
+   * @details Use when instantiation variables are required in instantiation,
    * @param rendererRef Required for all objects using ASGE Sprites
    * @param health @param attack
    */
-  explicit Entity(ASGE::Renderer& rendererRef, int health, int attack);
+  Entity(ASGE::Renderer& rendererRef, int health, int attack);
   /**
    * @brief Default constructor
    * @details Use when initialisation variables are not required in instantiation
    * @param rendererRef
    * @note Possibly unneeded, however the option is presented
    */
-  explicit Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef){};
+  explicit Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef) {}
   ~Entity() override = default;
 
-  virtual void update() override{};
+  virtual void update() override {}
 
   /// SETTER & GETTER FUNCTIONS
   // Health
-  void setHealth(int health) { entityHealth = health; };
+  void setHealth(int health) { entityHealth = health; }
   [[nodiscard]] int getHealth() const { return entityHealth; }
   // Animation
   // int getState();
   // void setSate(int state);
   // Attack
-  void setAttack(int attack) { entityAttack = attack; };
-  [[nodiscard]] int getAttack() const { return entityAttack; };
+  void setAttack(int attack) { entityAttack = attack; }
+  [[nodiscard]] int getAttack() const { return entityAttack; }
 
  protected:
   int entityHealth = 0;

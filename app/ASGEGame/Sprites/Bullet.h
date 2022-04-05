@@ -7,17 +7,17 @@
 #include <Engine/Sprite.hpp>
 
 /// Base Class
-#include "Sprite.h"
+#include "Sprites/Sprite.h"
 
 class Bullet : public Sprite
 {
  public:
-  explicit Bullet(ASGE::Renderer& rendererRef) : Sprite(rendererRef){};
+  explicit Bullet(ASGE::Renderer& rendererRef) : Sprite(rendererRef) {}
   virtual ~Bullet() override = default;
 
  protected:
  private:
-  int damage = 0;
+  // int damage = 0;
 };
 
 #endif // ASGEGAME_BULLET_H

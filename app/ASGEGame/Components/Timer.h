@@ -18,7 +18,7 @@ class Timer
    * @details Timer objects instantiate with their duration already set
    * @param timerDuration
    */
-  explicit Timer(float& timerDuration) : timerLength(timerDuration){};
+  explicit Timer(float& timerDuration) : timerLength(timerDuration) {}
   /**
    * @brief Default constructor
    * @details Use when duration length of timer is unknown during instantiation

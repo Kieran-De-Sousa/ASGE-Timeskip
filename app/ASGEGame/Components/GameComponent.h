@@ -4,7 +4,7 @@
 class GameComponent
 {
  public:
-  explicit GameComponent(){};
+  explicit GameComponent() = default;
   virtual ~GameComponent() = default;
 
   virtual void update() = 0;

@@ -7,11 +7,11 @@
 #include <Engine/Sprite.hpp>
 
 /// Base Class
+#include "Components/Timer.h"
 #include "Entity.h"
-#include "Timer.h"
 
 /// Helper Classes
-#include "Timer.h"
+#include "Components/Timer.h"
 
 /**
  * @brief Player class shared for both players
@@ -36,12 +36,12 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
-  virtual void update() override{};
+  virtual void update() override {}
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
-  void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); };
-  [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); };
+  void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); }
+  [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); }
 
   ASGE::Point2D getVelocity();
   void setVelocity(float _x, float _y);

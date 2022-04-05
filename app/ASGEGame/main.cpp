@@ -1,4 +1,4 @@
-#include "ASGEGame.hpp"
+#include "Scenes/ASGEGame.hpp"
 #include <Engine/Logger.hpp>
 
 int main(int /*argc*/, char* /*argv*/[])

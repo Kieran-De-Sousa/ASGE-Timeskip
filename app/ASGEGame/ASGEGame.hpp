@@ -14,6 +14,8 @@
 #include "Player.h"
 #include "Sprite.h"
 
+#include "bullet.h"
+
 class ASGENetGame : public ASGE::OGLGame
 {
  public:
@@ -67,7 +69,7 @@ class ASGENetGame : public ASGE::OGLGame
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesB;
   //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
-  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
+  std::unique_ptr<bullet> bullets;
   //  tmx::Map map;
   bool gravity     = true;
   bool hasPeaked   = false;

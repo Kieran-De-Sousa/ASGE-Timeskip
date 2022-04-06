@@ -8,7 +8,7 @@
 #include "Sprite.h"
 #include <cmath>
 
-class bullet : public Sprite
+struct bullet : public ASGE::Sprite
 {
   struct Vector2
   {
@@ -17,6 +17,10 @@ class bullet : public Sprite
     void normalise();
     float magnitude();
   };
+  // Vector2 direction;
+  float speed;
+  std::vector<std::unique_ptr<ASGE::Sprite>> imgSprite;
+  std::vector<Vector2> directions;
 };
 
 #endif // ASGEGAME_BULLET_H

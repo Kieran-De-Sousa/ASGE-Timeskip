@@ -1,7 +1,4 @@
-#include "Timer.h"
-
-/// Constructor w/Param
-Timer::Timer(float& timerDuration) : timerLength(timerDuration) {}
+#include "Components/Timer.h"
 
 void Timer::startTimer()
 {

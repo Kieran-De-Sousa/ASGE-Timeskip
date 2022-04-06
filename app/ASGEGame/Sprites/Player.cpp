@@ -3,21 +3,20 @@
 
 /// Constructor w/Param
 Player::Player(ASGE::Renderer& rendererRef, int id) :
-  Entity(rendererRef), playerID(id), powerUpTimer(powerUpDuration)
+  Entity(rendererRef), playerID(static_cast<PlayerID>(id)), powerUpTimer(powerUpDuration)
 {
 }
 /// Default Constructor
 Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef), powerUpTimer(powerUpDuration) {}
-
-/// SETTER & GETTER FUNCTIONS
-// Player ID
-void Player::setPlayerID(int id)
+void Player::setVelocity(float _x, float _y)
 {
-  playerID = id;
+  velocity.x = _x;
+  velocity.y = _y;
 }
-int Player::getPlayerID() const
+void Player::updatePlayer()
 {
-  return playerID;
+  this->getSprite()->xPos(this->getSprite()->xPos() + 5 * velocity.x);
+  this->getSprite()->yPos(this->getSprite()->yPos() + 5 * velocity.y);
 }
 ASGE::Point2D Player::getVelocity()
 {

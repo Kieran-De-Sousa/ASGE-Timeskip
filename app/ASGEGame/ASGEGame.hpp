@@ -14,6 +14,18 @@
 #include "Player.h"
 #include "Sprite.h"
 
+#define MAINMENU , level select, quit, play
+#define PAUSE
+#define WIN
+#define LOSE
+
+struct ObjRect
+{
+  // object rectangle
+
+  float x, y, w, h;
+};
+
 class ASGENetGame : public ASGE::OGLGame
 {
  public:

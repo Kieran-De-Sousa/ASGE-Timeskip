@@ -11,6 +11,7 @@
 #include "Scene.h"
 
 /// ASGE Sprites
+#include "Sprites/Bullet.h"
 #include "Sprites/Entity.h"
 #include "Sprites/Player.h"
 #include "Sprites/Sprite.h"
@@ -70,7 +71,7 @@ class SceneLevel1 : public Scene
   //  /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesB;
-  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
+  std::unique_ptr<Bullet> bullets;
   bool gravity     = true;
   bool hasPeaked   = false;
   bool jump        = false;

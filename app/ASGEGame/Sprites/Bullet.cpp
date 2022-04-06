@@ -3,7 +3,11 @@
 //
 
 #include "Bullet.h"
-void Bullet::Vector2::normalise() {}
+void Bullet::Vector2::normalise()
+{
+  x /= magnitude();
+  y /= magnitude();
+}
 
 float Bullet::Vector2::magnitude()
 {

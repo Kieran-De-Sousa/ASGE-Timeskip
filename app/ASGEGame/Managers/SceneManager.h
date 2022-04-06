@@ -20,17 +20,19 @@ class SceneManager
   /**
    * @brief Constructor w/Param
    * @details Use when starting scene is known upon instantiation
+   * @param inputRef Required in all game scenes for input systems
    * @param rendererRef Required in all game scenes for rendering
    * @param scene Default/starting scene for game
    */
-  SceneManager(ASGE::Renderer& rendererRef, const std::shared_ptr<Scene>& scene);
+  SceneManager(
+    ASGE::Renderer& rendererRef, ASGE::Input& inputRef, const std::shared_ptr<Scene>& scene);
   /**
    * @brief Default constructor
    * @details Use when starting scene is unknown upon creation - Use setter functions
    * when to set game state
    * @see setCurrentScene()
    */
-  explicit SceneManager(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
+  explicit SceneManager(ASGE::Renderer& rendererRef, ASGE::Input& inputRef);
   virtual ~SceneManager() = default;
 
   /**
@@ -53,8 +55,9 @@ class SceneManager
   virtual void render(ASGE::GameTime us);
 
  protected:
-  /// Save a pointer of renderer to pass into game scenes
+  /// Save a pointer of renderer and input to pass into game scenes
   std::unique_ptr<ASGE::Renderer> renderer;
+  std::unique_ptr<ASGE::Input> inputs;
   /// Scene FSM
   std::shared_ptr<Scene> currentScene;
   std::vector<std::shared_ptr<Scene>> scenes;

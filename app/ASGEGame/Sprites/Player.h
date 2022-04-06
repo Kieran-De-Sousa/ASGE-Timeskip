@@ -7,7 +7,6 @@
 #include <Engine/Sprite.hpp>
 
 /// Base Class
-#include "Components/Timer.h"
 #include "Entity.h"
 
 /// Helper Classes
@@ -36,7 +35,7 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
-  virtual void update() override {}
+  virtual void update() override;
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID

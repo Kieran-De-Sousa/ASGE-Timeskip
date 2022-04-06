@@ -1,2 +1,6 @@
 #include "Scene.h"
-#include "Managers/SceneManager.h"
+
+Scene::Scene(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) :
+  renderer(&rendererRef), inputs(&inputRef)
+{
+}

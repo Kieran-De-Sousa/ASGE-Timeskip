@@ -1,19 +1,8 @@
-#include "ASGEGame.hpp"
-#include <Engine/FileIO.hpp>
-#include <Engine/Logger.hpp>
+#include "SceneLevel1.h"
 
-/**
- * @brief Initialises the game.
- * Setup your game and initialise the core components.
- * @param settings
- */
-ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
-  OGLGame(settings), game_font(renderer->loadFont("/data/fonts/machine-gunk.ttf", 42, 5))
+bool SceneLevel1::init()
 {
-  renderer->setBaseResolution(1920, 1080, ASGE::Resolution::Policy::MAINTAIN);
-  renderer->setClearColour({ 0, 0, 0 });
-  key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
-  inputs->use_threads = false;
+  gameScene = GameScene::LEVEL_1;
 
   ship = renderer->createUniqueSprite();
   ship->loadTexture("/data/sprites/player1.png");
@@ -68,73 +57,17 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
     bullets[i]->height(8);
     bullets[i]->setGlobalZOrder(6);
   }
+
+  return true;
 }
 
-// void ASGENetGame::initAudio()
-//{
-//  audio_engine.init();
-//  ASGE::FILEIO::File bg_audio_file;
-//  if (bg_audio_file.open("/data/audio/cyberpunk.mp3"))
-//  {
-//    auto buffer = bg_audio_file.read();
-//    auto length = static_cast<unsigned int>(buffer.length);
-//    background_audio.loadMem(buffer.as_unsigned_char(), length, false, false);
-//    background_audio.setLooping(true);
-//    audio_engine.play(background_audio);
-//  }
-//}
-
-/**
- * Destroys the game.
- */
-ASGENetGame::~ASGENetGame()
-{
-  this->inputs->unregisterCallback(key_callback_id);
-  audio_engine.deinit();
-}
-
-/**
- * @brief Processes key inputs.
- * This function is added as a callback to handle the game's
- * keyboard input. For this game, calls to this function
- * are not thread safe, so you may alter the game's state
- * but your code needs to designed to prevent data-races.
- *
- * @param data
- * @see KeyEvent
- */
-void ASGENetGame::keyHandler(ASGE::SharedEventData data)
+void SceneLevel1::keyHandler(ASGE::SharedEventData data)
 {
   const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
   keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
-
-  if (key->key == ASGE::KEYS::KEY_ESCAPE)
-  {
-    signalExit();
-  }
 }
 
-/**
- * @brief FixedUpdate
- * Calls to this function use the same fixed timestep
- * irrespective of how much time is passed. If you want
- * deterministic behaviour on clients, this is the place
- * to go.
- *
- * https://gamedev.stackexchange.com/questions/1589/when-should-i-use-a-fixed-or-variable-time-step
- * "Use variable timesteps for your fixed steps for physics"
- * @param us
- */
-void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
-{
-  Game::fixedUpdate(us);
-}
-
-/**
- * @brief Updates your game and all it's components.
- * @param us
- */
-void ASGENetGame::update(const ASGE::GameTime& us)
+void SceneLevel1::update(const ASGE::GameTime& us)
 {
   playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
   playerIcon->yPos(ship_look.y);
@@ -448,14 +381,10 @@ void ASGENetGame::update(const ASGE::GameTime& us)
   camera_two.lookAt(ship2_look);
   camera_two.setZoom(2.0F);
 }
-//  ship->xPos(static_cast<float>(ship->xPos() + velocity.x * us.deltaInSecs()));
-//  ship->yPos(static_cast<float>(ship->yPos() + velocity.y * us.deltaInSecs()));
 
-/**
- * @brief Render your game and its scenes here.
- * @param us
- */
-void ASGENetGame::render(const ASGE::GameTime& /*us*/)
+void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
+
+void SceneLevel1::render(const ASGE::GameTime& us)
 {
   // example of split screen. just remove viewports and use
   // a single camera if you don't require the use of split screen
@@ -513,7 +442,7 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
 
   // renderer->setProjectionMatrix(camera_one.getView());
 }
-bool ASGENetGame::renderMap()
+bool SceneLevel1::renderMap()
 {
   ASGE::FILEIO::File tile_map;
   if (!tile_map.open("/data/PastMap2.tmx"))
@@ -571,7 +500,7 @@ bool ASGENetGame::renderMap()
   }
   return true;
 }
-bool ASGENetGame::renderBackground()
+bool SceneLevel1::renderBackground()
 {
   ASGE::FILEIO::File tile_map;
   if (!tile_map.open("/data/PastMap2.tmx"))
@@ -625,7 +554,8 @@ bool ASGENetGame::renderBackground()
   }
   return true;
 }
-void ASGENetGame::DebugInfo()
+void SceneLevel1::Camera() {}
+void SceneLevel1::DebugInfo()
 {
   Logging::DEBUG(std::to_string(bullets[bulletCount]->xPos()));
 }

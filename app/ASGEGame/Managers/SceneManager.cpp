@@ -1,10 +1,17 @@
 #include "SceneManager.h"
 
-SceneManager::SceneManager(ASGE::Renderer& rendererRef, const std::shared_ptr<Scene>& scene) :
-  renderer(&rendererRef)
+SceneManager::SceneManager(
+  ASGE::Renderer& rendererRef, ASGE::Input& inputRef, const std::shared_ptr<Scene>& scene) :
+  renderer(&rendererRef),
+  inputs(&inputRef)
 {
   addScene(scene);
   setCurrentScene(scene);
+}
+
+SceneManager::SceneManager(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) :
+  renderer(&rendererRef), inputs(&inputRef)
+{
 }
 
 void SceneManager::addScene(const std::shared_ptr<Scene>& scene)

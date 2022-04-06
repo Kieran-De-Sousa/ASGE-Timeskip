@@ -1,23 +1,22 @@
+//
+// Created by tpasl on 4/6/2022.
+//
+
 #ifndef ASGEGAME_BULLET_H
 #define ASGEGAME_BULLET_H
 
-/// Game Engine
-#include <Engine/Logger.hpp>
-#include <Engine/OGLGame.hpp>
-#include <Engine/Sprite.hpp>
-
-/// Base Class
 #include "Sprites/Sprite.h"
+#include <cmath>
 
 class Bullet : public Sprite
 {
- public:
-  explicit Bullet(ASGE::Renderer& rendererRef) : Sprite(rendererRef) {}
-  virtual ~Bullet() override = default;
-
- protected:
- private:
-  // int damage = 0;
+  struct Vector2
+  {
+    float x = 0;
+    float y = 0;
+    void normalise();
+    float magnitude();
+  };
 };
 
 #endif // ASGEGAME_BULLET_H

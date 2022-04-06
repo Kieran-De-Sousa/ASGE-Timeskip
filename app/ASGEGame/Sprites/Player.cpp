@@ -8,6 +8,13 @@ Player::Player(ASGE::Renderer& rendererRef, int id) :
 }
 /// Default Constructor
 Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef), powerUpTimer(powerUpDuration) {}
+
+void Player::update()
+{
+  this->getSprite()->xPos(this->getSprite()->xPos() + 5 * velocity.x);
+  this->getSprite()->yPos(this->getSprite()->yPos() + 5 * velocity.y);
+}
+
 void Player::setVelocity(float _x, float _y)
 {
   velocity.x = _x;
@@ -21,15 +28,4 @@ void Player::updatePlayer()
 ASGE::Point2D Player::getVelocity()
 {
   return velocity;
-}
-void Player::setVelocity(float _x, float _y)
-{
-  velocity.x = _x;
-
-  velocity.y = _y;
-}
-void Player::updatePlayer()
-{
-  this->getSprite()->xPos(this->getSprite()->xPos() + 5 * velocity.x);
-  this->getSprite()->yPos(this->getSprite()->yPos() + 5 * velocity.y);
 }

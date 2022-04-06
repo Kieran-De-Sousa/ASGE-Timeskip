@@ -1,55 +1,47 @@
-#pragma once
+#ifndef ASGEGAME_SCENELEVEL1_H
+#define ASGEGAME_SCENELEVEL1_H
 
-#include <Engine/Gamepad.hpp>
-#include <Engine/OGLGame.hpp>
-#include <Engine/Sprite.hpp>
-#include <map>
-
-#include <soloud.h>
-#include <soloud_wav.h>
+/// Tile map Libraries
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
 
-#include "Entity.h"
-#include "Player.h"
-#include "Sprite.h"
+#include <vector>
 
-#define MAINMENU , level select, quit, play
-#define PAUSE
-#define WIN
-#define LOSE
+/// Base Class
+#include "Scene.h"
 
-struct ObjRect
-{
-  // object rectangle
+/// ASGE Sprites
+#include "Sprites/Entity.h"
+#include "Sprites/Player.h"
+#include "Sprites/Sprite.h"
 
-  float x, y, w, h;
-};
+/**
+ * @brief Level 1 scene
+ * @details
+ * @see GameScenes.h
+ * @author Kieran
+ */
 
-class ASGENetGame : public ASGE::OGLGame
+class SceneLevel1 : public Scene
 {
  public:
-  explicit ASGENetGame(const ASGE::GameSettings& settings);
-  ~ASGENetGame() override;
+  SceneLevel1(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) : Scene(rendererRef, inputRef) {}
+  virtual ~SceneLevel1() override = default;
 
-  ASGENetGame(const ASGENetGame&) = delete;
-  ASGENetGame& operator=(const ASGENetGame&) = delete;
+  virtual bool init() override;
 
-  void keyHandler(ASGE::SharedEventData data);
-  void update(const ASGE::GameTime& us) override;
-  void render(const ASGE::GameTime& us) override;
-  void fixedUpdate(const ASGE::GameTime& us) override;
+  virtual void keyHandler(ASGE::SharedEventData data) override;
+  virtual void update(const ASGE::GameTime& us) override;
+  virtual void fixedUpdate(const ASGE::GameTime& us) override;
+  virtual void render(const ASGE::GameTime& us) override;
+
   bool renderMap();
   bool renderBackground();
   void Camera();
   void DebugInfo();
 
  private:
-  SoLoud::Soloud audio_engine;
-  SoLoud::Wav background_audio;
-  std::string key_callback_id{}; /**< Key Input Callback ID. */
-  std::map<int, bool> keymap{};
-  std::map<int, ASGE::GamePadData> gamepad_state{};
+  // Players
   std::unique_ptr<ASGE::Sprite> ship{ nullptr };
   std::unique_ptr<ASGE::Sprite> ship2{ nullptr };
   ASGE::Point2D velocity{ 0, 0 };
@@ -78,9 +70,7 @@ class ASGENetGame : public ASGE::OGLGame
   //  /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesB;
-  //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
   std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
-  //  tmx::Map map;
   bool gravity     = true;
   bool hasPeaked   = false;
   bool jump        = false;
@@ -107,3 +97,5 @@ class ASGENetGame : public ASGE::OGLGame
   unsigned int bulletCount = 0;
   std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
 };
+
+#endif // ASGEGAME_SCENELEVEL1_H

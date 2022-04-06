@@ -5,7 +5,6 @@
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
 
-#include <map>
 #include <vector>
 
 /// Base Class
@@ -20,7 +19,9 @@
 class SceneMainMenu : public Scene
 {
  public:
-  explicit SceneMainMenu(ASGE::Renderer& rendererRef) : Scene(rendererRef) {}
+  SceneMainMenu(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) : Scene(rendererRef, inputRef)
+  {
+  }
   virtual ~SceneMainMenu() override = default;
 
   virtual bool init() override;

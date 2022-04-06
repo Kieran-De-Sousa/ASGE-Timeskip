@@ -25,8 +25,8 @@ set(GAME_SOURCES
         Sprites/Bullet.cpp
         Components/GameComponent.cpp
         Scenes/SceneMainMenu.cpp
-        "Scenes/GameScenes.h")
-        bullet.cpp)
+        "Scenes/GameScenes.h"
+        Scenes/SceneLevel1.cpp)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

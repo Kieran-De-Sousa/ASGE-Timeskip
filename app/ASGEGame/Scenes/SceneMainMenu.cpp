@@ -9,7 +9,11 @@ bool SceneMainMenu::init()
   return true;
 }
 
-void SceneMainMenu::keyHandler(ASGE::SharedEventData data) {}
+void SceneMainMenu::keyHandler(ASGE::SharedEventData data)
+{
+  const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
+  keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
+}
 
 void SceneMainMenu::update(const ASGE::GameTime& us) {}
 

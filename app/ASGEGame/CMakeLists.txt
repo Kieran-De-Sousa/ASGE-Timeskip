@@ -21,9 +21,11 @@ set(GAME_SOURCES
         Sprites/Player.cpp
         Components/Timer.cpp
         Scenes/Scene.cpp
-        Scenes/Scene.h
-        Managers/SceneManager.h
-        Managers/SceneManager.cpp Sprites/Bullet.cpp Sprites/Bullet.h Components/GameComponent.cpp Components/GameComponent.h Scenes/SceneMainMenu.cpp Scenes/SceneMainMenu.h "Scenes/GameScenes.h")
+        Managers/SceneManager.cpp
+        Sprites/Bullet.cpp
+        Components/GameComponent.cpp
+        Scenes/SceneMainMenu.cpp
+        "Scenes/GameScenes.h")
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

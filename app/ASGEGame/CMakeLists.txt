@@ -19,7 +19,7 @@ set(GAME_SOURCES
         Sprite.cpp
         Entity.cpp
         Player.cpp
-        Timer.cpp)
+        Timer.cpp bullet.cpp bullet.h)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

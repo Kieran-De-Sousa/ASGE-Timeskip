@@ -34,6 +34,14 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   camera_two.lookAt(ship2_look);
   renderMap();
   renderBackground();
+
+  playerIcon = renderer->createUniqueSprite();
+  playerIcon->loadTexture("data/sprites/Player1 Icon.png");
+  playerIcon->xPos(0);
+  playerIcon->yPos(64);
+  playerIcon->width(32);
+  playerIcon->height(32);
+  playerIcon->setGlobalZOrder(9);
   // camera_two.lookAt({ ship->xPos(), ship->yPos() + 100 });
   //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
   //  }).setScale(1.5); camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({
@@ -46,6 +54,20 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) :
   //  testSprite = std::make_unique<Sprite>(*renderer);
   //  testEntity = std::make_unique<Entity>(*renderer);
   //  testPlayer = std::make_unique<Player>(*renderer);
+
+  for (int i = 0; i < magSize; ++i)
+  {
+    bullets.push_back(renderer->createUniqueSprite());
+  }
+  for (unsigned long long int i = 0; i < bullets.size(); i++)
+  {
+    bullets[i]->loadTexture("data/sprites/bulletSprite.png");
+    bullets[i]->xPos(-200);
+    bullets[i]->yPos(-200);
+    bullets[i]->width(8);
+    bullets[i]->height(8);
+    bullets[i]->setGlobalZOrder(6);
+  }
 }
 
 // void ASGENetGame::initAudio()
@@ -114,6 +136,19 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
  */
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
+  playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
+  playerIcon->yPos(ship_look.y);
+  for (unsigned long long i = 0; i < bullets.size(); i++)
+  {
+    if (ship->flipFlags() == ASGE::Sprite::NORMAL)
+    {
+      bullets[i]->xPos(bullets[i]->xPos() + 8.4f);
+    }
+    if (ship->flipFlags() == ASGE::Sprite::FLIP_X)
+    {
+      bullets[i]->xPos(bullets[i]->xPos() - 8.4f);
+    }
+  }
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
   {
@@ -122,7 +157,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
       j_s = 3.0f;
       g_s = 0;
       Logging::DEBUG("jump");
-      newPos      = ship->yPos() - 96;
+      newPos      = ship->yPos() - 128;
       jump        = true;
       groundCheck = false;
     }
@@ -153,8 +188,29 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     j_s         = 3.0f;
     g_s         = 0;
     Logging::DEBUG("jump");
-    newPos = ship->yPos() - 96;
+    newPos = ship->yPos() - 128;
     jump   = true;
+  }
+  if (keymap[ASGE::KEYS::KEY_F])
+  {
+    bullets[bulletCount]->xPos(ship->xPos() + ship->width());
+    bullets[bulletCount]->yPos(ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
+    bulletCount++;
+    if (bulletCount > 25)
+    {
+      bulletCount = 0;
+    }
+  }
+  if (keymap[ASGE::KEYS::KEY_SLASH])
+  {
+    bullets[bulletCount]->xPos(ship2->xPos() + ship2->width());
+    bullets[bulletCount]->yPos(
+      ship2->yPos() + ship2->height() / 2 - bullets[bulletCount]->height());
+    bulletCount++;
+    if (bulletCount > 25)
+    {
+      bulletCount = 0;
+    }
   }
   //  if (keymap[ASGE::KEYS::KEY_S])
   //  {
@@ -421,10 +477,14 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   }
   renderer->render(*ship);
   renderer->render(*ship2);
-
+  for (unsigned long long int i = 0; i < bullets.size(); i++)
+  {
+    renderer->render(*bullets[i]);
+  }
   // top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
+  renderer->render(*playerIcon);
   //  renderer->render(*ship);
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
@@ -438,6 +498,10 @@ void ASGENetGame::render(const ASGE::GameTime& /*us*/)
   }
   renderer->render(*ship);
   renderer->render(*ship2);
+  for (unsigned long long int i = 0; i < bullets.size(); i++)
+  {
+    renderer->render(*bullets[i]);
+  }
 
   // reset the view and don't use a camera, useful for HUD
   //  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
@@ -563,5 +627,5 @@ bool ASGENetGame::renderBackground()
 }
 void ASGENetGame::DebugInfo()
 {
-  Logging::DEBUG(std::to_string(ship_look.x));
+  Logging::DEBUG(std::to_string(bullets[bulletCount]->xPos()));
 }

@@ -67,6 +67,7 @@ class ASGENetGame : public ASGE::OGLGame
   std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesB;
   //  std::vector<std::unique_ptr<ASGE::Sprite>> collidables;
+  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
   //  tmx::Map map;
   bool gravity     = true;
   bool hasPeaked   = false;
@@ -90,4 +91,7 @@ class ASGENetGame : public ASGE::OGLGame
   float newPos2     = 0;
   float g_s2 = 0, j_s2 = 0;
   tmx::Map map;
+  int magSize              = 120;
+  unsigned int bulletCount = 0;
+  std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
 };

@@ -15,11 +15,15 @@ list(APPEND HEADER_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
 ## source files get listed here ##
 set(GAME_SOURCES
         main.cpp
-        ASGEGame.cpp
-        Sprite.cpp
-        Entity.cpp
-        Player.cpp
-        Timer.cpp)
+        Scenes/ASGEGame.cpp
+        Sprites/Sprite.cpp
+        Sprites/Entity.cpp
+        Sprites/Player.cpp
+        Components/Timer.cpp
+        Scenes/Scene.cpp
+        Scenes/Scene.h
+        Managers/SceneManager.h
+        Managers/SceneManager.cpp Sprites/Bullet.cpp Sprites/Bullet.h Components/GameComponent.cpp Components/GameComponent.h Scenes/SceneMainMenu.cpp Scenes/SceneMainMenu.h "Scenes/GameScenes.h")
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

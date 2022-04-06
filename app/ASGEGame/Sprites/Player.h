@@ -1,12 +1,17 @@
 #ifndef ASGEGAME_PLAYER_H
 #define ASGEGAME_PLAYER_H
 
+/// Game Engine
 #include <Engine/Logger.hpp>
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
+/// Base Class
+#include "Components/Timer.h"
 #include "Entity.h"
-#include "Timer.h"
+
+/// Helper Classes
+#include "Components/Timer.h"
 
 /**
  * @brief Player class shared for both players
@@ -31,21 +36,29 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
+  virtual void update() override {}
+
   /// SETTER & GETTER FUNCTIONS
   // Player ID
-  void setPlayerID(int id);
-  [[nodiscard]] int getPlayerID() const;
+  void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); }
+  [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); }
+
   ASGE::Point2D getVelocity();
   void setVelocity(float _x, float _y);
   void updatePlayer();
 
- private:
+ protected:
   // ID
-  int playerID = 0;
+  enum class PlayerID : int
+  {
+    UNKNOWN  = 0,
+    PLAYER_1 = 1,
+    PLAYER_2 = 2
+  };
+  PlayerID playerID = PlayerID::UNKNOWN;
   // Timers
   Timer powerUpTimer;
-  float powerUpDuration = 20;
-
+  float powerUpDuration  = 20;
   ASGE::Point2D velocity = { 0, 0 };
 };
 #endif // ASGEGAME_PLAYER_H

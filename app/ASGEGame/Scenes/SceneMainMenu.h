@@ -12,6 +12,17 @@
 #include "Scene.h"
 
 /**
+ * @brief Data class for storing menu state
+ * @author Asli
+ */
+enum class MenuState : int
+{
+  PLAY = 0,
+  LEVELSELECT = 1,
+  QUIT   = 2
+};
+
+/**
  * @brief Main menu scene
  * @details Currently first scene loaded for game
  * @see GameScenes.h
@@ -30,9 +41,17 @@ class SceneMainMenu : public Scene
   virtual void fixedUpdate(const ASGE::GameTime& us) override;
   virtual void render(const ASGE::GameTime& us) override;
 
+  MenuState state = MenuState::PLAY;
+
  private:
   const ASGE::Font* game_font = nullptr;
-  ASGE::Text camera_one_label{};
+  ASGE::Text Title{};
+  ASGE::Text Play{};
+  ASGE::Text LevelSelect{};
+  ASGE::Text Quit{};
+  ASGE::Text Level1{};
+  ASGE::Text Level2{};
+  ASGE::Text Back{};
 };
 
 #endif // ASGEGAME_SCENEMAINMENU_H

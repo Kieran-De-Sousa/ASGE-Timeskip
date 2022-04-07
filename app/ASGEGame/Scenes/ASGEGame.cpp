@@ -13,8 +13,8 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   inputs->use_threads = false;
 
-  scene_manager =
-    std::make_unique<SceneManager>(*renderer, std::make_shared<SceneMainMenu>(*renderer));
+  scene_manager = std::make_unique<SceneManager>(
+    *renderer, *inputs, std::make_shared<SceneMainMenu>(*renderer, *inputs));
 }
 
 // void ASGENetGame::initAudio()

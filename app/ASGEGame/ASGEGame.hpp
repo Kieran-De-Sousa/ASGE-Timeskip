@@ -26,7 +26,14 @@ struct ObjRect
   float x, y, w, h;
 };
 
-class ASGENetGame : public ASGE::OGLGame
+struct ObjRect
+{
+  //object rectangle
+
+  float x, y, w, h;
+};
+
+class SceneLevel1 : public Scene
 {
  public:
   explicit ASGENetGame(const ASGE::GameSettings& settings);
@@ -98,8 +105,11 @@ class ASGENetGame : public ASGE::OGLGame
   bool groundCheck2 = false;
   float newPos2     = 0;
   float g_s2 = 0, j_s2 = 0;
+  tmx::Map map;
+  int magSize              = 120;
+  unsigned int bulletCount = 0;
+  std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
 
-  //Animation stuff
   ObjRect animation_frames[5];
   int animation_index1 = 0;
   int animation_index2 = 0;

@@ -47,6 +47,7 @@ bool SceneLevel1::init()
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
+    directions.push_back({ 0, 0 });
   }
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -73,14 +74,8 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   playerIcon->yPos(ship_look.y);
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
-    if (ship->flipFlags() == ASGE::Sprite::NORMAL)
-    {
-      bullets[i]->xPos(bullets[i]->xPos() + 8.4f);
-    }
-    if (ship->flipFlags() == ASGE::Sprite::FLIP_X)
-    {
-      bullets[i]->xPos(bullets[i]->xPos() - 8.4f);
-    }
+    bullets[i]->xPos(bullets[i]->xPos() + directions[i].x * 8.4F);
+    bullets[i]->yPos(bullets[i]->yPos() + directions[i].y * 8.4F);
   }
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
@@ -126,8 +121,20 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   }
   if (keymap[ASGE::KEYS::KEY_F])
   {
-    bullets[bulletCount]->xPos(ship->xPos() + ship->width());
-    bullets[bulletCount]->yPos(ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
+    if (ship->flipFlags() == ASGE::Sprite::FLIP_X)
+    {
+      bullets[bulletCount]->xPos(ship->xPos() - bullets[bulletCount]->width());
+      bullets[bulletCount]->yPos(
+        ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
+      directions[bulletCount].x = -1;
+    }
+    if (ship->flipFlags() == ASGE::Sprite::NORMAL)
+    {
+      bullets[bulletCount]->xPos(ship->xPos() + ship->width());
+      bullets[bulletCount]->yPos(
+        ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
+      directions[bulletCount].x = 1;
+    }
     bulletCount++;
     if (bulletCount > 25)
     {

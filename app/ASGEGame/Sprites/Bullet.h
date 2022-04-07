@@ -10,6 +10,7 @@
 
 class Bullet : public Sprite
 {
+ public:
   struct Vector2
   {
     float x = 0;

@@ -7,10 +7,11 @@
  */
 enum class GameScene : int
 {
-  UNDEFINED = 0,
-  MAIN_MENU = 1,
-  LEVEL_1   = 2,
-  LEVEL_2   = 3
+  UNDEFINED    = 0,
+  MAIN_MENU    = 1,
+  LEVEL_SELECT = 2,
+  LEVEL_1      = 3,
+  LEVEL_2      = 4
   /// Insert more scenes here
 };
 

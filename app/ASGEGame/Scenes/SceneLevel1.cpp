@@ -5,7 +5,7 @@ bool SceneLevel1::init()
   gameScene = GameScene::LEVEL_1;
 
   ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/player1.png");
+  ship->loadTexture("/data/sprites/Player1Animation.png");
   ship->width(32);
   ship->height(32);
   ship->xPos(64);
@@ -13,12 +13,23 @@ bool SceneLevel1::init()
   ship->setGlobalZOrder(3);
 
   ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Player2.png");
+  ship2->loadTexture("/data/sprites/Player2Animation.png");
   ship2->width(32);
   ship2->height(32);
   ship2->xPos(64);
   ship2->yPos(240);
   ship2->setGlobalZOrder(3);
+
+  /// Animations
+  ship->srcRect()[0]  = 0;
+  ship->srcRect()[1]  = 0;
+  ship->srcRect()[2]  = 32;
+  ship->srcRect()[3]  = 32;
+  ship2->srcRect()[0] = 0;
+  ship2->srcRect()[1] = 0;
+  ship2->srcRect()[2] = 32;
+  ship2->srcRect()[3] = 32;
+
   camera_one.lookAt(ship_look);
   camera_two.lookAt(ship2_look);
   renderMap();
@@ -85,15 +96,19 @@ void SceneLevel1::update(const ASGE::GameTime& us)
       j_s = 3.0f;
       g_s = 0;
       Logging::DEBUG("jump");
-      newPos      = ship->yPos() - 128;
-      jump        = true;
-      groundCheck = false;
+      newPos       = ship->yPos() - 128;
+      jump         = true;
+      groundCheck  = false;
+      player1State = JUMPING;
     }
     if (abs(gamepad.axis[0]) > 0.1)
     {
       ship->xPos(ship->xPos() + 5 * gamepad.axis[0]);
     }
   }
+
+  player1State = player2State = IDLE;
+
   if (keymap[ASGE::KEYS::KEY_SPACE])
   {
     DebugInfo();
@@ -102,11 +117,13 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     ship->xPos(ship->xPos() - 5);
     ship->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
+    player1State = RUNNING;
   }
   if (keymap[ASGE::KEYS::KEY_D])
   {
     ship->xPos(ship->xPos() + 5);
     ship->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
+    player1State = RUNNING;
   }
   if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
   {
@@ -116,8 +133,9 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     j_s         = 3.0f;
     g_s         = 0;
     Logging::DEBUG("jump");
-    newPos = ship->yPos() - 128;
-    jump   = true;
+    newPos       = ship->yPos() - 128;
+    jump         = true;
+    player1State = JUMPING;
   }
   if (keymap[ASGE::KEYS::KEY_F])
   {
@@ -160,11 +178,13 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     ship2->xPos(ship2->xPos() - 5);
     ship2->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
+    player2State = RUNNING;
   }
   if (keymap[ASGE::KEYS::KEY_RIGHT])
   {
     ship2->xPos(ship2->xPos() + 5);
     ship2->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
+    player2State = RUNNING;
   }
   if (keymap[ASGE::KEYS::KEY_UP] && groundCheck2)
   {
@@ -173,8 +193,9 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     j_s2         = 3.0f;
     g_s2         = 0;
     Logging::DEBUG("jump");
-    newPos2 = ship2->yPos() - 96;
-    jump2   = true;
+    newPos2      = ship2->yPos() - 96;
+    jump2        = true;
+    player2State = JUMPING;
   }
 
   if (gravity)
@@ -413,6 +434,45 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   }
   renderer->render(*ship);
   renderer->render(*ship2);
+
+  animation_timer += static_cast<float>(us.deltaInSecs());
+  if (animation_timer > ANIMATION_FRAME_RATE)
+  {
+    // player1
+    if (player1State == RUNNING)
+    {
+      animation_index1 += 1;
+      if (animation_index1 > 3)
+        animation_index1 = 0;
+    }
+    else if (player1State == IDLE)
+    {
+      animation_index1 = 4;
+    }
+    else if (player1State == JUMPING)
+    {
+      animation_index1 = 5;
+    }
+    // gets the frame according to the animation index
+    ship->srcRect()[0] = static_cast<float>(animation_index1) * 32;
+    if (player2State == RUNNING)
+    {
+      animation_index2 += 1;
+      if (animation_index2 > 3)
+        animation_index2 = 0;
+    }
+    else if (player2State == IDLE)
+    {
+      animation_index2 = 4;
+    }
+    else if (player2State == JUMPING)
+    {
+      animation_index2 = 5;
+    }
+    ship2->srcRect()[0] = static_cast<float>(animation_index2) * 32;
+    animation_timer     = 0.0f;
+  }
+
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
     renderer->render(*bullets[i]);

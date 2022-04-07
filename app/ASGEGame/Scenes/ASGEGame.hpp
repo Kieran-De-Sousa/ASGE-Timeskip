@@ -10,6 +10,7 @@
 
 /// Game Screen FSM
 #include "Managers/SceneManager.h"
+#include "Scenes/LevelSelect.h"
 #include "Scenes/Scene.h"
 #include "Scenes/SceneLevel1.h"
 #include "Scenes/SceneMainMenu.h"

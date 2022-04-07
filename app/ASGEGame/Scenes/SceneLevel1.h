@@ -16,13 +16,17 @@
 #include "Sprites/Player.h"
 #include "Sprites/Sprite.h"
 
+struct ObjRect
+{
+  float x, y, w, h;
+};
+
 /**
  * @brief Level 1 scene
  * @details
  * @see GameScenes.h
  * @author Kieran
  */
-
 class SceneLevel1 : public Scene
 {
  public:
@@ -98,6 +102,16 @@ class SceneLevel1 : public Scene
   int magSize              = 120;
   unsigned int bulletCount = 0;
   std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
+
+  /// Animation
+  ObjRect animation_frames[5];
+  int animation_index1             = 0;
+  int animation_index2             = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer            = 0.0f;
+
+  int player1State = IDLE;
+  int player2State = IDLE;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

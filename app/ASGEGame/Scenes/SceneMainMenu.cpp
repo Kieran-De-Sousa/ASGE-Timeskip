@@ -4,7 +4,7 @@ bool SceneMainMenu::init()
 {
   gameScene = GameScene::MAIN_MENU;
   renderer->setClearColour(ASGE::COLOURS::BLACK);
-  game_font = renderer->loadFont("/data/fonts/machine-gunk.ttf", 100, 10);
+  game_font = renderer->loadFont("/data/fonts/Contra.ttf", 100, 10);
   Title.setFont(*game_font).setString("TIMESKIP").setPosition({ 350, 500 }).setScale(1.5);
 
   Play.setFont(*game_font).setString("PLAY .").setPosition({ 360, 600 }).setScale(0.5);

@@ -24,10 +24,7 @@ enum class LevelSelectState : int
 class SceneLevelSelect : public Scene
 {
  public:
-  SceneLevelSelect(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) :
-    Scene(rendererRef, inputRef)
-  {
-  }
+  SceneLevelSelect(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene);
   virtual ~SceneLevelSelect() override = default;
 
   virtual bool init() override;

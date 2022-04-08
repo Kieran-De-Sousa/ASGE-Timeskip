@@ -1,8 +1,13 @@
 #include "SceneLevel1.h"
 
+SceneLevel1::SceneLevel1(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene) :
+  Scene(rendererRef, inputRef, scene)
+{
+}
+
 bool SceneLevel1::init()
 {
-  gameScene = GameScene::LEVEL_1;
+  setDefaultSceneStatus();
 
   ship = renderer->createUniqueSprite();
   ship->loadTexture("/data/sprites/Player1Animation.png");

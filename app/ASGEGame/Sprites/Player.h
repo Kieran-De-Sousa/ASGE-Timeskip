@@ -19,6 +19,13 @@
 class Player : public Entity
 {
  public:
+  /// ID
+  enum class PlayerID : int
+  {
+    UNKNOWN  = 0,
+    PLAYER_1 = 1,
+    PLAYER_2 = 2
+  };
   /**
    * @brief Constructor w/Param
    * @details Use when initialisation variables are required in instantiation,
@@ -41,19 +48,11 @@ class Player : public Entity
   // Player ID
   void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); }
   [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); }
-
+  // Velocity
   ASGE::Point2D getVelocity();
   void setVelocity(float _x, float _y);
-  void updatePlayer();
 
  protected:
-  // ID
-  enum class PlayerID : int
-  {
-    UNKNOWN  = 0,
-    PLAYER_1 = 1,
-    PLAYER_2 = 2
-  };
   PlayerID playerID = PlayerID::UNKNOWN;
   // Timers
   Timer powerUpTimer;

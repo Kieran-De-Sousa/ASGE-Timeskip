@@ -27,14 +27,23 @@ class Scene : public std::enable_shared_from_this<Scene>
  public:
   /**
    * @brief Default constructor
-   * @details Renderer of OGLGame stored in protected member and is accessible in derived classes
+   * @details Renderer and input of OGLGame stored in protected member and is accessible in derived
+   * classes
    * @param rendererRef Required in all game scenes for rendering
    */
-  explicit Scene(ASGE::Renderer& rendererRef, ASGE::Input& inputRef);
+  Scene(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene);
   virtual ~Scene() = default;
 
   Scene(const Scene&) = delete;
   Scene& operator=(const Scene&) = delete;
+
+  /// SETTER & GETTER FUNCTIONS
+  // Scene Status
+  void setDefaultSceneStatus();
+  virtual SceneStatus getSceneStatus() const;
+  // Game Scene
+  [[nodiscard]] virtual GameScene getScene() const;
+  void setNewScene(const GameScene& game_scene);
 
   /// Base virtual functions overridden in scene derived classes
   virtual bool init()                                 = 0;
@@ -53,8 +62,9 @@ class Scene : public std::enable_shared_from_this<Scene>
   std::map<int, bool> keymap{};
   std::map<int, ASGE::GamePadData> gamepad_state{};
 
-  /// Game State
-  GameScene gameScene = GameScene::UNDEFINED;
+  /// Scene State Data
+  SceneStatus sceneStatus;
+  const SceneStatus DEFAULT_SCENE_STATUS;
 };
 
 #endif // ASGEGAME_SCENE_H

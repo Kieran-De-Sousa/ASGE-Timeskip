@@ -48,9 +48,9 @@ class Sprite
   void setSpriteVariables(const float& width, const float& height, const int16_t& z_order);
 
  protected:
-  std::unique_ptr<ASGE::Sprite> sprite;
+  std::unique_ptr<ASGE::Sprite> sprite = nullptr;
   /// TODO: CAN BE REGULAR POINTER
-  std::unique_ptr<ASGE::Renderer> renderer;
+  std::unique_ptr<ASGE::Renderer> renderer = nullptr;
 
   const std::vector<float> DEFAULT_SPRITE_POSITION{ 0, 0 };
   const std::vector<float> DEFAULT_SPRITE_VARIABLES{ 16, 16 };

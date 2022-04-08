@@ -30,9 +30,7 @@ enum class MenuState : int
 class SceneMainMenu : public Scene
 {
  public:
-  SceneMainMenu(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) : Scene(rendererRef, inputRef)
-  {
-  }
+  SceneMainMenu(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene);
   virtual ~SceneMainMenu() override = default;
 
   virtual bool init() override;

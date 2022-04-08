@@ -2,8 +2,12 @@
 #define ASGEGAME_GAMESCENES_H
 
 /**
- * @brief Data class for storing game scenes
+ *
  * @author Kieran
+ */
+
+/**
+ * @brief Enum data class for storing game scene IDs
  */
 enum class GameScene : int
 {
@@ -12,7 +16,21 @@ enum class GameScene : int
   LEVEL_SELECT = 2,
   LEVEL_1      = 3,
   LEVEL_2      = 4
-  /// Insert more scenes here
+  /// Insert more scenes here...
+};
+
+/**
+ * @brief Data struct holding relevant information for every game scene
+ */
+struct SceneStatus
+{
+  explicit SceneStatus(GameScene scene) : current_scene(scene) {}
+  SceneStatus()          = default;
+  virtual ~SceneStatus() = default;
+
+  GameScene current_scene = GameScene::UNDEFINED;
+  GameScene new_scene     = GameScene::UNDEFINED;
+  bool change_scene       = false;
 };
 
 #endif // ASGEGAME_GAMESCENES_H

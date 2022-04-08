@@ -25,16 +25,31 @@ void SceneManager::setCurrentScene(const std::shared_ptr<Scene>& scene)
   scene->init();
 }
 
-Scene* SceneManager::getCurrentScene()
+GameScene SceneManager::getCurrentScene() const
 {
-  return currentScene.get();
+  return currentScene->getScene();
+}
+
+void SceneManager::checkCurrentSceneState()
+{
+  /// Grabs state of current scene every frame
+  SceneStatus current_state = currentScene->getSceneStatus();
+  if (current_state.change_scene)
+  {
+    for (const auto& scene : scenes)
+    {
+      if (scene->getScene() == current_state.new_scene)
+      {
+        setCurrentScene(scene);
+      }
+    }
+  }
 }
 
 void SceneManager::keyHandler(ASGE::SharedEventData data)
 {
   currentScene->keyHandler(data);
 }
-
 void SceneManager::update(ASGE::GameTime us)
 {
   currentScene->update(us);

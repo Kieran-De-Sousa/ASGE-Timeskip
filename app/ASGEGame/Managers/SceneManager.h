@@ -20,8 +20,8 @@ class SceneManager
   /**
    * @brief Constructor w/Param
    * @details Use when starting scene is known upon instantiation
-   * @param inputRef Required in all game scenes for input systems
    * @param rendererRef Required in all game scenes for rendering
+   * @param inputRef Required in all game scenes for input systems
    * @param scene Default/starting scene for game
    */
   SceneManager(
@@ -29,7 +29,9 @@ class SceneManager
   /**
    * @brief Default constructor
    * @details Use when starting scene is unknown upon creation - Use setter functions
-   * when to set game state
+   * when needed to set game state
+   * @param rendererRef Required in all game scenes for rendering
+   * @param inputRef Required in all game scenes for input systems
    * @see setCurrentScene()
    */
   explicit SceneManager(ASGE::Renderer& rendererRef, ASGE::Input& inputRef);
@@ -40,12 +42,15 @@ class SceneManager
    * @param scene Scene to add
    */
   void addScene(const std::shared_ptr<Scene>& scene);
+
   /**
    * @brief Sets current scene and calls init function within the scene
    * @param scene Scene to call overloaded functions
    */
   void setCurrentScene(const std::shared_ptr<Scene>& scene);
-  Scene* getCurrentScene();
+  [[nodiscard]] GameScene getCurrentScene() const;
+
+  void checkCurrentSceneState();
 
   /// Functions called within 'ASGEGame' that calls corresponding function in the current
   /// game scene

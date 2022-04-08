@@ -1,8 +1,14 @@
 #include "SceneMainMenu.h"
 
+SceneMainMenu::SceneMainMenu(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene) :
+  Scene(rendererRef, inputRef, scene)
+{
+}
+
 bool SceneMainMenu::init()
 {
-  gameScene = GameScene::MAIN_MENU;
+  setDefaultSceneStatus();
+
   renderer->setClearColour(ASGE::COLOURS::BLACK);
   game_font = renderer->loadFont("/data/fonts/Contra.ttf", 100, 10);
   Title.setFont(*game_font).setString("TIMESKIP").setPosition({ 350, 500 }).setScale(1.5);

@@ -30,7 +30,7 @@ struct ObjRect
 class SceneLevel1 : public Scene
 {
  public:
-  SceneLevel1(ASGE::Renderer& rendererRef, ASGE::Input& inputRef) : Scene(rendererRef, inputRef) {}
+  SceneLevel1(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene);
   virtual ~SceneLevel1() override = default;
 
   virtual bool init() override;

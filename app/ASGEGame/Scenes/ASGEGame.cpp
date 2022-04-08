@@ -14,7 +14,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   inputs->use_threads = false;
 
   scene_manager = std::make_unique<SceneManager>(
-    *renderer, *inputs, std::make_shared<SceneMainMenu>(*renderer, *inputs));
+    *renderer, *inputs, std::make_shared<SceneLevel1>(*renderer, *inputs, GameScene::LEVEL_1));
 }
 
 // void ASGENetGame::initAudio()
@@ -85,6 +85,7 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
   scene_manager->update(us);
+  scene_manager->checkCurrentSceneState();
 }
 
 /**

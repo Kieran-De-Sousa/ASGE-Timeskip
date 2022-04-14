@@ -96,6 +96,12 @@ class SceneLevel1 : public Scene
   int magSize              = 120;
   unsigned int bulletCount = 0;
   std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
+
+  // joey UI stuff
+  float p1_health_val = 100;
+  float p2_health_val = 100;
+  std::unique_ptr<ASGE::Sprite> p1_health_bar;
+  std::unique_ptr<ASGE::Sprite> p2_health_bar;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

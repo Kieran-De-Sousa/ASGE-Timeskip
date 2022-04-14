@@ -3,9 +3,8 @@
 //
 
 #include "Bullet.h"
-void Bullet::Vector2::normalise() {}
 
-float Bullet::Vector2::magnitude()
+Bullet::Bullet(ASGE::Renderer& rendererRef) : Sprite(rendererRef)
 {
-  return sqrt(x * x + y * y);
+  type = ComponentType::BULLET;
 }

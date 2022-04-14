@@ -5,9 +5,13 @@
 Player::Player(ASGE::Renderer& rendererRef, int id) :
   Entity(rendererRef), playerID(static_cast<PlayerID>(id))
 {
+  type = ComponentType::PLAYER;
 }
 /// Default Constructor
-Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef) {}
+Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef)
+{
+  type = ComponentType::PLAYER;
+}
 
 void Player::update() {}
 

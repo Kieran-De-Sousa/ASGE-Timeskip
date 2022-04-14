@@ -1,8 +1,11 @@
 #ifndef ASGEGAME_SCENEMANAGER_H
 #define ASGEGAME_SCENEMANAGER_H
 
-/// FSM
+/// Scenes
 #include "Scenes/Scene.h"
+#include "Scenes/SceneLevel1.h"
+#include "Scenes/SceneMainMenu.h"
+
 /// State Tracking
 #include "Scenes/GameScenes.h"
 
@@ -28,11 +31,11 @@ class SceneManager
     ASGE::Renderer& rendererRef, ASGE::Input& inputRef, const std::shared_ptr<Scene>& scene);
   /**
    * @brief Default constructor
-   * @details Use when starting scene is unknown upon creation - Use setter functions
-   * when needed to set game state
+   * @details Use when starting scene is unknown upon creation - Game uses first scene that can
+   * be created within the 'sceneFactory' function as the starting scene
    * @param rendererRef Required in all game scenes for rendering
    * @param inputRef Required in all game scenes for input systems
-   * @see setCurrentScene()
+   * @see setCurrentScene() @see SceneFactory()
    */
   explicit SceneManager(ASGE::Renderer& rendererRef, ASGE::Input& inputRef);
   virtual ~SceneManager() = default;
@@ -42,6 +45,19 @@ class SceneManager
    * @param scene Scene to add
    */
   void addScene(const std::shared_ptr<Scene>& scene);
+  /**
+   * @brief Creates all game scenes by looping through 'GameScene' enum
+   * @details Calls 'sceneFactory' function and adds return to 'scenes' array
+   * after assessing if the return is a nullptr. Sets currentScene to first element
+   * in 'scenes' vector.
+   */
+  void addGameScenes();
+  /**
+   * @brief Creates instance of game scene and returns its shared ptr
+   * @param gameScene GameScene enum value
+   * @return Shared ptr of game scene corresponding to enum state passed in
+   */
+  std::shared_ptr<Scene> sceneFactory(const GameScene& gameScene);
 
   /**
    * @brief Sets current scene and calls init function within the scene
@@ -51,6 +67,7 @@ class SceneManager
   [[nodiscard]] GameScene getCurrentScene() const;
 
   void checkCurrentSceneState();
+  [[nodiscard]] bool onExit() const { return exitGame; }
 
   /// Functions called within 'ASGEGame' that calls corresponding function in the current
   /// game scene
@@ -66,6 +83,7 @@ class SceneManager
   /// Scene FSM
   std::shared_ptr<Scene> currentScene;
   std::vector<std::shared_ptr<Scene>> scenes;
+  bool exitGame = false;
 };
 
 #endif // ASGEGAME_SCENEMANAGER_H

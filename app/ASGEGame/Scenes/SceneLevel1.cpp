@@ -40,30 +40,15 @@ bool SceneLevel1::init()
   renderMap();
   renderBackground();
 
-  playerIcon = renderer->createUniqueSprite();
-  playerIcon->loadTexture("data/sprites/Player1 Icon.png");
-  playerIcon->xPos(0);
-  playerIcon->yPos(64);
-  playerIcon->width(32);
-  playerIcon->height(32);
-  playerIcon->setGlobalZOrder(9);
-  // camera_two.lookAt({ ship->xPos(), ship->yPos() + 100 });
-  //  camera_one_label.setFont(*game_font).setString("Camera 1").setPosition({ 0, 55
-  //  }).setScale(1.5); camera_two_label.setFont(*game_font).setString("Camera 2").setPosition({
-  //  960, 55 }).setScale(1.5);
-  //
-  //  initAudio();
-
-  /// TESTING FOR DEFAULT CONSTRUCTORS OF DIFFERENT SPRITE OBJECT CLASSES
-  /// @note DELETE OR REMOVE ME WHEN TESTING IS COMPLETE
-  //  testSprite = std::make_unique<Sprite>(*renderer);
-  //  testEntity = std::make_unique<Entity>(*renderer);
-  //  testPlayer = std::make_unique<Player>(*renderer);
-
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
     directions.push_back({ 0, 0 });
+
+    auto bullet = std::make_unique<Bullet>(*renderer);
+    bullet->initialiseSprite("data/sprites/bulletSprite.png");
+    bullet->getSprite()->setGlobalZOrder(6);
+    betterBullets.emplace_back(bullet.get());
   }
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -86,12 +71,16 @@ void SceneLevel1::keyHandler(ASGE::SharedEventData data)
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
-  playerIcon->yPos(ship_look.y);
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     bullets[i]->xPos(bullets[i]->xPos() + directions[i].x * 8.4F);
     bullets[i]->yPos(bullets[i]->yPos() + directions[i].y * 8.4F);
+  }
+  for (auto& bullet : betterBullets)
+  {
+    bullet->setPosition(
+      bullet->getSprite()->xPos() + bullet->direction.x * 8.4F,
+      bullet->getSprite()->yPos() + bullet->direction.y * 8.4F);
   }
   // process single gamepad
   if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
@@ -175,10 +164,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
       bulletCount = 0;
     }
   }
-  //  if (keymap[ASGE::KEYS::KEY_S])
-  //  {
-  //    ship->yPos(ship->yPos() + 5);
-  //  }
+
   if (keymap[ASGE::KEYS::KEY_LEFT])
   {
     ship2->xPos(ship2->xPos() - 5);
@@ -218,155 +204,197 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     ship->yPos(ship->yPos() + 10);
   }
-  for (unsigned long long i = 0; i < tiles.size(); i++)
+  for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
   {
-    if (ship->xPos() >= tiles[i]->xPos() && ship->xPos() <= tiles[i]->xPos() + tiles[i]->width())
+    if (
+      ship->xPos() >= tilemapContactable[i]->xPos() &&
+      ship->xPos() <= tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
     {
       if (
-        ship->yPos() + ship->height() >= tiles[i]->yPos() &&
-        ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+        ship->yPos() + ship->height() >= tilemapContactable[i]->yPos() &&
+        ship->yPos() + ship->height() <=
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         groundCheck = true;
-        ship->yPos(tiles[i]->yPos() - ship->height());
+        ship->yPos(tilemapContactable[i]->yPos() - ship->height());
       }
       if (
-        ship->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
-        ship->yPos() + ship->height() > tiles[i]->yPos() + tiles[i]->height())
+        ship->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+        ship->yPos() + ship->height() >
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         jump      = false;
         hasPeaked = true;
       }
     }
     if (
-      ship->xPos() + ship->width() >= tiles[i]->xPos() &&
-      ship->xPos() + ship->width() <= tiles[i]->xPos() + tiles[i]->width())
+      ship->xPos() + ship->width() >= tilemapContactable[i]->xPos() &&
+      ship->xPos() + ship->width() <=
+        tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
     {
       if (
-        ship->yPos() + ship->height() >= tiles[i]->yPos() &&
-        ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+        ship->yPos() + ship->height() >= tilemapContactable[i]->yPos() &&
+        ship->yPos() + ship->height() <=
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         groundCheck = true;
-        ship->yPos(tiles[i]->yPos() - ship->height());
+        ship->yPos(tilemapContactable[i]->yPos() - ship->height());
       }
       if (
-        ship->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
-        ship->yPos() + ship->height() > tiles[i]->yPos() + tiles[i]->height())
+        ship->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+        ship->yPos() + ship->height() >
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         jump      = false;
         hasPeaked = true;
       }
     }
-    if (ship->yPos() >= tiles[i]->yPos() && ship->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    if (
+      ship->yPos() >= tilemapContactable[i]->yPos() &&
+      ship->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
-      if (ship->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship->xPos() > tiles[i]->xPos())
+      if (
+        ship->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
+        ship->xPos() > tilemapContactable[i]->xPos())
       {
-        ship->xPos(tiles[i]->xPos() + tiles[i]->width());
+        ship->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
     }
     if (
-      ship->yPos() + ship->height() >= tiles[i]->yPos() + tiles[i]->height() &&
-      ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
-    {
-      if (ship->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship->xPos() > tiles[i]->xPos())
-      {
-        ship->xPos(tiles[i]->xPos() + tiles[i]->width());
-      }
-    }
-    if (ship->yPos() >= tiles[i]->yPos() && ship->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+      ship->yPos() + ship->height() >=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+      ship->yPos() + ship->height() <=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
       if (
-        ship->xPos() + ship->width() > tiles[i]->xPos() &&
-        ship->xPos() + ship->width() < tiles[i]->xPos() + tiles[i]->width())
+        ship->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
+        ship->xPos() > tilemapContactable[i]->xPos())
       {
-        ship->xPos(tiles[i]->xPos() - ship->width());
+        ship->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
     }
     if (
-      ship->yPos() + ship->height() >= tiles[i]->yPos() + tiles[i]->height() &&
-      ship->yPos() + ship->height() <= tiles[i]->yPos() + tiles[i]->height())
+      ship->yPos() >= tilemapContactable[i]->yPos() &&
+      ship->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
       if (
-        ship->xPos() + ship->width() > tiles[i]->xPos() &&
-        ship->xPos() + ship->width() < tiles[i]->xPos() + tiles[i]->width())
+        ship->xPos() + ship->width() > tilemapContactable[i]->xPos() &&
+        ship->xPos() + ship->width() <
+          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
       {
-        ship->xPos(tiles[i]->xPos() - ship->width());
+        ship->xPos(tilemapContactable[i]->xPos() - ship->width());
+      }
+    }
+    if (
+      ship->yPos() + ship->height() >=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+      ship->yPos() + ship->height() <=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+    {
+      if (
+        ship->xPos() + ship->width() > tilemapContactable[i]->xPos() &&
+        ship->xPos() + ship->width() <
+          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+      {
+        ship->xPos(tilemapContactable[i]->xPos() - ship->width());
       }
     }
   }
 
   /// ship 2 logic
-  for (unsigned long long i = 0; i < tiles.size(); i++)
+  for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
   {
-    if (ship2->xPos() >= tiles[i]->xPos() && ship2->xPos() <= tiles[i]->xPos() + tiles[i]->width())
+    if (
+      ship2->xPos() >= tilemapContactable[i]->xPos() &&
+      ship2->xPos() <= tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
     {
       if (
-        ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
-        ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+        ship2->yPos() + ship2->height() >= tilemapContactable[i]->yPos() &&
+        ship2->yPos() + ship2->height() <=
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         groundCheck2 = true;
-        ship2->yPos(tiles[i]->yPos() - ship2->height());
+        ship2->yPos(tilemapContactable[i]->yPos() - ship2->height());
       }
       if (
-        ship2->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
-        ship2->yPos() + ship2->height() > tiles[i]->yPos() + tiles[i]->height())
+        ship2->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+        ship2->yPos() + ship2->height() >
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         jump2      = false;
         hasPeaked2 = true;
       }
     }
     if (
-      ship2->xPos() + ship2->width() >= tiles[i]->xPos() &&
-      ship2->xPos() + ship2->width() <= tiles[i]->xPos() + tiles[i]->width())
+      ship2->xPos() + ship2->width() >= tilemapContactable[i]->xPos() &&
+      ship2->xPos() + ship2->width() <=
+        tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
     {
       if (
-        ship2->yPos() + ship2->height() >= tiles[i]->yPos() &&
-        ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+        ship2->yPos() + ship2->height() >= tilemapContactable[i]->yPos() &&
+        ship2->yPos() + ship2->height() <=
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         groundCheck2 = true;
-        ship2->yPos(tiles[i]->yPos() - ship2->height());
+        ship2->yPos(tilemapContactable[i]->yPos() - ship2->height());
       }
       if (
-        ship2->yPos() < tiles[i]->yPos() + tiles[i]->height() &&
-        ship2->yPos() + ship2->height() > tiles[i]->yPos() + tiles[i]->height())
+        ship2->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+        ship2->yPos() + ship2->height() >
+          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
       {
         jump2      = false;
         hasPeaked2 = true;
       }
     }
-    if (ship2->yPos() >= tiles[i]->yPos() && ship2->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+    if (
+      ship2->yPos() >= tilemapContactable[i]->yPos() &&
+      ship2->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
-      if (ship2->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship2->xPos() > tiles[i]->xPos())
+      if (
+        ship2->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
+        ship2->xPos() > tilemapContactable[i]->xPos())
       {
-        ship2->xPos(tiles[i]->xPos() + tiles[i]->width());
+        ship2->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
     }
     if (
-      ship2->yPos() + ship2->height() >= tiles[i]->yPos() + tiles[i]->height() &&
-      ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
-    {
-      if (ship2->xPos() < tiles[i]->xPos() + tiles[i]->width() && ship2->xPos() > tiles[i]->xPos())
-      {
-        ship2->xPos(tiles[i]->xPos() + tiles[i]->width());
-      }
-    }
-    if (ship2->yPos() >= tiles[i]->yPos() && ship2->yPos() <= tiles[i]->yPos() + tiles[i]->height())
+      ship2->yPos() + ship2->height() >=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+      ship2->yPos() + ship2->height() <=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
       if (
-        ship2->xPos() + ship2->width() > tiles[i]->xPos() &&
-        ship2->xPos() + ship2->width() < tiles[i]->xPos() + tiles[i]->width())
+        ship2->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
+        ship2->xPos() > tilemapContactable[i]->xPos())
       {
-        ship2->xPos(tiles[i]->xPos() - ship2->width());
+        ship2->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
     }
     if (
-      ship2->yPos() + ship2->height() >= tiles[i]->yPos() + tiles[i]->height() &&
-      ship2->yPos() + ship2->height() <= tiles[i]->yPos() + tiles[i]->height())
+      ship2->yPos() >= tilemapContactable[i]->yPos() &&
+      ship2->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
     {
       if (
-        ship2->xPos() + ship2->width() > tiles[i]->xPos() &&
-        ship2->xPos() + ship2->width() < tiles[i]->xPos() + tiles[i]->width())
+        ship2->xPos() + ship2->width() > tilemapContactable[i]->xPos() &&
+        ship2->xPos() + ship2->width() <
+          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
       {
-        ship2->xPos(tiles[i]->xPos() - ship2->width());
+        ship2->xPos(tilemapContactable[i]->xPos() - ship2->width());
+      }
+    }
+    if (
+      ship2->yPos() + ship2->height() >=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
+      ship2->yPos() + ship2->height() <=
+        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+    {
+      if (
+        ship2->xPos() + ship2->width() > tilemapContactable[i]->xPos() &&
+        ship2->xPos() + ship2->width() <
+          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+      {
+        ship2->xPos(tilemapContactable[i]->xPos() - ship2->width());
       }
     }
   }
@@ -419,23 +447,139 @@ void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
 
 void SceneLevel1::render(const ASGE::GameTime& us)
 {
-  // example of split screen. just remove viewports and use
-  // a single camera if you don't require the use of split screen
-  // renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
-  // renderer->setProjectionMatrix(camera_one.getView());
-
-  // bottom view
+  /// bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
-  for (unsigned int i = 0; i < tiles.size(); ++i)
+  renderScene(us);
+
+  /// top view
+  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
+  renderer->setProjectionMatrix(camera_one.getView());
+  renderScene(us);
+}
+bool SceneLevel1::renderMap()
+{
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/PastMap2.tmx"))
   {
-    renderer->render(*tiles[i]);
-    // Logging::DEBUG("rendering tiles");
+    Logging::ERRORS("init::Failed to load map");
+    return false;
   }
-  for (unsigned int i = 0; i < tilesB.size(); ++i)
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  /// All collidable objects are checked within the init function as their location is will remain
+  /// the same during gameplay, i.e: they remain static.
+  for (const auto& layer : map.getLayers())
   {
-    renderer->render(*tilesB[i]);
-    // Logging::DEBUG("rendering tiles");
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tilemapContactable from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        {
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            if (tile_layer.getName() == "Ground")
+            {
+              auto& sprite = tilemapContactable.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+bool SceneLevel1::renderBackground()
+{
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/PastMap2.tmx"))
+  {
+    Logging::ERRORS("init::Failed to load map");
+    return false;
+  }
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tilemapContactable from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        {
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            auto& sprite = tilesBackground.emplace_back(renderer->createUniqueSprite());
+            if (sprite->loadTexture(tile->imagePath))
+            {
+              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+              sprite->width(static_cast<float>(tile->imageSize.x));
+              sprite->height(static_cast<float>(tile->imageSize.y));
+
+              sprite->scale(1);
+              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+void SceneLevel1::Camera() {}
+void SceneLevel1::DebugInfo()
+{
+  Logging::DEBUG(std::to_string(bullets[bulletCount]->xPos()));
+}
+
+void SceneLevel1::renderScene(const ASGE::GameTime& us)
+{
+  for (unsigned int i = 0; i < tilemapContactable.size(); ++i)
+  {
+    renderer->render(*tilemapContactable[i]);
+    // Logging::DEBUG("rendering tilemapContactable");
+  }
+  for (unsigned int i = 0; i < tilesBackground.size(); ++i)
+  {
+    renderer->render(*tilesBackground[i]);
+    // Logging::DEBUG("rendering tilemapContactable");
   }
   renderer->render(*ship);
   renderer->render(*ship2);
@@ -482,152 +626,4 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   {
     renderer->render(*bullets[i]);
   }
-  // top view
-  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
-  renderer->setProjectionMatrix(camera_one.getView());
-  renderer->render(*playerIcon);
-  //  renderer->render(*ship);
-  for (unsigned int i = 0; i < tiles.size(); ++i)
-  {
-    renderer->render(*tiles[i]);
-    // Logging::DEBUG("rendering tiles");
-  }
-  for (unsigned int i = 0; i < tilesB.size(); ++i)
-  {
-    renderer->render(*tilesB[i]);
-    // Logging::DEBUG("rendering tiles");
-  }
-  renderer->render(*ship);
-  renderer->render(*ship2);
-  for (unsigned long long int i = 0; i < bullets.size(); i++)
-  {
-    renderer->render(*bullets[i]);
-  }
-
-  // reset the view and don't use a camera, useful for HUD
-  //  renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 1080 });
-  //  renderer->setProjectionMatrix(0, 0, 1920, 1080);
-  //  renderer->render(camera_one_label);
-  //  renderer->render(camera_two_label);
-
-  // renderer->render(*testPlayer->getSprite());
-
-  // renderer->setProjectionMatrix(camera_one.getView());
-}
-bool SceneLevel1::renderMap()
-{
-  ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  /// All collidable objects are checked within the init function as their location is will remain
-  /// the same during gameplay, i.e: they remain static.
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tiles from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            /// All contactable objects can be checked within this if statement, currently only
-            /// walls but easily expandable with additional || / or
-            if (tile_layer.getName() == "Ground")
-            {
-              auto& sprite = tiles.emplace_back(renderer->createUniqueSprite());
-              if (sprite->loadTexture(tile->imagePath))
-              {
-                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-                sprite->width(static_cast<float>(tile->imageSize.x));
-                sprite->height(static_cast<float>(tile->imageSize.y));
-
-                sprite->scale(1);
-                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-                sprite->setGlobalZOrder(1);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return true;
-}
-bool SceneLevel1::renderBackground()
-{
-  ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  /// All collidable objects are checked within the init function as their location is will remain
-  /// the same during gameplay, i.e: they remain static.
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tiles from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            /// All contactable objects can be checked within this if statement, currently only
-            /// walls but easily expandable with additional || / or
-            auto& sprite = tilesB.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-            }
-          }
-        }
-      }
-    }
-  }
-  return true;
-}
-void SceneLevel1::Camera() {}
-void SceneLevel1::DebugInfo()
-{
-  Logging::DEBUG(std::to_string(bullets[bulletCount]->xPos()));
 }

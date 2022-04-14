@@ -6,12 +6,15 @@
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
+/// Base Class
+#include "Components/GameComponent.h"
+
 /**
  * @brief Base sprite class that is inherited by any object requiring ASGE Sprites
  * @details
  * @author Kieran
  */
-class Sprite
+class Sprite : public GameComponent
 {
  public:
   /**
@@ -19,10 +22,10 @@ class Sprite
    * objects
    * @param rendererRef Required for all objects using ASGE Sprites
    */
-  explicit Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
-  virtual ~Sprite() = default;
+  explicit Sprite(ASGE::Renderer& rendererRef);
+  virtual ~Sprite() override = default;
 
-  virtual void update() {}
+  virtual void update() override {}
 
   /**
    * @brief Initialise sprite with default values

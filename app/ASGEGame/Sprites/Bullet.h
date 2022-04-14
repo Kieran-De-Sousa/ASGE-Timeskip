@@ -5,19 +5,23 @@
 #ifndef ASGEGAME_BULLET_H
 #define ASGEGAME_BULLET_H
 
+#include "Components/Vector2.h"
 #include "Sprites/Sprite.h"
-#include <cmath>
 
 class Bullet : public Sprite
 {
  public:
-  struct Vector2
+  enum class BulletType : int
   {
-    float x = 0;
-    float y = 0;
-    void normalise();
-    float magnitude();
+    UNKNOWN = 0,
+    DEFAULT = 1
   };
+
+  explicit Bullet(ASGE::Renderer& rendererRef);
+  virtual ~Bullet() override = default;
+
+  Vector2 direction{ 0, 0 };
+  float velocity = 0.0F;
 };
 
 #endif // ASGEGAME_BULLET_H

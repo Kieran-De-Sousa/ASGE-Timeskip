@@ -2,7 +2,6 @@
 #define ASGEGAME_GAMESCENES_H
 
 /**
- *
  * @author Kieran
  */
 
@@ -15,9 +14,15 @@ enum class GameScene : int
   MAIN_MENU    = 1,
   LEVEL_SELECT = 2,
   LEVEL_1      = 3,
-  LEVEL_2      = 4
-  /// Insert more scenes here...
+  LEVEL_2      = 4,
+  /// Insert more scenes here
 };
+/// Provides enum iteration (Used for creating all game scenes in scene manager)
+static const std::vector<GameScene> ALL_GAMESCENES{ GameScene::UNDEFINED,
+                                                    GameScene::MAIN_MENU,
+                                                    GameScene::LEVEL_SELECT,
+                                                    GameScene::LEVEL_1,
+                                                    GameScene::LEVEL_2 };
 
 /**
  * @brief Data struct holding relevant information for every game scene
@@ -31,6 +36,7 @@ struct SceneStatus
   GameScene current_scene = GameScene::UNDEFINED;
   GameScene new_scene     = GameScene::UNDEFINED;
   bool change_scene       = false;
+  bool exit_game          = false;
 };
 
 #endif // ASGEGAME_GAMESCENES_H

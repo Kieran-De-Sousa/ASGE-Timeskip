@@ -13,8 +13,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   inputs->use_threads = false;
 
-  scene_manager = std::make_unique<SceneManager>(
-    *renderer, *inputs, std::make_shared<SceneLevel1>(*renderer, *inputs, GameScene::LEVEL_1));
+  scene_manager = std::make_unique<SceneManager>(*renderer, *inputs);
 }
 
 // void ASGENetGame::initAudio()
@@ -86,6 +85,12 @@ void ASGENetGame::update(const ASGE::GameTime& us)
 {
   scene_manager->update(us);
   scene_manager->checkCurrentSceneState();
+
+  /// Checks if current loaded scene wished for game to exit
+  if (scene_manager->onExit())
+  {
+    signalExit();
+  }
 }
 
 /**

@@ -1,5 +1,10 @@
 #include "Sprite.h"
 
+Sprite::Sprite(ASGE::Renderer& rendererRef) : renderer(&rendererRef)
+{
+  type = ComponentType::SPRITE;
+}
+
 bool Sprite::initialiseSprite(const std::string& filename)
 {
   sprite = renderer->createUniqueSprite();

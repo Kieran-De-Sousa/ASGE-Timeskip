@@ -40,6 +40,8 @@ class SceneLevel1 : public Scene
   virtual void fixedUpdate(const ASGE::GameTime& us) override;
   virtual void render(const ASGE::GameTime& us) override;
 
+  void renderScene(const ASGE::GameTime& us);
+
   bool renderMap();
   bool renderBackground();
   void Camera();
@@ -73,10 +75,13 @@ class SceneLevel1 : public Scene
   std::unique_ptr<Entity> player1;
 
   //  /// TILED - TILEMAP VECTORS
-  std::vector<std::unique_ptr<ASGE::Sprite>> tiles;
-  std::vector<std::unique_ptr<ASGE::Sprite>> tilesB;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilemapContactable;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilesBackground;
+
   std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
-  std::vector<Bullet::Vector2> directions;
+  std::vector<std::unique_ptr<Bullet>> betterBullets;
+
+  std::vector<Vector2> directions;
   bool gravity     = true;
   bool hasPeaked   = false;
   bool jump        = false;
@@ -101,7 +106,6 @@ class SceneLevel1 : public Scene
   tmx::Map map;
   int magSize              = 120;
   unsigned int bulletCount = 0;
-  std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
 
   /// Animation
   ObjRect animation_frames[5];

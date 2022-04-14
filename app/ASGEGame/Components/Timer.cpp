@@ -29,7 +29,7 @@ void Timer::setTimerDuration(float& timerDuration)
 }
 float Timer::getTimerDuration() const
 {
-  return 0;
+  return timerLength;
 }
 // Elapsed Time
 void Timer::setElapsedTime(float& elapsedTime)

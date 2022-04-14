@@ -43,6 +43,10 @@ class Scene : public std::enable_shared_from_this<Scene>
   virtual SceneStatus getSceneStatus() const;
   // Game Scene
   [[nodiscard]] virtual GameScene getScene() const;
+  /**
+   * @brief Change the current scene to the passed in game scene type
+   * @param game_scene Enum type of game scene to transition to
+   */
   void setNewScene(const GameScene& game_scene);
 
   /// Base virtual functions overridden in scene derived classes

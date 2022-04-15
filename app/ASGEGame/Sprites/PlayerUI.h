@@ -7,17 +7,12 @@
 class PlayerUI
 {
  public:
-  void init();
-  void update_health();
-  void render();
+  explicit PlayerUI() = default;
+  virtual ~PlayerUI() = default;
 
- private:
-  float p1_heatlh_val;
-  float p2_health_val;
-
-  std::unique_ptr<ASGE::Renderer> renderer;
-  std::unique_ptr<Sprite> p1_health_bar;
-  std::unique_ptr<Sprite> p2_health_bar;
+  void init(std::unique_ptr<Sprite> sprite, float health_val, float y_val);
+  // void update_health();
+  // void render();
 };
 
 #endif // ASGEGAME_PLAYERUI_H

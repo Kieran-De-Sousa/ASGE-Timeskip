@@ -1,9 +1,25 @@
 #include "PlayerUI.h"
 
-void PlayerUI::init(std::unique_ptr<Sprite> sprite, float health_val, float y_val)
+void PlayerUI::init()
 {
   // UI initialisation
-  sprite->initialiseSprite("data/sprites/green.jpg");
-  sprite->setSpriteVariables(health_val, 10, 3);
-  sprite->setPosition(10, y_val);
+  p1_health_bar = std::make_unique<Sprite>(*renderer);
+  p1_health_bar->initialiseSprite("data/sprites/green.jpg");
+  p1_health_bar->setSpriteVariables(p1_health_val, 10, 3);
+  p1_health_bar->setPosition(10, 10);
+
+  p2_health_bar = std::make_unique<Sprite>(*renderer);
+  p2_health_bar->initialiseSprite("data/sprites/green.jpg");
+  p2_health_bar->setSpriteVariables(p2_health_val, 10, 3);
+  p2_health_bar->setPosition(10, 550);
+}
+
+ASGE::Sprite* PlayerUI::getP1HealthBar()
+{
+  return p1_health_bar->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2HealthBar()
+{
+  return p2_health_bar->getSprite();
 }

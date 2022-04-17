@@ -44,16 +44,6 @@ bool SceneLevel1::init()
   //  testEntity = std::make_unique<Entity>(*renderer);
   //  testPlayer = std::make_unique<Player>(*renderer);
 
-  // ui shenanigans
-  p1_health_bar_sprite = std::make_unique<Sprite>(*renderer);
-  p1_health_bar        = std::make_unique<PlayerUI>();
-  // p1_health_bar->init(p1_health_bar_sprite, p1_health_val, 10); - temporarily broken
-
-  p2_health_bar = std::make_unique<Sprite>(*renderer);
-  p2_health_bar->initialiseSprite("data/sprites/green.jpg");
-  p2_health_bar->setSpriteVariables(p2_health_val, 10, 3);
-  p2_health_bar->setPosition(10, 550);
-
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
@@ -453,8 +443,7 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // renderer->setProjectionMatrix(camera_one.getView());
 
   // ui render
-  // renderer->render(*p1_health_bar->getSprite()); - broken temporarily
-  renderer->render(*p2_health_bar->getSprite());
+  // renderer->render(*UI.getP1HealthBar()); - it broke again
 }
 bool SceneLevel1::renderMap()
 {

@@ -51,14 +51,8 @@ ASGENetGame::~ASGENetGame()
  */
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 {
-  const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
-  keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
-
-  if (key->key == ASGE::KEYS::KEY_ESCAPE)
-  {
-    signalExit();
-  }
   scene_manager->keyHandler(data);
+  scene_manager->input();
 }
 
 /**
@@ -83,6 +77,7 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
  */
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
+  /// Assess input, update game and check the current screens state
   scene_manager->update(us);
   scene_manager->checkCurrentSceneState();
 

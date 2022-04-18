@@ -49,12 +49,33 @@ class Scene : public std::enable_shared_from_this<Scene>
    */
   void setNewScene(const GameScene& game_scene);
 
-  /// Base virtual functions overridden in scene derived classes
-  virtual bool init()                                 = 0;
-  virtual void keyHandler(ASGE::SharedEventData data) = 0;
-  virtual void update(const ASGE::GameTime& us)       = 0;
-  virtual void fixedUpdate(const ASGE::GameTime& us)  = 0;
-  virtual void render(const ASGE::GameTime& us)       = 0;
+  /**
+   * @brief Update keymap with current state of keyboard & mouse
+   * @param data Input event data
+   */
+  void keyHandler(const ASGE::SharedEventData& data);
+
+  //! Base virtual functions overridden in scene derived classes
+  /**
+   * @brief Instantiate game elements of scene
+   */
+  virtual bool init() = 0;
+  /**
+   * @brief Input handling for scenes
+   */
+  virtual void input() = 0;
+  /**
+   * @brief Updates scene every frame
+   */
+  virtual void update(const ASGE::GameTime& us) = 0;
+  /**
+   * @brief Update scene on fixed time step declared in "main.cpp"
+   */
+  virtual void fixedUpdate(const ASGE::GameTime& us) = 0;
+  /**
+   * @brief Render the scene
+   */
+  virtual void render(const ASGE::GameTime& us) = 0;
 
  protected:
   /// Save a pointer of renderer and input to pass into game scenes

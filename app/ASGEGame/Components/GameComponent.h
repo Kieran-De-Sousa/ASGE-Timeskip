@@ -1,6 +1,10 @@
 #ifndef ASGEGAME_GAMECOMPONENT_H
 #define ASGEGAME_GAMECOMPONENT_H
 
+/// Game Engine
+#include <Engine/Logger.hpp>
+#include <Engine/OGLGame.hpp>
+
 class GameComponent
 {
  public:
@@ -15,7 +19,7 @@ class GameComponent
   explicit GameComponent() = default;
   virtual ~GameComponent() = default;
 
-  virtual void update() = 0;
+  virtual void update(const ASGE::GameTime& us) = 0;
 
   void setComponentType(const ComponentType& componentType) { type = componentType; }
   [[nodiscard]] ComponentType getComponentType() const { return type; }

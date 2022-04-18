@@ -29,7 +29,7 @@ class SceneLevelSelect : public Scene
 
   virtual bool init() override;
 
-  virtual void keyHandler(ASGE::SharedEventData data) override;
+  virtual void input() override;
   virtual void update(const ASGE::GameTime& us) override;
   virtual void fixedUpdate(const ASGE::GameTime& us) override;
   virtual void render(const ASGE::GameTime& us) override;

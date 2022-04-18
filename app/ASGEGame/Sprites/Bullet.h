@@ -5,10 +5,13 @@
 #ifndef ASGEGAME_BULLET_H
 #define ASGEGAME_BULLET_H
 
-#include "Components/Vector2.h"
-#include "Sprites/Sprite.h"
+/// Base Class
+#include "Sprites/Entity.h"
 
-class Bullet : public Sprite
+/// Helper Classes
+#include "Components/Vector2.h"
+
+class Bullet : public Entity
 {
  public:
   enum class BulletType : int

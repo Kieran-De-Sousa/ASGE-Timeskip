@@ -71,10 +71,11 @@ class SceneManager
 
   /// Functions called within 'ASGEGame' that calls corresponding function in the current
   /// game scene
-  virtual void keyHandler(ASGE::SharedEventData data);
-  virtual void update(ASGE::GameTime us);
-  virtual void fixedUpdate(ASGE::GameTime us);
-  virtual void render(ASGE::GameTime us);
+  virtual void keyHandler(const ASGE::SharedEventData& data);
+  virtual void input();
+  virtual void update(const ASGE::GameTime& us);
+  virtual void fixedUpdate(const ASGE::GameTime& us);
+  virtual void render(const ASGE::GameTime& us);
 
  protected:
   /// Save a pointer of renderer and input to pass into game scenes

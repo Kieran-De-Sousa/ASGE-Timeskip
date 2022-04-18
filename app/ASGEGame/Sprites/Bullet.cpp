@@ -4,7 +4,7 @@
 
 #include "Bullet.h"
 
-Bullet::Bullet(ASGE::Renderer& rendererRef) : Sprite(rendererRef)
+Bullet::Bullet(ASGE::Renderer& rendererRef) : Entity(rendererRef), direction(0, 0)
 {
   type = ComponentType::BULLET;
 }

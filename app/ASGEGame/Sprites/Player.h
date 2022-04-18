@@ -6,6 +6,10 @@
 #include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
+/// Data Storage
+#include <map>
+#include <utility>
+
 /// Base Class
 #include "Entity.h"
 
@@ -42,21 +46,51 @@ class Player : public Entity
   explicit Player(ASGE::Renderer& rendererRef);
   ~Player() override = default;
 
-  virtual void update() override;
+  virtual void update(const ASGE::GameTime& us) override;
+
+  void updateKeymap(const std::map<int, bool>& key_state) { keymap = key_state; }
+  void updateGamepad(const std::map<int, ASGE::GamePadData>& gamepad_state)
+  {
+    gamepad = gamepad_state;
+  }
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
   void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); }
-  [[nodiscard]] int getPlayerID() const { return static_cast<int>(playerID); }
+  [[nodiscard]] PlayerID getPlayerID() const { return playerID; }
+  // Grounded
+  void setGrounded(const bool& grounded) { isGrounded = grounded; }
+  [[nodiscard]] bool getGrounded() const { return isGrounded; }
+  // Jump
+  void setJumping(const bool& jumping) { isJumping = jumping; }
+  [[nodiscard]] bool getJumping() const { return isJumping; }
+  // Jump Peaked
+  void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
+  [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
   // Velocity
-  ASGE::Point2D getVelocity();
-  void setVelocity(float _x, float _y);
+  void setVelocity(const float& _x, const float& _y);
+  [[nodiscard]] ASGE::Point2D getVelocity() const;
 
  protected:
   PlayerID playerID = PlayerID::UNKNOWN;
-  // Timers
-  Timer powerUpTimer;
-  float powerUpDuration  = 20;
+  /// Inputs
+  std::map<int, bool> keymap{};
+  std::map<int, ASGE::GamePadData> gamepad{};
+  /// Movement
+  // Walking
+  const float MOVEMENT_SPEED = 5;
+  // Jumping
+  const float JUMP_HEIGHT = 128;
+  bool gravity            = true;
+  bool isGrounded         = false;
+  bool isJumping          = false;
+  bool isJumpPeaked       = false;
+  float newPos            = 0;
+  // Position
+  float j_s              = 0;
   ASGE::Point2D velocity = { 0, 0 };
+  /// Timers
+  Timer powerUpTimer;
+  float powerUpDuration = 20;
 };
 #endif // ASGEGAME_PLAYER_H

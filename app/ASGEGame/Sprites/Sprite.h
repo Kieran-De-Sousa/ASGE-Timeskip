@@ -2,8 +2,6 @@
 #define ASGEGAME_SPRITE_H
 
 /// Game Engine
-#include <Engine/Logger.hpp>
-#include <Engine/OGLGame.hpp>
 #include <Engine/Sprite.hpp>
 
 /// Base Class
@@ -25,7 +23,7 @@ class Sprite : public GameComponent
   explicit Sprite(ASGE::Renderer& rendererRef);
   virtual ~Sprite() override = default;
 
-  virtual void update() override {}
+  virtual void update(const ASGE::GameTime& us) override {}
 
   /**
    * @brief Initialise sprite with default values
@@ -52,7 +50,7 @@ class Sprite : public GameComponent
 
  protected:
   std::unique_ptr<ASGE::Sprite> sprite = nullptr;
-  /// TODO: CAN BE REGULAR POINTER
+  // TODO: CAN BE REGULAR POINTER
   std::unique_ptr<ASGE::Renderer> renderer = nullptr;
 
   const std::vector<float> DEFAULT_SPRITE_POSITION{ 0, 0 };

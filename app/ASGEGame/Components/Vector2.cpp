@@ -1,9 +1,11 @@
-#include "Vector2.h"
+/// Helper
 #include <cmath>
+
+#include "Vector2.h"
 
 void Vector2::normalise() {}
 
 float Vector2::magnitude()
 {
-  return sqrt(x * x + y * y);
+  return sqrt(position.x * position.x + position.y * position.y);
 }

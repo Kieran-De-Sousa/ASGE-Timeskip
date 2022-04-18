@@ -80,20 +80,24 @@ void SceneManager::checkCurrentSceneState()
   }
 }
 
-/// Calls virtual functions within scene base class of all game scenes
-void SceneManager::keyHandler(ASGE::SharedEventData data)
+/// Calls virtual functions within scene base class
+void SceneManager::keyHandler(const ASGE::SharedEventData& data)
 {
   currentScene->keyHandler(data);
 }
-void SceneManager::update(ASGE::GameTime us)
+void SceneManager::input()
+{
+  currentScene->input();
+}
+void SceneManager::update(const ASGE::GameTime& us)
 {
   currentScene->update(us);
 }
-void SceneManager::render(ASGE::GameTime us)
+void SceneManager::render(const ASGE::GameTime& us)
 {
   currentScene->render(us);
 }
-void SceneManager::fixedUpdate(ASGE::GameTime us)
+void SceneManager::fixedUpdate(const ASGE::GameTime& us)
 {
   currentScene->fixedUpdate(us);
 }

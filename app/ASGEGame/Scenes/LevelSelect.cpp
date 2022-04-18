@@ -20,11 +20,8 @@ bool SceneLevelSelect::init()
   return true;
 }
 
-void SceneLevelSelect::keyHandler(ASGE::SharedEventData data)
+void SceneLevelSelect::input()
 {
-  const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
-  keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
-
   if (keymap[ASGE::KEYS::KEY_UP] || keymap[ASGE::KEYS::KEY_W])
   {
     switch (state)
@@ -79,6 +76,7 @@ void SceneLevelSelect::keyHandler(ASGE::SharedEventData data)
       break;
   }
 }
+
 void SceneLevelSelect::update(const ASGE::GameTime& us) {}
 
 void SceneLevelSelect::fixedUpdate(const ASGE::GameTime& us) {}

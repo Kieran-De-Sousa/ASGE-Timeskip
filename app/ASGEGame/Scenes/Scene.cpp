@@ -5,6 +5,17 @@ Scene::Scene(ASGE::Renderer& rendererRef, ASGE::Input& inputRef, GameScene scene
 {
 }
 
+void Scene::keyHandler(const ASGE::SharedEventData& data)
+{
+  const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
+  keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
+
+  if (key->key == ASGE::KEYS::KEY_ESCAPE)
+  {
+    sceneStatus.exit_game = true;
+  }
+}
+
 /// SETTER & GETTER FUNCTIONS
 // Scene Status
 void Scene::setDefaultSceneStatus()

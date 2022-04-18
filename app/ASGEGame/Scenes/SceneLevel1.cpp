@@ -9,46 +9,31 @@ bool SceneLevel1::init()
 {
   setDefaultSceneStatus();
 
-  ship = renderer->createUniqueSprite();
-  ship->loadTexture("/data/sprites/Player1Animation.png");
-  ship->width(32);
-  ship->height(32);
-  ship->xPos(64);
-  ship->yPos(240);
-  ship->setGlobalZOrder(3);
+  player1 = std::make_unique<Player>(*renderer);
+  player1->initialiseSprite("/data/sprites/Player1Animation.png");
+  player1->setSpriteVariables(32, 32, 3);
+  player1->setPosition(64, 240);
 
-  ship2 = renderer->createUniqueSprite();
-  ship2->loadTexture("/data/sprites/Player2Animation.png");
-  ship2->width(32);
-  ship2->height(32);
-  ship2->xPos(64);
-  ship2->yPos(240);
-  ship2->setGlobalZOrder(3);
+  player2 = std::make_unique<Player>(*renderer);
+  player2->initialiseSprite("/data/sprites/Player2Animation.png");
+  player2->setSpriteVariables(32, 32, 3);
+  player2->setPosition(64, 240);
 
-  /// Animations
-  ship->srcRect()[0]  = 0;
-  ship->srcRect()[1]  = 0;
-  ship->srcRect()[2]  = 32;
-  ship->srcRect()[3]  = 32;
-  ship2->srcRect()[0] = 0;
-  ship2->srcRect()[1] = 0;
-  ship2->srcRect()[2] = 32;
-  ship2->srcRect()[3] = 32;
-
-  camera_one.lookAt(ship_look);
-  camera_two.lookAt(ship2_look);
+  camera_one.lookAt(player1Look);
+  camera_two.lookAt(player2Look);
   renderMap();
   renderBackground();
 
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
-    directions.push_back({ 0, 0 });
+    directions.emplace_back(0, 0);
 
-    auto bullet = std::make_unique<Bullet>(*renderer);
-    bullet->initialiseSprite("data/sprites/bulletSprite.png");
-    bullet->getSprite()->setGlobalZOrder(6);
-    betterBullets.emplace_back(bullet.get());
+    // TODO: Finish below
+    //    auto bullet = std::make_unique<Bullet>(*renderer);
+    //    bullet->initialiseSprite("data/sprites/bulletSprite.png");
+    //    bullet->getSprite()->setGlobalZOrder(6);
+    //    betterBullets.emplace_back(bullet.get());
   }
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -63,383 +48,117 @@ bool SceneLevel1::init()
   return true;
 }
 
-void SceneLevel1::keyHandler(ASGE::SharedEventData data)
+void SceneLevel1::input()
 {
-  const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
-  keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
+  // TODO: updateGamepad() for players
+  player1->updateKeymap(keymap);
+  player2->updateKeymap(keymap);
 }
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
+  // TODO: Finish conversion into "betterBullets" (part of bullet class)
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
-    bullets[i]->xPos(bullets[i]->xPos() + directions[i].x * 8.4F);
-    bullets[i]->yPos(bullets[i]->yPos() + directions[i].y * 8.4F);
-  }
-  for (auto& bullet : betterBullets)
-  {
-    bullet->setPosition(
-      bullet->getSprite()->xPos() + bullet->direction.x * 8.4F,
-      bullet->getSprite()->yPos() + bullet->direction.y * 8.4F);
-  }
-  // process single gamepad
-  if (auto gamepad = inputs->getGamePad(); gamepad.is_connected)
-  {
-    if (((gamepad.buttons[0]) != 0u) && !gravity && groundCheck)
-    {
-      j_s = 3.0f;
-      g_s = 0;
-      Logging::DEBUG("jump");
-      newPos       = ship->yPos() - 128;
-      jump         = true;
-      groundCheck  = false;
-      player1State = JUMPING;
-    }
-    if (abs(gamepad.axis[0]) > 0.1)
-    {
-      ship->xPos(ship->xPos() + 5 * gamepad.axis[0]);
-    }
+    bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
+    bullets[i]->yPos(bullets[i]->yPos() + directions[i].position.y * 8.4F);
   }
 
-  player1State = player2State = IDLE;
+  player1->update(us);
+  player2->update(us);
 
-  if (keymap[ASGE::KEYS::KEY_SPACE])
-  {
-    DebugInfo();
-  }
-  if (keymap[ASGE::KEYS::KEY_A])
-  {
-    ship->xPos(ship->xPos() - 5);
-    ship->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
-    player1State = RUNNING;
-  }
-  if (keymap[ASGE::KEYS::KEY_D])
-  {
-    ship->xPos(ship->xPos() + 5);
-    ship->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
-    player1State = RUNNING;
-  }
-  if (keymap[ASGE::KEYS::KEY_W] && groundCheck)
-  {
-    // Logging::DEBUG("jump");
-    jump        = true;
-    groundCheck = false;
-    j_s         = 3.0f;
-    g_s         = 0;
-    Logging::DEBUG("jump");
-    newPos       = ship->yPos() - 128;
-    jump         = true;
-    player1State = JUMPING;
-  }
-  if (keymap[ASGE::KEYS::KEY_F])
-  {
-    if (ship->flipFlags() == ASGE::Sprite::FLIP_X)
-    {
-      bullets[bulletCount]->xPos(ship->xPos() - bullets[bulletCount]->width());
-      bullets[bulletCount]->yPos(
-        ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
-      directions[bulletCount].x = -1;
-    }
-    if (ship->flipFlags() == ASGE::Sprite::NORMAL)
-    {
-      bullets[bulletCount]->xPos(ship->xPos() + ship->width());
-      bullets[bulletCount]->yPos(
-        ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
-      directions[bulletCount].x = 1;
-    }
-    bulletCount++;
-    if (bulletCount > 25)
-    {
-      bulletCount = 0;
-    }
-  }
-  if (keymap[ASGE::KEYS::KEY_SLASH])
-  {
-    bullets[bulletCount]->xPos(ship2->xPos() + ship2->width());
-    bullets[bulletCount]->yPos(
-      ship2->yPos() + ship2->height() / 2 - bullets[bulletCount]->height());
-    bulletCount++;
-    if (bulletCount > 25)
-    {
-      bulletCount = 0;
-    }
-  }
-
-  if (keymap[ASGE::KEYS::KEY_LEFT])
-  {
-    ship2->xPos(ship2->xPos() - 5);
-    ship2->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
-    player2State = RUNNING;
-  }
-  if (keymap[ASGE::KEYS::KEY_RIGHT])
-  {
-    ship2->xPos(ship2->xPos() + 5);
-    ship2->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
-    player2State = RUNNING;
-  }
-  if (keymap[ASGE::KEYS::KEY_UP] && groundCheck2)
-  {
-    jump2        = true;
-    groundCheck2 = false;
-    j_s2         = 3.0f;
-    g_s2         = 0;
-    Logging::DEBUG("jump");
-    newPos2      = ship2->yPos() - 96;
-    jump2        = true;
-    player2State = JUMPING;
-  }
-
-  if (gravity)
-  {
-    j_s = 7.0f;
-    j_s -= 0.3f;
-    ship->yPos(ship->yPos() - j_s);
-    if (ship->yPos() < newPos)
-    {
-      jump      = false;
-      hasPeaked = true;
-    }
-  }
-  if ((!groundCheck || hasPeaked) && !jump)
-  {
-    ship->yPos(ship->yPos() + 10);
-  }
   for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
   {
-    if (
-      ship->xPos() >= tilemapContactable[i]->xPos() &&
-      ship->xPos() <= tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+    /// Player 1 Collision Detection
+    if (Helper::CollisionDetection::inXBounds(
+          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (
-        ship->yPos() + ship->height() >= tilemapContactable[i]->yPos() &&
-        ship->yPos() + ship->height() <=
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      if (Helper::CollisionDetection::touchingTop(
+            player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        groundCheck = true;
-        ship->yPos(tilemapContactable[i]->yPos() - ship->height());
+        player1->setGrounded(true);
+        player1->getSprite()->yPos(tilemapContactable[i]->yPos() - player1->getSprite()->height());
       }
-      if (
-        ship->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-        ship->yPos() + ship->height() >
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      else if (Helper::CollisionDetection::touchingBottom(
+                 player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        jump      = false;
-        hasPeaked = true;
+        player1->setJumping(false);
+        player1->setJumpPeaked(true);
       }
     }
-    if (
-      ship->xPos() + ship->width() >= tilemapContactable[i]->xPos() &&
-      ship->xPos() + ship->width() <=
-        tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+    if (Helper::CollisionDetection::playerYChecking(
+          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (
-        ship->yPos() + ship->height() >= tilemapContactable[i]->yPos() &&
-        ship->yPos() + ship->height() <=
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      if (Helper::CollisionDetection::touchingLeft(
+            player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        groundCheck = true;
-        ship->yPos(tilemapContactable[i]->yPos() - ship->height());
+        player1->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
-      if (
-        ship->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-        ship->yPos() + ship->height() >
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      else if (Helper::CollisionDetection::touchingRight(
+                 player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        jump      = false;
-        hasPeaked = true;
+        player1->getSprite()->xPos(tilemapContactable[i]->xPos() - player1->getSprite()->width());
       }
     }
-    if (
-      ship->yPos() >= tilemapContactable[i]->yPos() &&
-      ship->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
-        ship->xPos() > tilemapContactable[i]->xPos())
-      {
-        ship->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-    }
-    if (
-      ship->yPos() + ship->height() >=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-      ship->yPos() + ship->height() <=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
-        ship->xPos() > tilemapContactable[i]->xPos())
-      {
-        ship->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-    }
-    if (
-      ship->yPos() >= tilemapContactable[i]->yPos() &&
-      ship->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship->xPos() + ship->width() > tilemapContactable[i]->xPos() &&
-        ship->xPos() + ship->width() <
-          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
-      {
-        ship->xPos(tilemapContactable[i]->xPos() - ship->width());
-      }
-    }
-    if (
-      ship->yPos() + ship->height() >=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-      ship->yPos() + ship->height() <=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship->xPos() + ship->width() > tilemapContactable[i]->xPos() &&
-        ship->xPos() + ship->width() <
-          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
-      {
-        ship->xPos(tilemapContactable[i]->xPos() - ship->width());
-      }
-    }
-  }
 
-  /// ship 2 logic
-  for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
-  {
-    if (
-      ship2->xPos() >= tilemapContactable[i]->xPos() &&
-      ship2->xPos() <= tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+    /// Player 2 Collision Detection
+    if (Helper::CollisionDetection::inXBounds(
+          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (
-        ship2->yPos() + ship2->height() >= tilemapContactable[i]->yPos() &&
-        ship2->yPos() + ship2->height() <=
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      if (Helper::CollisionDetection::touchingTop(
+            player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        groundCheck2 = true;
-        ship2->yPos(tilemapContactable[i]->yPos() - ship2->height());
+        player2->setGrounded(true);
+        player2->getSprite()->yPos(tilemapContactable[i]->yPos() - player2->getSprite()->height());
       }
-      if (
-        ship2->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-        ship2->yPos() + ship2->height() >
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      else if (Helper::CollisionDetection::touchingBottom(
+                 player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        jump2      = false;
-        hasPeaked2 = true;
+        player2->setJumping(false);
+        player2->setJumpPeaked(true);
       }
     }
-    if (
-      ship2->xPos() + ship2->width() >= tilemapContactable[i]->xPos() &&
-      ship2->xPos() + ship2->width() <=
-        tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
+    if (Helper::CollisionDetection::playerYChecking(
+          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (
-        ship2->yPos() + ship2->height() >= tilemapContactable[i]->yPos() &&
-        ship2->yPos() + ship2->height() <=
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      if (Helper::CollisionDetection::touchingLeft(
+            player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        groundCheck2 = true;
-        ship2->yPos(tilemapContactable[i]->yPos() - ship2->height());
+        player2->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
       }
-      if (
-        ship2->yPos() < tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-        ship2->yPos() + ship2->height() >
-          tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
+      else if (Helper::CollisionDetection::touchingRight(
+                 player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
       {
-        jump2      = false;
-        hasPeaked2 = true;
+        player2->getSprite()->xPos(tilemapContactable[i]->xPos() - player2->getSprite()->width());
       }
     }
-    if (
-      ship2->yPos() >= tilemapContactable[i]->yPos() &&
-      ship2->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship2->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
-        ship2->xPos() > tilemapContactable[i]->xPos())
-      {
-        ship2->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-    }
-    if (
-      ship2->yPos() + ship2->height() >=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-      ship2->yPos() + ship2->height() <=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship2->xPos() < tilemapContactable[i]->xPos() + tilemapContactable[i]->width() &&
-        ship2->xPos() > tilemapContactable[i]->xPos())
-      {
-        ship2->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-    }
-    if (
-      ship2->yPos() >= tilemapContactable[i]->yPos() &&
-      ship2->yPos() <= tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship2->xPos() + ship2->width() > tilemapContactable[i]->xPos() &&
-        ship2->xPos() + ship2->width() <
-          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
-      {
-        ship2->xPos(tilemapContactable[i]->xPos() - ship2->width());
-      }
-    }
-    if (
-      ship2->yPos() + ship2->height() >=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height() &&
-      ship2->yPos() + ship2->height() <=
-        tilemapContactable[i]->yPos() + tilemapContactable[i]->height())
-    {
-      if (
-        ship2->xPos() + ship2->width() > tilemapContactable[i]->xPos() &&
-        ship2->xPos() + ship2->width() <
-          tilemapContactable[i]->xPos() + tilemapContactable[i]->width())
-      {
-        ship2->xPos(tilemapContactable[i]->xPos() - ship2->width());
-      }
-    }
-  }
-
-  if (gravity2)
-  {
-    j_s2 = 7.0f;
-    j_s2 -= 0.3f;
-    ship2->yPos(ship2->yPos() - j_s2);
-    if (ship2->yPos() < newPos2)
-    {
-      jump2      = false;
-      hasPeaked2 = true;
-    }
-  }
-  if ((!groundCheck2 || hasPeaked2) && !jump2)
-  {
-    ship2->yPos(ship2->yPos() + 10);
   }
 
   // moving the camera
-  if (ship->xPos() > ship_look.x)
+  if (player1->getSprite()->xPos() > player1Look.x)
   {
-    ship_look.x = ship->xPos();
+    player1Look.x = player1->getSprite()->xPos();
   }
-  ship_look.y  = ship->yPos();
-  ship2_look.y = ship2->yPos();
+  player1Look.y = player1->getSprite()->yPos();
+  player2Look.y = player2->getSprite()->yPos();
   // stopping player exit
-  if (ship->xPos() < ship_look.x - 960)
+  if (player1->getSprite()->xPos() < player1Look.x - 960)
   {
-    ship->xPos(ship_look.x - 960);
+    player1->getSprite()->xPos(player1Look.x - 960);
   }
-  camera_one.lookAt(ship_look);
+  camera_one.lookAt(player1Look);
   camera_one.setZoom(2.0F);
 
-  if (ship2->xPos() > ship2_look.x)
+  if (player2->getSprite()->xPos() > player2Look.x)
   {
-    ship2_look.x = ship2->xPos();
+    player2Look.x = player2->getSprite()->xPos();
   }
   // stopping player exit
-  if (ship2->xPos() < ship2_look.x - 540)
+  if (player2->getSprite()->xPos() < player2Look.x - 540)
   {
-    ship2->xPos(ship2_look.x - 540);
+    player2->getSprite()->xPos(player2Look.x - 540);
   }
-  camera_two.lookAt(ship2_look);
+  camera_two.lookAt(player2Look);
   camera_two.setZoom(2.0F);
 }
 
@@ -457,6 +176,28 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   renderer->setProjectionMatrix(camera_one.getView());
   renderScene(us);
 }
+
+void SceneLevel1::renderScene(const ASGE::GameTime& us)
+{
+  for (unsigned int i = 0; i < tilemapContactable.size(); ++i)
+  {
+    renderer->render(*tilemapContactable[i]);
+  }
+  for (unsigned int i = 0; i < tilesBackground.size(); ++i)
+  {
+    renderer->render(*tilesBackground[i]);
+  }
+
+  renderer->render(*player1->getSprite());
+  renderer->render(*player2->getSprite());
+
+  // TODO: Convert into "betterBullets"
+  for (unsigned long long int i = 0; i < bullets.size(); i++)
+  {
+    renderer->render(*bullets[i]);
+  }
+}
+
 bool SceneLevel1::renderMap()
 {
   ASGE::FILEIO::File tile_map;
@@ -567,63 +308,4 @@ void SceneLevel1::Camera() {}
 void SceneLevel1::DebugInfo()
 {
   Logging::DEBUG(std::to_string(bullets[bulletCount]->xPos()));
-}
-
-void SceneLevel1::renderScene(const ASGE::GameTime& us)
-{
-  for (unsigned int i = 0; i < tilemapContactable.size(); ++i)
-  {
-    renderer->render(*tilemapContactable[i]);
-    // Logging::DEBUG("rendering tilemapContactable");
-  }
-  for (unsigned int i = 0; i < tilesBackground.size(); ++i)
-  {
-    renderer->render(*tilesBackground[i]);
-    // Logging::DEBUG("rendering tilemapContactable");
-  }
-  renderer->render(*ship);
-  renderer->render(*ship2);
-
-  animation_timer += static_cast<float>(us.deltaInSecs());
-  if (animation_timer > ANIMATION_FRAME_RATE)
-  {
-    // player1
-    if (player1State == RUNNING)
-    {
-      animation_index1 += 1;
-      if (animation_index1 > 3)
-        animation_index1 = 0;
-    }
-    else if (player1State == IDLE)
-    {
-      animation_index1 = 4;
-    }
-    else if (player1State == JUMPING)
-    {
-      animation_index1 = 5;
-    }
-    // gets the frame according to the animation index
-    ship->srcRect()[0] = static_cast<float>(animation_index1) * 32;
-    if (player2State == RUNNING)
-    {
-      animation_index2 += 1;
-      if (animation_index2 > 3)
-        animation_index2 = 0;
-    }
-    else if (player2State == IDLE)
-    {
-      animation_index2 = 4;
-    }
-    else if (player2State == JUMPING)
-    {
-      animation_index2 = 5;
-    }
-    ship2->srcRect()[0] = static_cast<float>(animation_index2) * 32;
-    animation_timer     = 0.0f;
-  }
-
-  for (unsigned long long int i = 0; i < bullets.size(); i++)
-  {
-    renderer->render(*bullets[i]);
-  }
 }

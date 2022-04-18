@@ -101,7 +101,7 @@ class SceneLevel1 : public Scene
   std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
 
   // ui test shenanigans
-  PlayerUI UI;
+  std::unique_ptr<PlayerUI> UI = nullptr;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

@@ -7,7 +7,7 @@
 class PlayerUI
 {
  public:
-  explicit PlayerUI() = default;
+  explicit PlayerUI(ASGE::Renderer& rendererRef);
   virtual ~PlayerUI() = default;
 
   void init();

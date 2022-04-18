@@ -44,6 +44,10 @@ bool SceneLevel1::init()
   //  testEntity = std::make_unique<Entity>(*renderer);
   //  testPlayer = std::make_unique<Player>(*renderer);
 
+  // UI Initialisation
+  UI = std::make_unique<PlayerUI>(*renderer);
+  UI->init();
+
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
@@ -379,6 +383,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     ship2->xPos(ship2_look.x - 540);
   }
   camera_two.lookAt(ship2_look);
+
   camera_two.setZoom(2.0F);
 }
 
@@ -443,7 +448,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // renderer->setProjectionMatrix(camera_one.getView());
 
   // ui render
-  // renderer->render(*UI.getP1HealthBar()); - it broke again
+  renderer->render(*UI->getP1HealthBar());
+  renderer->render(*UI->getP2HealthBar());
 }
 bool SceneLevel1::renderMap()
 {

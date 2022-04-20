@@ -70,6 +70,7 @@ class Player : public Entity
   // Velocity
   void setVelocity(const float& _x, const float& _y);
   [[nodiscard]] ASGE::Point2D getVelocity() const;
+  void setJumpSpeed(const float& jump) { j_s = jump; }
 
  protected:
   PlayerID playerID = PlayerID::UNKNOWN;

@@ -19,9 +19,10 @@ void Player::update(const ASGE::GameTime& us)
   if (keymap[ASGE::KEYS::KEY_W] && isGrounded)
   {
     newPos     = sprite->yPos() - JUMP_HEIGHT;
-    j_s        = 3.0f;
+    j_s        = -10.0f;
     isJumping  = true;
     isGrounded = false;
+    // gravity = false;
   }
   /// Move left
   if (keymap[ASGE::KEYS::KEY_A])
@@ -59,9 +60,12 @@ void Player::update(const ASGE::GameTime& us)
 
   if (gravity)
   {
-    j_s = 7.0f;
-    j_s -= 0.3f;
-    sprite->yPos(sprite->yPos() - j_s);
+    j_s += 0.3f;
+    if (j_s > 10.0f)
+    {
+      j_s = 10.0f;
+    }
+    sprite->yPos(sprite->yPos() + j_s);
     if (sprite->yPos() < newPos)
     {
       isJumping    = false;
@@ -70,7 +74,7 @@ void Player::update(const ASGE::GameTime& us)
   }
   if ((!isGrounded || isJumpPeaked) && !isJumping)
   {
-    sprite->yPos(sprite->yPos() + 10);
+    gravity = true;
   }
 }
 

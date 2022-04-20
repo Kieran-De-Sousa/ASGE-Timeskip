@@ -19,6 +19,10 @@
 /// Helpers
 #include "Components/Helper.h"
 
+/// Audio
+#include "soloud.h"
+#include "soloud_wav.h"
+
 struct ObjRect
 {
   float x, y, w, h;
@@ -49,6 +53,7 @@ class SceneLevel1 : public Scene
   bool renderBackground();
   void Camera();
   void DebugInfo();
+  void initAudio();
 
  private:
   // Font
@@ -59,7 +64,6 @@ class SceneLevel1 : public Scene
   // some cameras
   ASGE::Camera camera_one{ 1920, 560 };
   ASGE::Camera camera_two{ 1920, 560 };
-  void initAudio();
 
   /// Players
   std::unique_ptr<Player> player1 = nullptr;
@@ -80,6 +84,10 @@ class SceneLevel1 : public Scene
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesBackground;
 
   tmx::Map map;
+
+  SoLoud::Soloud audio_engine;
+  SoLoud::Wav background_audio;
+  SoLoud::Wav fireAudio;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

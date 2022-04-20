@@ -45,6 +45,23 @@ bool SceneLevel1::init()
     bullets[i]->setGlobalZOrder(6);
   }
 
+  audio_engine.init();
+
+  ASGE::FILEIO::File bg_audio_file;
+  if (bg_audio_file.open("/data/audio/bgm_action_4.mp3")) // open the file
+  {
+    static auto buffer = bg_audio_file.read(); // read its contents
+    background_audio.loadMem(
+      buffer.as_unsigned_char(), static_cast<unsigned int>(buffer.length), false, false);
+  }
+  ASGE::FILEIO::File f_audio_file;
+  if (f_audio_file.open("/data/audio/sfx_wpn_machinegun_loop3.wav")) // open the file
+  {
+    static auto buffer = f_audio_file.read(); // read its contents
+    fireAudio.loadMem(
+      buffer.as_unsigned_char(), static_cast<unsigned int>(buffer.length), false, false);
+  }
+  audio_engine.play(background_audio);
   return true;
 }
 
@@ -160,6 +177,11 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   }
   camera_two.lookAt(player2Look);
   camera_two.setZoom(2.0F);
+
+  if (keymap[ASGE::KEYS::KEY_F])
+  {
+    audio_engine.play(fireAudio);
+  }
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}

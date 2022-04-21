@@ -32,7 +32,7 @@ set(GAME_SOURCES
         Components/Helper.cpp
         Sprites/Enemy.cpp
         Sprites/EnemyChaser.cpp
-        Sprites/PlayerUI.cpp)
+        Components/ControlSchemes.h)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

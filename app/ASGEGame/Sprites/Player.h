@@ -14,6 +14,7 @@
 #include "Entity.h"
 
 /// Helper Classes
+#include "Bullet.h"
 #include "Components/Timer.h"
 
 /**
@@ -33,7 +34,7 @@ class Player : public Entity
 
   enum class PlayerState : int
   {
-    IDLE = 0,
+    IDLE    = 0,
     RUNNING = 1,
     JUMPING = 2
   };
@@ -77,8 +78,12 @@ class Player : public Entity
   // Velocity
   void setVelocity(const float& _x, const float& _y);
   [[nodiscard]] ASGE::Point2D getVelocity() const;
+  // Jump Speed
   void setJumpSpeed(const float& jump) { j_s = jump; }
 
+  // Bullets
+  [[nodiscard]] const std::vector<std::unique_ptr<Bullet>>& getBullets() const { return bullets; }
+  [[nodiscard]] int getCurrentBullet() const { return currentBullet; }
 
  protected:
   PlayerID playerID = PlayerID::UNKNOWN;
@@ -98,12 +103,17 @@ class Player : public Entity
   // Position
   float j_s              = 0;
   ASGE::Point2D velocity = { 0, 0 };
+  /// Bullets
+  std::vector<std::unique_ptr<Bullet>> bullets;
+  const int DEFAULT_MAG_SIZE = 30;
+  int magSize                = DEFAULT_MAG_SIZE;
+  int currentBullet          = 0;
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
 
   /// Animation
-  //ObjRect animation_frames[5];
+  // ObjRect animation_frames[5];
   int animation_index              = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer            = 0.0f;

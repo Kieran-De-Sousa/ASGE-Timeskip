@@ -19,6 +19,17 @@ bool SceneLevel1::init()
   player2->setSpriteVariables(32, 32, 3);
   player2->setPosition(64, 240);
 
+  /// Animations
+  player1->getSprite()->srcRect()[0]  = 0;
+  player1->getSprite()->srcRect()[1]  = 0;
+  player1->getSprite()->srcRect()[2]  = 32;
+  player1->getSprite()->srcRect()[3]  = 32;
+
+  player2->getSprite()->srcRect()[0] = 0;
+  player2->getSprite()->srcRect()[1] = 0;
+  player2->getSprite()->srcRect()[2] = 32;
+  player2->getSprite()->srcRect()[3] = 32;
+
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
   renderMap();
@@ -229,6 +240,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
+
 
   // TODO: Convert into "betterBullets"
   for (unsigned long long int i = 0; i < bullets.size(); i++)

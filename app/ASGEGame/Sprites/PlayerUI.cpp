@@ -12,7 +12,7 @@ void PlayerUI::init()
 
   p2_health_bar = std::make_unique<Sprite>(*renderer);
   p2_health_bar->initialiseSprite("data/sprites/3-Lives.png");
-  p2_health_bar->setSpriteVariables(100, 15, 11);
+  p2_health_bar->setSpriteVariables(100, 15, 9);
   p2_health_bar->setPosition(50, 150);
 
   p1_portrait = std::make_unique<Sprite>(*renderer);

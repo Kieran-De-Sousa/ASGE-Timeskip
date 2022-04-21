@@ -24,13 +24,6 @@ bool SceneLevel1::init()
   renderMap();
   renderBackground();
 
-  playerIcon = renderer->createUniqueSprite();
-  playerIcon->loadTexture("data/sprites/Player1 Icon.png");
-  playerIcon->xPos(0);
-  playerIcon->yPos(64);
-  playerIcon->width(32);
-  playerIcon->height(32);
-  playerIcon->setGlobalZOrder(9);
   // UI Initialisation
   UI = std::make_unique<PlayerUI>(*renderer);
   UI->init();
@@ -86,19 +79,16 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
-  playerIcon->yPos(ship_look.y);
-
   // UI shtuff
-  UI->getP1Portrait()->xPos(ship2_look.x - 475);
-  UI->getP1Portrait()->yPos(ship2_look.y - 105);
-  UI->getP1HealthBar()->xPos(ship2_look.x - 435);
-  UI->getP1HealthBar()->yPos(ship2_look.y - 105);
+  UI->getP1Portrait()->xPos(player2Look.x - 475);
+  UI->getP1Portrait()->yPos(player2Look.y - 105);
+  UI->getP1HealthBar()->xPos(player2Look.x - 435);
+  UI->getP1HealthBar()->yPos(player2Look.y - 105);
 
-  UI->getP2Portrait()->xPos(ship_look.x - 475);
-  UI->getP2Portrait()->yPos(ship_look.y - 135);
-  UI->getP2HealthBar()->xPos(ship_look.x - 435);
-  UI->getP2HealthBar()->yPos(ship_look.y - 135);
+  UI->getP2Portrait()->xPos(player1Look.x - 475);
+  UI->getP2Portrait()->yPos(player1Look.y - 135);
+  UI->getP2HealthBar()->xPos(player1Look.x - 435);
+  UI->getP2HealthBar()->yPos(player1Look.y - 135);
 
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
@@ -231,13 +221,19 @@ void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
 
 void SceneLevel1::render(const ASGE::GameTime& us)
 {
-  /// bottom view
+  /// Bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
   renderScene(us);
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
+
+  /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
   renderScene(us);
+  renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)
@@ -259,10 +255,6 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   {
     renderer->render(*bullets[i]);
   }
-  renderer->render(*UI->getP1Portrait());
-  renderer->render(*UI->getP1HealthBar());
-  renderer->render(*UI->getP2HealthBar());
-  renderer->render(*UI->getP2Portrait());
 }
 
 bool SceneLevel1::renderMap()

@@ -91,7 +91,6 @@ class SceneLevel1 : public Scene
   SoLoud::Wav fireAudio;
 
   // ui test shenanigans
-  std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
   std::unique_ptr<PlayerUI> UI = nullptr;
 };
 

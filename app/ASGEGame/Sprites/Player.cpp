@@ -15,6 +15,39 @@ Player::Player(ASGE::Renderer& rendererRef) : Entity(rendererRef)
 
 void Player::update(const ASGE::GameTime& us)
 {
+  animation_timer += static_cast<float>(us.deltaInSecs());
+
+
+  if (animation_timer > ANIMATION_FRAME_RATE)
+  {
+    // player1
+    switch(player1)
+    {
+      case PlayerState::RUNNING:
+        animation_index += 1;
+        if (animation_index > 3)
+          animation_index = 0;
+        break;
+      case PlayerState::IDLE:
+        animation_index = 4;
+        break;
+      case PlayerState::JUMPING:
+        animation_index = 5;
+        break;
+    }
+    // gets the frame according to the animation index
+    sprite->srcRect()[0] = static_cast<float>(animation_index) * 32;
+    animation_timer     = 0.0f;
+  }
+  if (isGrounded)
+  {
+    player1 = PlayerState::IDLE;
+  }
+  if(!isGrounded)
+  {
+    player1 = PlayerState::JUMPING;
+  }
+
   /// Jump
   if (keymap[ASGE::KEYS::KEY_W] && isGrounded)
   {
@@ -29,12 +62,22 @@ void Player::update(const ASGE::GameTime& us)
   {
     sprite->xPos(sprite->xPos() - 5);
     sprite->setFlipFlags(ASGE::Sprite::FlipFlags::FLIP_X);
+
+    if(isGrounded)
+    {
+      player1 = PlayerState::RUNNING;
+    }
   }
   /// Move right
   if (keymap[ASGE::KEYS::KEY_D])
   {
     sprite->xPos(sprite->xPos() + 5);
     sprite->setFlipFlags(ASGE::Sprite::FlipFlags::NORMAL);
+
+    if(isGrounded)
+    {
+      player1 = PlayerState::RUNNING;
+    }
   }
   // TODO: SHOOTING
   //  if (keymap[ASGE::KEYS::KEY_F])

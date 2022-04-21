@@ -83,7 +83,7 @@ class Scene : public std::enable_shared_from_this<Scene>
   std::unique_ptr<ASGE::Input> inputs;
 
   /// Input System
-  std::string key_callback_id{}; /**< Key Input Callback ID. */
+  // std::string key_callback_id{}; /**< Key Input Callback ID. */
   std::map<int, bool> keymap{};
   std::map<int, ASGE::GamePadData> gamepad_state{};
 

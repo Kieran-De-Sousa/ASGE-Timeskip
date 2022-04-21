@@ -9,10 +9,6 @@
 /// Base Class
 #include "Sprite.h"
 
-#define IDLE 0
-#define RUNNING 1
-#define JUMPING 2
-
 /**
  * @brief Shared class for player-controlled and non player-controlled objects
  * @details Entity objects (and inheriting classes) possess health, attack, [MORE ATTRIBUTES HERE]

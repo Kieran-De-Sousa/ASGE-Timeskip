@@ -9,20 +9,35 @@ bool SceneLevel1::init()
 {
   setDefaultSceneStatus();
 
-  player1 = std::make_unique<Player>(*renderer);
+  player1 = std::make_unique<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
   player1->setSpriteVariables(32, 32, 3);
   player1->setPosition(64, 240);
 
-  player2 = std::make_unique<Player>(*renderer);
+  player2 = std::make_unique<Player>(*renderer, 2);
   player2->initialiseSprite("/data/sprites/Player2Animation.png");
   player2->setSpriteVariables(32, 32, 3);
   player2->setPosition(64, 240);
+
+  /// Animations
+  player1->getSprite()->srcRect()[0]  = 0;
+  player1->getSprite()->srcRect()[1]  = 0;
+  player1->getSprite()->srcRect()[2]  = 32;
+  player1->getSprite()->srcRect()[3]  = 32;
+
+  player2->getSprite()->srcRect()[0] = 0;
+  player2->getSprite()->srcRect()[1] = 0;
+  player2->getSprite()->srcRect()[2] = 32;
+  player2->getSprite()->srcRect()[3] = 32;
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
   renderMap();
   renderBackground();
+
+  // UI Initialisation
+  UI = std::make_unique<PlayerUI>(*renderer);
+  UI->init();
 
   for (int i = 0; i < magSize; ++i)
   {
@@ -75,7 +90,17 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  // TODO: Finish conversion into "betterBullets" (part of bullet class)
+  // UI shtuff
+  UI->getP1Portrait()->xPos(player2Look.x - 475);
+  UI->getP1Portrait()->yPos(player2Look.y - 105);
+  UI->getP1HealthBar()->xPos(player2Look.x - 435);
+  UI->getP1HealthBar()->yPos(player2Look.y - 105);
+
+  UI->getP2Portrait()->xPos(player1Look.x - 475);
+  UI->getP2Portrait()->yPos(player1Look.y - 135);
+  UI->getP2HealthBar()->xPos(player1Look.x - 435);
+  UI->getP2HealthBar()->yPos(player1Look.y - 135);
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
@@ -270,21 +295,27 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     audio_engine.play(fireAudio);
   }
+
+  UI->updateLives();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
 
 void SceneLevel1::render(const ASGE::GameTime& us)
 {
-  /// bottom view
+  /// Bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
   renderScene(us);
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
 
-  /// top view
+  /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
   renderScene(us);
+  renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)
@@ -301,6 +332,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
 
+
   // TODO: Convert into "betterBullets"
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -311,7 +343,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 bool SceneLevel1::renderMap()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
+  if (!tile_map.open("/data/map/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;
@@ -367,7 +399,7 @@ bool SceneLevel1::renderMap()
 bool SceneLevel1::renderBackground()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
+  if (!tile_map.open("/data/map/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;

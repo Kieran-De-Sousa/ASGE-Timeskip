@@ -30,6 +30,13 @@ class Player : public Entity
     PLAYER_1 = 1,
     PLAYER_2 = 2
   };
+
+  enum class PlayerState : int
+  {
+    IDLE = 0,
+    RUNNING = 1,
+    JUMPING = 2
+  };
   /**
    * @brief Constructor w/Param
    * @details Use when initialisation variables are required in instantiation,
@@ -72,6 +79,7 @@ class Player : public Entity
   [[nodiscard]] ASGE::Point2D getVelocity() const;
   void setJumpSpeed(const float& jump) { j_s = jump; }
 
+
  protected:
   PlayerID playerID = PlayerID::UNKNOWN;
   /// Inputs
@@ -93,5 +101,14 @@ class Player : public Entity
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
+
+  /// Animation
+  //ObjRect animation_frames[5];
+  int animation_index              = 0;
+  const float ANIMATION_FRAME_RATE = 0.1f;
+  float animation_timer            = 0.0f;
+
+  PlayerState player1 = PlayerState::IDLE;
+  PlayerState player2 = PlayerState::IDLE;
 };
 #endif // ASGEGAME_PLAYER_H

@@ -272,7 +272,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 bool SceneLevel1::renderMap()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
+  if (!tile_map.open("/data/map/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;
@@ -328,7 +328,7 @@ bool SceneLevel1::renderMap()
 bool SceneLevel1::renderBackground()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/PastMap2.tmx"))
+  if (!tile_map.open("/data/map/PastMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;

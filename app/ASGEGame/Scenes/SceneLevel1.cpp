@@ -9,12 +9,12 @@ bool SceneLevel1::init()
 {
   setDefaultSceneStatus();
 
-  player1 = std::make_unique<Player>(*renderer);
+  player1 = std::make_unique<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
   player1->setSpriteVariables(32, 32, 3);
   player1->setPosition(64, 240);
 
-  player2 = std::make_unique<Player>(*renderer);
+  player2 = std::make_unique<Player>(*renderer, 2);
   player2->initialiseSprite("/data/sprites/Player2Animation.png");
   player2->setSpriteVariables(32, 32, 3);
   player2->setPosition(64, 240);

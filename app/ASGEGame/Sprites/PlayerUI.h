@@ -20,16 +20,18 @@ class PlayerUI
   ASGE::Sprite* getP2Portrait();
 
   // health stuff
-  void removeHealth(int playerChoice, float amount);
-  void addHealth(int playerChoice, float amount);
+  void removeHealth(int playerChoice);
+  void addHealth(int playerChoice);
+
+  void updateLives();
 
   // Position stuff
   // Nothing here yet.
 
  private:
   // random vars
-  float p1_health_val = 100;
-  float p2_health_val = 100;
+  int p1_health_val = 3;
+  int p2_health_val = 3;
   std::unique_ptr<Sprite> p1_health_bar;
   std::unique_ptr<Sprite> p2_health_bar;
   std::unique_ptr<Sprite> p1_portrait;

@@ -385,6 +385,8 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   camera_two.lookAt(ship2_look);
 
   camera_two.setZoom(2.0F);
+
+  UI->updateLives();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}

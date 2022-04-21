@@ -35,6 +35,10 @@ bool SceneLevel1::init()
   renderMap();
   renderBackground();
 
+  // UI Initialisation
+  UI = std::make_unique<PlayerUI>(*renderer);
+  UI->init();
+
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
@@ -86,7 +90,17 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  // TODO: Finish conversion into "betterBullets" (part of bullet class)
+  // UI shtuff
+  UI->getP1Portrait()->xPos(player2Look.x - 475);
+  UI->getP1Portrait()->yPos(player2Look.y - 105);
+  UI->getP1HealthBar()->xPos(player2Look.x - 435);
+  UI->getP1HealthBar()->yPos(player2Look.y - 105);
+
+  UI->getP2Portrait()->xPos(player1Look.x - 475);
+  UI->getP2Portrait()->yPos(player1Look.y - 135);
+  UI->getP2HealthBar()->xPos(player1Look.x - 435);
+  UI->getP2HealthBar()->yPos(player1Look.y - 135);
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
@@ -210,21 +224,27 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     audio_engine.play(fireAudio);
   }
+
+  UI->updateLives();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
 
 void SceneLevel1::render(const ASGE::GameTime& us)
 {
-  /// bottom view
+  /// Bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
   renderScene(us);
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
 
-  /// top view
+  /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
   renderScene(us);
+  renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)

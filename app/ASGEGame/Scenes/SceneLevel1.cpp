@@ -75,6 +75,18 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 {
   playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
   playerIcon->yPos(ship_look.y);
+
+  // UI shtuff
+  UI->getP1Portrait()->xPos(ship2_look.x - 475);
+  UI->getP1Portrait()->yPos(ship2_look.y - 105);
+  UI->getP1HealthBar()->xPos(ship2_look.x - 435);
+  UI->getP1HealthBar()->yPos(ship2_look.y - 105);
+
+  UI->getP2Portrait()->xPos(ship_look.x - 475);
+  UI->getP2Portrait()->yPos(ship_look.y - 135);
+  UI->getP2HealthBar()->xPos(ship_look.x - 435);
+  UI->getP2HealthBar()->yPos(ship_look.y - 135);
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     if (ship->flipFlags() == ASGE::Sprite::NORMAL)

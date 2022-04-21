@@ -16,12 +16,12 @@ void PlayerUI::init()
   p2_health_bar->setPosition(50, 150);
 
   p1_portrait = std::make_unique<Sprite>(*renderer);
-  p1_portrait->initialiseSprite("data/sprites/Player1Portrait.png");
+  p1_portrait->initialiseSprite("data/sprites/Player2Portrait.png");
   p1_portrait->setSpriteVariables(35, 35, 9);
   p1_portrait->setPosition(12.5, 182.5);
 
   p2_portrait = std::make_unique<Sprite>(*renderer);
-  p2_portrait->initialiseSprite("data/sprites/Player2Portrait.png");
+  p2_portrait->initialiseSprite("data/sprites/Player1Portrait.png");
   p2_portrait->setSpriteVariables(35, 35, 9);
   p2_portrait->setPosition(12.5, 150);
 }

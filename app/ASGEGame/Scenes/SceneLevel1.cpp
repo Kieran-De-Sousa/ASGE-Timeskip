@@ -60,7 +60,7 @@ bool SceneLevel1::init()
     static auto buffer = f_audio_file.read(); // read its contents
     fireAudio.loadMem(
       buffer.as_unsigned_char(), static_cast<unsigned int>(buffer.length), false, false);
-    fireAudio.mVolume = 0.2f;
+    fireAudio.mVolume = 0.2F;
   }
   audio_engine.play(background_audio);
   return true;
@@ -87,85 +87,156 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 
   for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
   {
-    /// Player 1 Collision Detection
-    if (Helper::CollisionDetection::inXBounds(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    switch (Helper::CollisionDetection::resolveCollision(
+      player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (Helper::CollisionDetection::touchingTop(
-            player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
-      {
+      case 0:
+        // Logging::DEBUG("No Collision");
+        break;
+      case 1:
+        //::DEBUG("Player Left Collision");
+        player1->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
+        break;
+      case 2:
+        // Logging::DEBUG("Player Right Collision");
+        player1->getSprite()->xPos(tilemapContactable[i]->xPos() - player1->getSprite()->width());
+        break;
+      case 3:
+        // Logging::DEBUG("Player Bottom Collision");
+        Logging::DEBUG(std::to_string(player1->getSprite()->yPos()));
+        Logging::DEBUG(
+          std::to_string(tilemapContactable[i]->yPos() - player1->getSprite()->height()));
         player1->setGrounded(true);
         player1->getSprite()->yPos(tilemapContactable[i]->yPos() - player1->getSprite()->height());
-      }
-      else if ((Helper::CollisionDetection::touchingBottom(
-                 player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
-      {
+        break;
+      case 4:
+        // Logging::DEBUG("Player Top Collision");
         player1->setJumpSpeed(0);
         player1->setJumping(false);
         player1->setJumpPeaked(true);
         player1->getSprite()->yPos(tilemapContactable[i]->yPos() + tilemapContactable[i]->height());
-      }
+        break;
     }
-    if (Helper::CollisionDetection::playerYChecking(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    switch (Helper::CollisionDetection::resolveCollision(
+      player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
     {
-      if (
-        Helper::CollisionDetection::touchingLeft(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
-      {
-        player1->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-      else if (
-        Helper::CollisionDetection::touchingRight(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
-      {
-        player1->getSprite()->xPos(tilemapContactable[i]->xPos() - player1->getSprite()->width());
-      }
-    }
-
-    /// Player 2 Collision Detection
-    if (Helper::CollisionDetection::inXBounds(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
-    {
-      if (Helper::CollisionDetection::touchingTop(
-            player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
-      {
+      case 0:
+        // Logging::DEBUG("No Collision");
+        break;
+      case 1:
+        // Logging::DEBUG("Player Left Collision");
+        player2->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
+        break;
+      case 2:
+        // Logging::DEBUG("Player Right Collision");
+        player2->getSprite()->xPos(tilemapContactable[i]->xPos() - player2->getSprite()->width());
+        break;
+      case 3:
+        // Logging::DEBUG("Player Bottom Collision");
         player2->setGrounded(true);
-        player2->getSprite()->yPos(tilemapContactable[i]->yPos() + player2->getSprite()->height());
-      }
-      else if (Helper::CollisionDetection::touchingBottom(
-                 player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
-      {
+        player2->getSprite()->yPos(tilemapContactable[i]->yPos() - player2->getSprite()->height());
+        break;
+      case 4:
+        // Logging::DEBUG("Player Top Collision");
         player2->setJumpSpeed(0);
         player2->setJumping(false);
         player2->setJumpPeaked(true);
         player2->getSprite()->yPos(tilemapContactable[i]->yPos() + tilemapContactable[i]->height());
-      }
+        break;
     }
-    if (Helper::CollisionDetection::playerYChecking(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
-    {
-      if (
-        Helper::CollisionDetection::touchingLeft(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
-      {
-        player2->getSprite()->xPos(tilemapContactable[i]->xPos() + tilemapContactable[i]->width());
-      }
-      else if (
-        Helper::CollisionDetection::touchingRight(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
-      {
-        player2->getSprite()->xPos(tilemapContactable[i]->xPos() - player2->getSprite()->width());
-      }
-    }
+    //    /// Player 1 Collision Detection
+    //    if (Helper::CollisionDetection::inXBounds(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //    {
+    //      if (Helper::CollisionDetection::touchingTop(
+    //            player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //      {
+    //        player1->setGrounded(true);
+    //        player1->getSprite()->yPos(tilemapContactable[i]->yPos() -
+    //        player1->getSprite()->height());
+    //      }
+    //      else if ((Helper::CollisionDetection::touchingBottom(
+    //                 player1->getSprite()->getWorldBounds(),
+    //                 tilemapContactable[i]->getWorldBounds())))
+    //      {
+    //        player1->setJumpSpeed(0);
+    //        player1->setJumping(false);
+    //        player1->setJumpPeaked(true);
+    //        player1->getSprite()->yPos(tilemapContactable[i]->yPos() +
+    //        tilemapContactable[i]->height());
+    //      }
+    //    }
+    //    if (Helper::CollisionDetection::playerYChecking(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //    {
+    //      if (
+    //        Helper::CollisionDetection::touchingLeft(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
+    //        !(Helper::CollisionDetection::touchingBottom(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
+    //      {
+    //        player1->getSprite()->xPos(tilemapContactable[i]->xPos() +
+    //        tilemapContactable[i]->width());
+    //      }
+    //      else if (
+    //        Helper::CollisionDetection::touchingRight(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()) &&
+    //        !(Helper::CollisionDetection::touchingBottom(
+    //          player1->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())))
+    //      {
+    //        player1->getSprite()->xPos(tilemapContactable[i]->xPos() -
+    //        player1->getSprite()->width());
+    //      }
+    //    }
+    //
+    //    /// Player 2 Collision Detection
+    //    if (Helper::CollisionDetection::inXBounds(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //    {
+    //      if (Helper::CollisionDetection::touchingTop(
+    //            player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //      {
+    //        player2->setGrounded(true);
+    //        player2->getSprite()->yPos(tilemapContactable[i]->yPos() +
+    //        player2->getSprite()->height());
+    //      }
+    //      else if (Helper::CollisionDetection::touchingBottom(
+    //                 player2->getSprite()->getWorldBounds(),
+    //                 tilemapContactable[i]->getWorldBounds()))
+    //      {
+    //        player2->setJumpSpeed(0);
+    //        player2->setJumping(false);
+    //        player2->setJumpPeaked(true);
+    //        player2->getSprite()->yPos(tilemapContactable[i]->yPos() +
+    //        tilemapContactable[i]->height());
+    //      }
+    //    }
+    //    if (Helper::CollisionDetection::playerYChecking(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //    {
+    //      if (
+    //        Helper::CollisionDetection::touchingLeft(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())
+    //          /*&&
+    //        !(Helper::CollisionDetection::touchingBottom(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //          */)
+    //      {
+    //        player2->getSprite()->xPos(tilemapContactable[i]->xPos() +
+    //        tilemapContactable[i]->width());
+    //      }
+    //      else if (
+    //        Helper::CollisionDetection::touchingRight(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds())
+    //          /*&&
+    //        !(Helper::CollisionDetection::touchingBottom(
+    //          player2->getSprite()->getWorldBounds(), tilemapContactable[i]->getWorldBounds()))
+    //          */)
+    //      {
+    //        player2->getSprite()->xPos(tilemapContactable[i]->xPos() -
+    //        player2->getSprite()->width());
+    //      }
+    //    }
   }
 
   // moving the camera

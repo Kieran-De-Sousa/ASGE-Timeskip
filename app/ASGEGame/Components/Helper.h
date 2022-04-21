@@ -3,6 +3,7 @@
 
 /// Game Engine
 // CollisionDetection
+#include <Engine/Logger.hpp>
 #include <Engine/Sprite.hpp>
 
 /**
@@ -68,7 +69,10 @@ namespace Helper
      */
     bool inYBounds(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
 
-    bool playerYChecking(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
+    [[maybe_unused]] bool
+    playerYChecking(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
+
+    int resolveCollision(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
   }
 } // namespace Helper
 

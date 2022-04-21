@@ -399,6 +399,10 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
+
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
+
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
     renderer->render(*tiles[i]);
@@ -448,8 +452,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // renderer->setProjectionMatrix(camera_one.getView());
 
   // ui render
-  renderer->render(*UI->getP1HealthBar());
   renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 bool SceneLevel1::renderMap()
 {

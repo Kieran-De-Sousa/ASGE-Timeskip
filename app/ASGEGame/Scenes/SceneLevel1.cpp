@@ -24,6 +24,17 @@ bool SceneLevel1::init()
   renderMap();
   renderBackground();
 
+  playerIcon = renderer->createUniqueSprite();
+  playerIcon->loadTexture("data/sprites/Player1 Icon.png");
+  playerIcon->xPos(0);
+  playerIcon->yPos(64);
+  playerIcon->width(32);
+  playerIcon->height(32);
+  playerIcon->setGlobalZOrder(9);
+  // UI Initialisation
+  UI = std::make_unique<PlayerUI>(*renderer);
+  UI->init();
+
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
@@ -75,7 +86,20 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  // TODO: Finish conversion into "betterBullets" (part of bullet class)
+  playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
+  playerIcon->yPos(ship_look.y);
+
+  // UI shtuff
+  UI->getP1Portrait()->xPos(ship2_look.x - 475);
+  UI->getP1Portrait()->yPos(ship2_look.y - 105);
+  UI->getP1HealthBar()->xPos(ship2_look.x - 435);
+  UI->getP1HealthBar()->yPos(ship2_look.y - 105);
+
+  UI->getP2Portrait()->xPos(ship_look.x - 475);
+  UI->getP2Portrait()->yPos(ship_look.y - 135);
+  UI->getP2HealthBar()->xPos(ship_look.x - 435);
+  UI->getP2HealthBar()->yPos(ship_look.y - 135);
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
@@ -199,6 +223,8 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     audio_engine.play(fireAudio);
   }
+
+  UI->updateLives();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
@@ -209,8 +235,6 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
   renderScene(us);
-
-  /// top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
   renderScene(us);
@@ -235,6 +259,10 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   {
     renderer->render(*bullets[i]);
   }
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
+  renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 
 bool SceneLevel1::renderMap()

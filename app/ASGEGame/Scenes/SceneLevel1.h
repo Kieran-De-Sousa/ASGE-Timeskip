@@ -14,6 +14,7 @@
 #include "Sprites/Bullet.h"
 #include "Sprites/Entity.h"
 #include "Sprites/Player.h"
+#include "Sprites/PlayerUI.h"
 #include "Sprites/Sprite.h"
 
 /// Helpers
@@ -88,6 +89,10 @@ class SceneLevel1 : public Scene
   SoLoud::Soloud audio_engine;
   SoLoud::Wav background_audio;
   SoLoud::Wav fireAudio;
+
+  // ui test shenanigans
+  std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
+  std::unique_ptr<PlayerUI> UI = nullptr;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

@@ -79,6 +79,7 @@ void Player::update(const ASGE::GameTime& us)
       player1 = PlayerState::RUNNING;
     }
   }
+
   // TODO: SHOOTING
   //  if (keymap[ASGE::KEYS::KEY_F])
   //  {

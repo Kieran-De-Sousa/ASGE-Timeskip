@@ -37,6 +37,12 @@ class Player : public Entity
     RUNNING = 1,
     JUMPING = 2
   };
+
+  enum class TimeTravelState : int
+  {
+    PRESENT = 0,
+    PAST    = 1
+  };
   /**
    * @brief Constructor w/Param
    * @details Use when initialisation variables are required in instantiation,

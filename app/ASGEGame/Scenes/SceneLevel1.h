@@ -29,6 +29,12 @@ struct ObjRect
   float x, y, w, h;
 };
 
+enum class TimeTravelState : int
+{
+  PRESENT = 0,
+  PAST    = 1
+};
+
 /**
  * @brief Level 1 scene
  * @details
@@ -50,8 +56,13 @@ class SceneLevel1 : public Scene
 
   void renderScene(const ASGE::GameTime& us);
 
-  bool renderMap();
-  bool renderBackground();
+  bool renderPastMap();
+  bool renderPastBackground();
+
+  bool renderPresentMap();
+  bool renderPresentBackground();
+
+
   void Camera();
   void DebugInfo();
   void initAudio();
@@ -83,6 +94,11 @@ class SceneLevel1 : public Scene
   /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tilemapContactable;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
+  std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
+
+  //Switching maps initial state
+  TimeTravelState state             = TimeTravelState::PAST;
 
   tmx::Map map;
 

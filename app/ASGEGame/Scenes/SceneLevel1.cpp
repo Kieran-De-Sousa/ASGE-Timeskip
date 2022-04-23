@@ -32,8 +32,10 @@ bool SceneLevel1::init()
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
-  renderMap();
-  renderBackground();
+  renderPastMap();
+  renderPresentMap();
+  renderPastBackground();
+  renderPresentBackground();
 
   // UI Initialisation
   UI = std::make_unique<PlayerUI>(*renderer);
@@ -226,6 +228,26 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   }
 
   UI->updateLives();
+
+  if (keymap[ASGE::KEYS::KEY_Q])
+  {
+    switch(state)
+    {
+      case TimeTravelState::PAST:
+        renderPastMap();
+        renderPastBackground();
+        state = TimeTravelState::PRESENT;
+        DebugInfo();
+        break;
+
+      case TimeTravelState::PRESENT:
+        renderPresentMap();
+        renderPresentBackground();
+        state = TimeTravelState::PAST;
+        DebugInfo();
+        break;
+    }
+  }
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
@@ -269,7 +291,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   }
 }
 
-bool SceneLevel1::renderMap()
+bool SceneLevel1::renderPastMap()
 {
   ASGE::FILEIO::File tile_map;
   if (!tile_map.open("/data/map/PastMap2.tmx"))
@@ -325,7 +347,68 @@ bool SceneLevel1::renderMap()
   }
   return true;
 }
-bool SceneLevel1::renderBackground()
+
+bool SceneLevel1::renderPresentMap()
+{
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/map/PresentMap2.tmx"))
+  {
+    Logging::ERRORS("init::Failed to load map");
+    return false;
+  }
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  /// All collidable objects are checked within the init function as their location is will remain
+  /// the same during gameplay, i.e: they remain static.
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tiles from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        {
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            /// All contactable objects can be checked within this if statement, currently only
+            /// walls but easily expandable with additional || / or
+            if (tile_layer.getName() == "Ground")
+            {
+              auto& sprite = PresentTiles.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+
+
+bool SceneLevel1::renderPastBackground()
 {
   ASGE::FILEIO::File tile_map;
   if (!tile_map.open("/data/map/PastMap2.tmx"))
@@ -375,6 +458,62 @@ bool SceneLevel1::renderBackground()
   }
   return true;
 }
+
+bool SceneLevel1::renderPresentBackground()
+{
+  ASGE::FILEIO::File tile_map;
+  if (!tile_map.open("/data/map/PresentMap2.tmx"))
+  {
+    Logging::ERRORS("init::Failed to load map");
+    return false;
+  }
+  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
+  std::string file_string(buffer.as_char(), buffer.length);
+  map.loadFromString(file_string, ".");
+
+  /// All collidable objects are checked within the init function as their location is will remain
+  /// the same during gameplay, i.e: they remain static.
+  for (const auto& layer : map.getLayers())
+  {
+    if (layer->getType() == tmx::Layer::Type::Tile)
+    {
+      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
+      /// Look up tiles from a layer in a tile set
+      for (unsigned int row = 0; row < layer->getSize().y; row++)
+      {
+        for (unsigned int col = 0; col < layer->getSize().x; col++)
+        {
+          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
+          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
+          if (tile != nullptr)
+          {
+            /// All contactable objects can be checked within this if statement, currently only
+            /// walls but easily expandable with additional || / or
+            auto& sprite = tilesBackground.emplace_back(renderer->createUniqueSprite());
+            if (sprite->loadTexture(tile->imagePath))
+            {
+              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+              sprite->width(static_cast<float>(tile->imageSize.x));
+              sprite->height(static_cast<float>(tile->imageSize.y));
+
+              sprite->scale(1);
+              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+
 void SceneLevel1::Camera() {}
 void SceneLevel1::DebugInfo()
 {

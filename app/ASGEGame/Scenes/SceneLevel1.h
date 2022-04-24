@@ -56,11 +56,11 @@ class SceneLevel1 : public Scene
 
   void renderScene(const ASGE::GameTime& us);
 
-  bool renderPastMap();
-  bool renderPastBackground();
+  bool loadPastMap();
+  bool loadPastBackground();
 
-  bool renderPresentMap();
-  bool renderPresentBackground();
+  bool loadPresentMap();
+  bool loadPresentBackground();
 
 
   void Camera();
@@ -92,8 +92,8 @@ class SceneLevel1 : public Scene
   std::vector<std::unique_ptr<Bullet>> betterBullets;
 
   /// TILED - TILEMAP VECTORS
-  std::vector<std::unique_ptr<ASGE::Sprite>> tilemapContactable;
-  std::vector<std::unique_ptr<ASGE::Sprite>> tilesBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilesPastBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
 

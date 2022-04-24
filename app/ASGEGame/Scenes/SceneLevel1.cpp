@@ -20,10 +20,10 @@ bool SceneLevel1::init()
   player2->setPosition(64, 240);
 
   /// Animations
-  player1->getSprite()->srcRect()[0]  = 0;
-  player1->getSprite()->srcRect()[1]  = 0;
-  player1->getSprite()->srcRect()[2]  = 32;
-  player1->getSprite()->srcRect()[3]  = 32;
+  player1->getSprite()->srcRect()[0] = 0;
+  player1->getSprite()->srcRect()[1] = 0;
+  player1->getSprite()->srcRect()[2] = 32;
+  player1->getSprite()->srcRect()[3] = 32;
 
   player2->getSprite()->srcRect()[0] = 0;
   player2->getSprite()->srcRect()[1] = 0;
@@ -100,6 +100,13 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   UI->getP2Portrait()->yPos(player1Look.y - 135);
   UI->getP2HealthBar()->xPos(player1Look.x - 435);
   UI->getP2HealthBar()->yPos(player1Look.y - 135);
+
+  // TODO: Finish below by putting players in vector
+  // retrieve all connected gamepads and store their states
+  for (auto& gamepad : inputs->getGamePads())
+  {
+    player1->updateGamepad(gamepad);
+  }
 
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
@@ -331,7 +338,6 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
-
 
   // TODO: Convert into "betterBullets"
   for (unsigned long long int i = 0; i < bullets.size(); i++)

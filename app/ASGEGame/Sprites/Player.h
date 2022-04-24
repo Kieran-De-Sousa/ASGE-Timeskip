@@ -15,23 +15,18 @@
 
 /// Helper Classes
 #include "Bullet.h"
+#include "Components/ControlSchemes.h"
 #include "Components/Timer.h"
 
 /**
  * @brief Player class shared for both players
- * @author Kieran
+ * @authors Kieran
+ * @authors Tom
+ * @authors Asli
  */
 class Player : public Entity
 {
  public:
-  /// ID
-  enum class PlayerID : int
-  {
-    UNKNOWN  = 0,
-    PLAYER_1 = 1,
-    PLAYER_2 = 2
-  };
-
   enum class PlayerState : int
   {
     IDLE    = 0,
@@ -57,10 +52,7 @@ class Player : public Entity
   virtual void update(const ASGE::GameTime& us) override;
 
   void updateKeymap(const std::map<int, bool>& key_state) { keymap = key_state; }
-  void updateGamepad(const std::map<int, ASGE::GamePadData>& gamepad_state)
-  {
-    gamepad = gamepad_state;
-  }
+  void updateGamepad(const ASGE::GamePadData& gamepad_state) { gamepad = gamepad_state; }
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
@@ -80,16 +72,24 @@ class Player : public Entity
   [[nodiscard]] ASGE::Point2D getVelocity() const;
   // Jump Speed
   void setJumpSpeed(const float& jump) { j_s = jump; }
-
+  [[nodiscard]] float getJumpSpeed() const { return j_s; }
   // Bullets
   [[nodiscard]] const std::vector<std::unique_ptr<Bullet>>& getBullets() const { return bullets; }
   [[nodiscard]] int getCurrentBullet() const { return currentBullet; }
 
  protected:
+  /// @note Methods
+  void updateAnimations(const ASGE::GameTime& us);
+
+  /// @note Members
   PlayerID playerID = PlayerID::UNKNOWN;
   /// Inputs
+  // Keyboard
   std::map<int, bool> keymap{};
-  std::map<int, ASGE::GamePadData> gamepad{};
+  ControlSchemeKeyboard keyboard;
+  // Controller
+  ASGE::GamePadData gamepad = ASGE::GamePadData(0, nullptr, nullptr, nullptr);
+  ControlSchemeGamepad controller;
   /// Movement
   // Walking
   const float MOVEMENT_SPEED = 5;

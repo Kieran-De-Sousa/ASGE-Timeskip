@@ -94,14 +94,13 @@ class Player : public Entity
   // Walking
   const float MOVEMENT_SPEED = 5;
   // Jumping
-  const float JUMP_HEIGHT = 80;
+  const float JUMP_HEIGHT = 64;
   bool gravity            = true;
   bool isGrounded         = false;
   bool isJumping          = false;
   bool isJumpPeaked       = false;
   float newPos            = 0;
-  // Position
-  float j_s = 0;
+  float j_s               = 0;
   // Position
   float gravity_f        = 0;
   ASGE::Point2D velocity = { 0, 0 };

@@ -19,6 +19,12 @@ bool SceneLevel1::init()
   player2->setSpriteVariables(24, 24, 3);
   player2->setPosition(88, 240);
 
+  /// Enemies
+  enemy1 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
+  enemy1->initialiseSprite("/data/sprites/mushroom.png");
+  enemy1->setSpriteVariables(16, 16, 3);
+  enemy1->setPosition(310, 368);
+
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
   player1->getSprite()->srcRect()[1] = 0;
@@ -29,6 +35,13 @@ bool SceneLevel1::init()
   player2->getSprite()->srcRect()[1] = 0;
   player2->getSprite()->srcRect()[2] = 32;
   player2->getSprite()->srcRect()[3] = 32;
+
+  enemy1->getSprite()->srcRect()[0] = 0;
+  enemy1->getSprite()->srcRect()[1] = 0;
+  enemy1->getSprite()->srcRect()[2] = 16;
+  enemy1->getSprite()->srcRect()[3] = 16;
+
+  enemy1->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -115,6 +128,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 
   player1->update(us);
   player2->update(us);
+  enemy1->update(us);
 
   for (unsigned long long i = 0; i < tilemapContactable.size(); i++)
   {
@@ -502,6 +516,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
+  renderer->render(*enemy1->getSprite());
 
   // TODO: Convert into "betterBullets"
   for (unsigned long long int i = 0; i < bullets.size(); i++)

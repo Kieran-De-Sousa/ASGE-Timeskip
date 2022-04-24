@@ -12,6 +12,7 @@
 
 /// ASGE Sprites
 #include "Sprites/Bullet.h"
+#include "Sprites/Enemy.h"
 #include "Sprites/Entity.h"
 #include "Sprites/Player.h"
 #include "Sprites/PlayerUI.h"
@@ -71,6 +72,9 @@ class SceneLevel1 : public Scene
   std::unique_ptr<Player> player2 = nullptr;
   ASGE::Point2D player1Look{ 492, 120 };
   ASGE::Point2D player2Look{ 492, 120 };
+
+  /// Enemies
+  std::unique_ptr<Enemy> enemy1 = nullptr;
 
   int collisions = 0;
 

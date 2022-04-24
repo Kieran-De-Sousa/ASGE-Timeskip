@@ -85,7 +85,7 @@ void SceneLevel1::input()
 {
   // TODO: updateGamepad() for players
   player1->updateKeymap(keymap);
-  // player2->updateKeymap(keymap);
+  player2->updateKeymap(keymap);
 }
 
 void SceneLevel1::update(const ASGE::GameTime& us)
@@ -503,10 +503,14 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
 
-  // TODO: Convert into "betterBullets"
-  for (unsigned long long int i = 0; i < bullets.size(); i++)
+  /// Bullets
+  for (const auto& bullet : player1->getBullets())
   {
-    renderer->render(*bullets[i]);
+    renderer->render(*bullet);
+  }
+  for (const auto& bullet : player2->getBullets())
+  {
+    renderer->render(*bullet);
   }
 }
 

@@ -7,18 +7,22 @@ Player::Player(ASGE::Renderer& rendererRef, int id) :
   controller(static_cast<PlayerID>(id))
 {
   type = ComponentType::PLAYER;
+  createBullets();
 }
 /// Default Constructor
 Player::Player(ASGE::Renderer& rendererRef) :
   Entity(rendererRef), keyboard(PlayerID::UNKNOWN), controller(PlayerID::UNKNOWN)
 {
   type = ComponentType::PLAYER;
+  createBullets();
 }
 
 void Player::update(const ASGE::GameTime& us)
 {
   /// Update player animations & state machine
   updateAnimations(us);
+  /// Update bullet positions
+  updateBullets(us);
 
   /// Jump
   if ((keymap[keyboard.MOVE_UP] || (gamepad.buttons[controller.MOVE_UP] != 0u)) && isGrounded)
@@ -27,7 +31,6 @@ void Player::update(const ASGE::GameTime& us)
     j_s        = -10.0f;
     isJumping  = true;
     isGrounded = false;
-    // gravity = false;
   }
   /// Move left
   if (keymap[keyboard.MOVE_LEFT] || (gamepad.buttons[controller.MOVE_LEFT] != 0u))
@@ -51,33 +54,11 @@ void Player::update(const ASGE::GameTime& us)
       player1 = PlayerState::RUNNING;
     }
   }
-  // TODO: SHOOTING
-  //  if (keymap[ASGE::KEYS::KEY_F])
-  //  {
-  //    if (sprite->flipFlags() == ASGE::Sprite::FLIP_X)
-  //    {
-  ////      bullets[bulletCount]->xPos(ship->xPos() - bullets[bulletCount]->width());
-  ////      bullets[bulletCount]->yPos(ship->yPos() + ship->height() / 2 -
-  /// bullets[bulletCount]->height()); /      directions[bulletCount].position.x = -1;
-  //    }
-  //    if (getSprite()->flipFlags() == ASGE::Sprite::NORMAL)
-  //    {
-  ////      bullets[bulletCount]->xPos(ship->xPos() + ship->width());
-  ////      bullets[bulletCount]->yPos(
-  ////        ship->yPos() + ship->height() / 2 - bullets[bulletCount]->height());
-  ////      directions[bulletCount].position.x = 1;
-  //    }
-  ////    bulletCount++;
-  ////    if (bulletCount > 25)
-  ////    {
-  ////      bulletCount = 0;
-  ////    }
-  if (keymap[ASGE::KEYS::KEY_W] && isGrounded)
+
+  /// Shooting
+  if (keymap[keyboard.SHOOT] || (gamepad.buttons[controller.SHOOT] != 0u))
   {
-    newPos     = sprite->yPos() - JUMP_HEIGHT;
-    j_s        = -10.0f;
-    isJumping  = true;
-    isGrounded = false;
+    shootBullet(us);
   }
 
   if (gravity)
@@ -108,6 +89,25 @@ void Player::setVelocity(const float& _x, const float& _y)
 ASGE::Point2D Player::getVelocity() const
 {
   return velocity;
+}
+
+void Player::createBullets()
+{
+  /// Bullets
+  for (int i = 0; i < magSize; ++i)
+  {
+    bullets.push_back(renderer->createUniqueSprite());
+    directions.emplace_back(0, 0);
+  }
+  for (auto& bullet : bullets)
+  {
+    bullet->loadTexture("/data/sprites/bulletSprite.png");
+    bullet->xPos(-200);
+    bullet->yPos(-200);
+    bullet->width(8);
+    bullet->height(8);
+    bullet->setGlobalZOrder(6);
+  }
 }
 
 void Player::updateAnimations(const ASGE::GameTime& us)
@@ -142,5 +142,37 @@ void Player::updateAnimations(const ASGE::GameTime& us)
   if (!isGrounded)
   {
     player1 = PlayerState::JUMPING;
+  }
+}
+
+void Player::updateBullets(const ASGE::GameTime& us)
+{
+  for (unsigned long long i = 0; i < bullets.size(); i++)
+  {
+    bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
+    bullets[i]->yPos(bullets[i]->yPos() + directions[i].position.y * 8.4F);
+  }
+}
+
+void Player::shootBullet(const ASGE::GameTime& us)
+{
+  if (sprite->flipFlags() == ASGE::Sprite::FLIP_X)
+  {
+    bullets[bulletCount]->xPos(sprite->xPos() - bullets[bulletCount]->width());
+    bullets[bulletCount]->yPos(
+      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->height());
+    directions[bulletCount].position.x = -1;
+  }
+  if (getSprite()->flipFlags() == ASGE::Sprite::NORMAL)
+  {
+    bullets[bulletCount]->xPos(sprite->xPos() + sprite->width());
+    bullets[bulletCount]->yPos(
+      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->height());
+    directions[bulletCount].position.x = 1;
+  }
+  bulletCount++;
+  if (bulletCount > 25)
+  {
+    bulletCount = 0;
   }
 }

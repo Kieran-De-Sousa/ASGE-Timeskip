@@ -74,12 +74,19 @@ class Player : public Entity
   // Jump Speed
   [[nodiscard]] float getJumpSpeed() const { return j_s; }
   // Bullets
-  [[nodiscard]] const std::vector<std::unique_ptr<Bullet>>& getBullets() const { return bullets; }
-  [[nodiscard]] int getCurrentBullet() const { return currentBullet; }
+  [[nodiscard]] const std::vector<std::unique_ptr<ASGE::Sprite>>& getBullets() const
+  {
+    return bullets;
+  }
+  [[nodiscard]] int getCurrentBullet() const { return static_cast<int>(bulletCount); }
 
  protected:
-  /// @note Methods
+  //// @note Methods
+  void createBullets();
+  /// Updates
   void updateAnimations(const ASGE::GameTime& us);
+  void updateBullets(const ASGE::GameTime& us);
+  void shootBullet(const ASGE::GameTime& us);
 
   /// @note Members
   PlayerID playerID = PlayerID::UNKNOWN;
@@ -106,10 +113,13 @@ class Player : public Entity
   float gravity_f        = 0;
   ASGE::Point2D velocity = { 0, 0 };
   /// Bullets
-  std::vector<std::unique_ptr<Bullet>> bullets;
+  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
+  std::vector<Vector2> directions;
   const int DEFAULT_MAG_SIZE = 30;
   int magSize                = DEFAULT_MAG_SIZE;
-  int currentBullet          = 0;
+  unsigned int bulletCount   = 0;
+  // TODO: Finish betterBullets
+  std::vector<std::unique_ptr<Bullet>> betterBullets;
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
@@ -121,6 +131,5 @@ class Player : public Entity
   float animation_timer            = 0.0f;
 
   PlayerState player1 = PlayerState::IDLE;
-  PlayerState player2 = PlayerState::IDLE;
 };
 #endif // ASGEGAME_PLAYER_H

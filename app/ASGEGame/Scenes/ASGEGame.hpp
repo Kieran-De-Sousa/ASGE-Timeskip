@@ -4,7 +4,6 @@
 #include <Engine/Gamepad.hpp>
 #include <Engine/OGLGame.hpp>
 
-/// TODO: Audio engine incorporation into scene handler
 #include <soloud.h>
 #include <soloud_wav.h>
 
@@ -33,7 +32,6 @@ class ASGENetGame : public ASGE::OGLGame
   /// Game state manager
   std::unique_ptr<SceneManager> scene_manager;
 
-  /// TODO: Audio engine incorporation into scene handler
   void initAudio();
   SoLoud::Soloud audio_engine;
   SoLoud::Wav background_audio;

@@ -83,8 +83,6 @@ class SceneLevel1 : public Scene
   std::vector<Vector2> directions;
   int magSize              = 120;
   unsigned int bulletCount = 0;
-  // TODO: Finish betterBullets
-  std::vector<std::unique_ptr<Bullet>> betterBullets;
 
   /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tilemapContactable;

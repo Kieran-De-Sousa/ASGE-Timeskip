@@ -271,6 +271,7 @@ void SceneLevel1::render(const ASGE::GameTime& us)
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)
 {
+
   for (unsigned int i = 0; i < tilemapContactable.size(); ++i)
   {
     renderer->render(*tilemapContactable[i]);
@@ -288,6 +289,26 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
     renderer->render(*bullets[i]);
+  }
+
+  ///renders past and present maps using vectors
+  switch(state)
+  {
+    case TimeTravelState::PAST:
+      for (unsigned int i = 0; i < PastTiles.size(); ++i)
+      {
+        renderer->render(*PastTiles[i]);
+        // Logging::DEBUG("rendering tiles");
+      }
+      break;
+
+    case TimeTravelState::PRESENT:
+      for (unsigned int i = 0; i < PresentTiles.size(); ++i)
+      {
+        renderer->render(*PresentTiles[i]);
+        // Logging::DEBUG("rendering tiles");
+      }
+      break;
   }
 }
 
@@ -351,6 +372,7 @@ bool SceneLevel1::renderPastMap()
 bool SceneLevel1::renderPresentMap()
 {
   ASGE::FILEIO::File tile_map;
+
   if (!tile_map.open("/data/map/PresentMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
@@ -404,6 +426,7 @@ bool SceneLevel1::renderPresentMap()
       }
     }
   }
+
   return true;
 }
 
@@ -462,6 +485,7 @@ bool SceneLevel1::renderPastBackground()
 bool SceneLevel1::renderPresentBackground()
 {
   ASGE::FILEIO::File tile_map;
+
   if (!tile_map.open("/data/map/PresentMap2.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
@@ -511,7 +535,9 @@ bool SceneLevel1::renderPresentBackground()
       }
     }
   }
+
   return true;
+
 }
 
 void SceneLevel1::Camera() {}

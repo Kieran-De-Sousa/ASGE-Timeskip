@@ -73,6 +73,7 @@ namespace Helper
     playerYChecking(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
 
     int resolveCollision(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
+
   }
 } // namespace Helper
 

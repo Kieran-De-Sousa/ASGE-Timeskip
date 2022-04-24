@@ -27,19 +27,19 @@ bool Helper::CollisionDetection::onRight(
 bool Helper::CollisionDetection::touchingTop(
   const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface)
 {
-  return (sprite.v3.y >= surface.v1.y && sprite.v3.y <= surface.v3.y);
+  return (sprite.v3.y > surface.v1.y && sprite.v3.y < surface.v3.y);
 }
 
 bool Helper::CollisionDetection::touchingBottom(
   const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface)
 {
-  return (sprite.v3.y >= surface.v3.y && sprite.v1.y <= surface.v3.y);
+  return (sprite.v3.y > surface.v1.y && sprite.v1.y < surface.v3.y);
 }
 
 bool Helper::CollisionDetection::touchingLeft(
   const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface)
 {
-  return (sprite.v1.x > surface.v1.x && sprite.v1.x < surface.v2.x);
+  return (sprite.v1.x < surface.v2.x && sprite.v1.x > surface.v1.x);
 }
 
 bool Helper::CollisionDetection::touchingRight(
@@ -58,9 +58,7 @@ bool Helper::CollisionDetection::inXBounds(
 bool Helper::CollisionDetection::inYBounds(
   const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)
 {
-  return (
-    (sprite_1.v1.y >= sprite_2.v1.y && sprite_1.v1.y <= sprite_2.v3.y) ||
-    (sprite_1.v3.y >= sprite_2.v1.y && sprite_1.v3.y <= sprite_2.v3.y));
+  return ((sprite_1.v1.y >= sprite_2.v1.y && sprite_1.v1.y <= sprite_2.v4.y));
 }
 
 [[maybe_unused]] bool Helper::CollisionDetection::playerYChecking(
@@ -89,22 +87,22 @@ int Helper::CollisionDetection::resolveCollision(
     // Logging::DEBUG("in Y Bounds");
     if (Helper::CollisionDetection::touchingRight(sprite_1, sprite_2))
     {
-      Logging::DEBUG("Player Left Collision");
+      Logging::DEBUG("Player Right Collision");
       return 1;
     }
     if (Helper::CollisionDetection::touchingLeft(sprite_1, sprite_2))
     {
-      Logging::DEBUG("Player Right Collision");
+      Logging::DEBUG("Player Left Collision");
       return 2;
     }
   }
-  if (Helper::CollisionDetection::touchingRight(sprite_1, sprite_2))
-  {
-    // Logging::DEBUG("Player Left Collision");
-  }
-  if (Helper::CollisionDetection::touchingLeft(sprite_1, sprite_2))
-  {
-    // Logging::DEBUG("Player Right Collision");
-  }
+  //  if (Helper::CollisionDetection::touchingRight(sprite_1, sprite_2))
+  //  {
+  //     Logging::DEBUG("Player Left Collision");
+  //  }
+  //  if (Helper::CollisionDetection::touchingLeft(sprite_1, sprite_2))
+  //  {
+  //     Logging::DEBUG("Player Right Collision");
+  //  }
   return 0;
 }

@@ -33,7 +33,7 @@ class Player : public Entity
 
   enum class PlayerState : int
   {
-    IDLE = 0,
+    IDLE    = 0,
     RUNNING = 1,
     JUMPING = 2
   };
@@ -71,14 +71,13 @@ class Player : public Entity
   // Jump
   void setJumping(const bool& jumping) { isJumping = jumping; }
   [[nodiscard]] bool getJumping() const { return isJumping; }
+  void setJumpSpeed(const float& value) { j_s = value; }
   // Jump Peaked
   void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
   [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
   // Velocity
   void setVelocity(const float& _x, const float& _y);
   [[nodiscard]] ASGE::Point2D getVelocity() const;
-  void setJumpSpeed(const float& jump) { j_s = jump; }
-
 
  protected:
   PlayerID playerID = PlayerID::UNKNOWN;
@@ -89,21 +88,23 @@ class Player : public Entity
   // Walking
   const float MOVEMENT_SPEED = 5;
   // Jumping
-  const float JUMP_HEIGHT = 128;
+  const float JUMP_HEIGHT = 80;
   bool gravity            = true;
   bool isGrounded         = false;
   bool isJumping          = false;
   bool isJumpPeaked       = false;
   float newPos            = 0;
   // Position
-  float j_s              = 0;
+  float j_s = 0;
+  // Position
+  float gravity_f        = 0;
   ASGE::Point2D velocity = { 0, 0 };
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
 
   /// Animation
-  //ObjRect animation_frames[5];
+  // ObjRect animation_frames[5];
   int animation_index              = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer            = 0.0f;

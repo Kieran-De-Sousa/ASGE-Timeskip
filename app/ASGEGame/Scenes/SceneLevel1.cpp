@@ -101,6 +101,12 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   UI->getP2HealthBar()->xPos(player1Look.x - 435);
   UI->getP2HealthBar()->yPos(player1Look.y - 135);
 
+  // retrieve all connected gamepads and store their states
+  for (auto& gamepad : inputs->getGamePads())
+  {
+    player1->updateGamepad(gamepad);
+  }
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);

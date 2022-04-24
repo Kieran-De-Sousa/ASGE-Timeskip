@@ -72,7 +72,6 @@ class Player : public Entity
   void setVelocity(const float& _x, const float& _y);
   [[nodiscard]] ASGE::Point2D getVelocity() const;
   // Jump Speed
-  void setJumpSpeed(const float& jump) { j_s = jump; }
   [[nodiscard]] float getJumpSpeed() const { return j_s; }
   // Bullets
   [[nodiscard]] const std::vector<std::unique_ptr<Bullet>>& getBullets() const { return bullets; }

@@ -104,3 +104,15 @@ int Helper::CollisionDetection::resolveCollision(
   //  }
   return 0;
 }
+bool Helper::CollisionDetection::isInside(
+  const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)
+{
+  if (inYBounds(sprite_1, sprite_2))
+  {
+    if (inXBounds(sprite_1, sprite_2))
+    {
+      return true;
+    }
+  }
+  return false;
+}

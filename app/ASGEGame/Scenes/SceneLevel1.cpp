@@ -30,6 +30,11 @@ bool SceneLevel1::init()
   enemy2->setSpriteVariables(16, 16, 3);
   enemy2->setPosition(530, 368);
 
+  enemy3 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
+  enemy3->initialiseSprite("/data/sprites/mushroom.png");
+  enemy3->setSpriteVariables(16, 16, 3);
+  enemy3->setPosition(600, 368);
+
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
   player1->getSprite()->srcRect()[1] = 0;
@@ -51,8 +56,14 @@ bool SceneLevel1::init()
   enemy2->getSprite()->srcRect()[2] = 16;
   enemy2->getSprite()->srcRect()[3] = 16;
 
+  enemy3->getSprite()->srcRect()[0] = 0;
+  enemy3->getSprite()->srcRect()[1] = 0;
+  enemy3->getSprite()->srcRect()[2] = 16;
+  enemy3->getSprite()->srcRect()[3] = 16;
+
   enemy1->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
   enemy2->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  enemy3->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -176,6 +187,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   player2->update(us);
   enemy1->update(us);
   enemy2->update(us);
+  enemy3->update(us);
 
   if (
     (enemy2->getSprite()->xPos() - player1->getSprite()->xPos() < 128) ||
@@ -183,6 +195,13 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     enemy2->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
     enemy2->setActive(true);
+  }
+  if (
+    (enemy3->getSprite()->xPos() - player1->getSprite()->xPos() < 256) ||
+    (enemy3->getSprite()->xPos() - player2->getSprite()->xPos() < 256))
+  {
+    enemy3->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+    enemy3->setActive(true);
   }
 
   switch (state)
@@ -434,6 +453,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   renderer->render(*player2->getSprite());
   renderer->render(*enemy1->getSprite());
   renderer->render(*enemy2->getSprite());
+  renderer->render(*enemy3->getSprite());
 
   /// Bullets
   for (const auto& bullet : player1->getBullets())

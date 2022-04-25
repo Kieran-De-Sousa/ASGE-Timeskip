@@ -86,6 +86,7 @@ class SceneLevel1 : public Scene
   /// Enemies
   std::unique_ptr<Enemy> enemy1 = nullptr;
   std::unique_ptr<Enemy> enemy2 = nullptr;
+  std::unique_ptr<Enemy> enemy3 = nullptr;
 
   int collisions = 0;
 

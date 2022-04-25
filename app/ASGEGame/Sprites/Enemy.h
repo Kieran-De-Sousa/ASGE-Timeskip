@@ -41,6 +41,8 @@ class Enemy : public Entity
   // Velocity
   void setActive(const bool& Act) { active = Act; }
 
+  void shoot();
+
  protected:
   EnemyType enemyType = EnemyType::UNDEFINED;
   float pointA        = 0;

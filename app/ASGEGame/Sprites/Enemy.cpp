@@ -36,6 +36,13 @@ void Enemy::update(const ASGE::GameTime& us)
       sprite->xPos(sprite->xPos() - 3);
     }
   }
+  if (enemyType == EnemyType::RANGED)
+  {
+    if (active)
+    {
+      shoot();
+    }
+  }
   updateAnimations(us);
   if (gravity)
   {
@@ -93,3 +100,4 @@ void Enemy::updateAnimations(const ASGE::GameTime& us)
     animation_timer      = 0.0f;
   }
 }
+void Enemy::shoot() {}

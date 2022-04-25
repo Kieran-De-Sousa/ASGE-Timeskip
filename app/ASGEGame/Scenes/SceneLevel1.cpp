@@ -209,6 +209,15 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     case TimeTravelState::PAST:
       for (unsigned long long i = 0; i < PastTiles.size(); i++)
       {
+        if (Helper::CollisionDetection::inYBounds(
+              enemy2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy2->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
         /// Player 1 Collision Detection
         if (Helper::CollisionDetection::inXBounds(
               player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
@@ -293,6 +302,15 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     case TimeTravelState::PRESENT:
       for (unsigned long long i = 0; i < PresentTiles.size(); i++)
       {
+        if (Helper::CollisionDetection::inYBounds(
+              enemy2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy2->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        }
         /// Player 1 Collision Detection
         if (Helper::CollisionDetection::inXBounds(
               player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))

@@ -72,6 +72,12 @@ bool SceneLevel1::init()
   loadPastBackground();
   loadPresentBackground();
 
+  // Health power up
+  HealthPowerUp = std::make_unique<Sprite>(*renderer);
+  HealthPowerUp->initialiseSprite("/data/sprites/Health.png");
+  HealthPowerUp->setPosition(370, 330);
+  HealthPowerUp->setSpriteVariables(16, 16, 3);
+
   // UI Initialisation
   UI = std::make_unique<PlayerUI>(*renderer);
   UI->init();
@@ -472,7 +478,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   renderer->render(*enemy1->getSprite());
   renderer->render(*enemy2->getSprite());
   renderer->render(*enemy3->getSprite());
-
+  renderer->render(*HealthPowerUp->getSprite());
   /// Bullets
   for (const auto& bullet : player1->getBullets())
   {

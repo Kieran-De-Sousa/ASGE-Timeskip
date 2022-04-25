@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="180" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="3">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="180" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="7">
  <tileset firstgid="1" name="mainlev_build" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="mainlev_build.png" width="1024" height="1024"/>
  </tileset>
@@ -86,8 +86,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,335,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,312,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="Objects">
+ <objectgroup id="7" name="PlayerEnterExit">
   <object id="1" name="Exit" x="5753.5" y="354" width="65" height="88" rotation="180"/>
   <object id="2" name="Entrance" x="17.5" y="222.667" width="79" height="96.5"/>
+ </objectgroup>
+ <objectgroup id="9" name="EnemySpawn">
+  <object id="3" name="Enemy1" x="388" y="319" width="62" height="66"/>
+  <object id="4" name="Enemy2" x="1882" y="413" width="62" height="66"/>
+  <object id="5" name="Enemy3" x="4270" y="315" width="62" height="66"/>
  </objectgroup>
 </map>

@@ -15,6 +15,9 @@
 #include "Sprites/Player.h"
 #include "Sprites/Sprite.h"
 
+// ui
+#include "Sprites/PlayerUI.h"
+
 /**
  * @brief Level 1 scene
  * @details
@@ -96,6 +99,9 @@ class SceneLevel1 : public Scene
   int magSize              = 120;
   unsigned int bulletCount = 0;
   std::unique_ptr<ASGE::Sprite> playerIcon{ nullptr };
+
+  // ui test shenanigans
+  std::unique_ptr<PlayerUI> UI = nullptr;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

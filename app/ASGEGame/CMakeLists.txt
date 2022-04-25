@@ -26,8 +26,7 @@ set(GAME_SOURCES
         Components/GameComponent.cpp
         Scenes/SceneMainMenu.cpp
         "Scenes/GameScenes.h"
-        Scenes/SceneLevel1.cpp
-        temp-joey-UI/PlayerUI.cpp)
+        Scenes/SceneLevel1.cpp Sprites/PlayerUI.cpp Sprites/PlayerUI.h)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

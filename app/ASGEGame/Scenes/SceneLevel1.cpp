@@ -44,6 +44,10 @@ bool SceneLevel1::init()
   //  testEntity = std::make_unique<Entity>(*renderer);
   //  testPlayer = std::make_unique<Player>(*renderer);
 
+  // UI Initialisation
+  UI = std::make_unique<PlayerUI>(*renderer);
+  UI->init();
+
   for (int i = 0; i < magSize; ++i)
   {
     bullets.push_back(renderer->createUniqueSprite());
@@ -71,6 +75,18 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 {
   playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
   playerIcon->yPos(ship_look.y);
+
+  // UI shtuff
+  UI->getP1Portrait()->xPos(ship2_look.x - 475);
+  UI->getP1Portrait()->yPos(ship2_look.y - 105);
+  UI->getP1HealthBar()->xPos(ship2_look.x - 435);
+  UI->getP1HealthBar()->yPos(ship2_look.y - 105);
+
+  UI->getP2Portrait()->xPos(ship_look.x - 475);
+  UI->getP2Portrait()->yPos(ship_look.y - 135);
+  UI->getP2HealthBar()->xPos(ship_look.x - 435);
+  UI->getP2HealthBar()->yPos(ship_look.y - 135);
+
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
     if (ship->flipFlags() == ASGE::Sprite::NORMAL)
@@ -379,7 +395,10 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     ship2->xPos(ship2_look.x - 540);
   }
   camera_two.lookAt(ship2_look);
+
   camera_two.setZoom(2.0F);
+
+  UI->updateLives();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
@@ -394,6 +413,10 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
+
+  renderer->render(*UI->getP1Portrait());
+  renderer->render(*UI->getP1HealthBar());
+
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
     renderer->render(*tiles[i]);
@@ -441,6 +464,10 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // renderer->render(*testPlayer->getSprite());
 
   // renderer->setProjectionMatrix(camera_one.getView());
+
+  // ui render
+  renderer->render(*UI->getP2HealthBar());
+  renderer->render(*UI->getP2Portrait());
 }
 bool SceneLevel1::renderMap()
 {

@@ -13,6 +13,7 @@
 /// ASGE Sprites
 #include "Sprites/Bullet.h"
 #include "Sprites/Entity.h"
+#include "Sprites/HealthPowerUp.h"
 #include "Sprites/Player.h"
 #include "Sprites/PlayerUI.h"
 #include "Sprites/Sprite.h"

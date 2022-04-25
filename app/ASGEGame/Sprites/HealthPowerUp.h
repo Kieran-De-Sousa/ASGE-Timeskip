@@ -1,21 +1,31 @@
-//
-// Created by ali on 24/04/2022.
-//
+#ifndef ASGEGAME_PLAYERUI_H
+#define ASGEGAME_PLAYERUI_H
 
-#ifndef ASGEGAME_HEALTHPOWERUP_H
-#define ASGEGAME_HEALTHPOWERUP_H
+#include "Sprite.h"
+#include <Engine/Sprite.hpp>
 
-#include "Entity.h"
-
-class HealthPowerUp : public Sprite
+class HealthPowerUp
 {
  public:
+  // initialisation stuff
   explicit HealthPowerUp(ASGE::Renderer& rendererRef);
-  ~HealthPowerUp() override = default;
+  virtual ~HealthPowerUp() = default;
 
-  virtual void update(const ASGE::GameTime& us) override;
+  void init();
+
+  // sprite stuff
+  ASGE::Sprite* getHealthPowerUp();
+
+  // health stuff
+  void addHealth(int playerChoice);
+
+  void updateHealth();
 
  private:
+  std::unique_ptr<Sprite> pHealthPowerUp;
+
+  // renderer
+  std::unique_ptr<ASGE::Renderer> renderer;
 };
 
 #endif // ASGEGAME_HEALTHPOWERUP_H

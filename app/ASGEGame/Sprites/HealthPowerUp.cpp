@@ -1,7 +1,16 @@
-//
-// Created by ali on 24/04/2022.
-//
-
 #include "HealthPowerUp.h"
 
-void HealthPowerUp::update(const ASGE::GameTime& us) {}
+HealthPowerUp::HealthPowerUp(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
+
+void HealthPowerUp::init()
+{
+  pHealthPowerUp = std::make_unique<Sprite>(*renderer);
+  pHealthPowerUp->initialiseSprite("data/sprites/Heatlh.png");
+  pHealthPowerUp->setSpriteVariables(100, 15, 9);
+  pHealthPowerUp->setPosition(100, 240);
+}
+// Sprite stuff
+ASGE::Sprite* HealthPowerUp::getHealthPowerUp()
+{
+  return pHealthPowerUp->getSprite();
+}

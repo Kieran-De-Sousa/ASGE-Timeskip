@@ -76,16 +76,24 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   playerIcon->xPos(ship_look.x - 540 + playerIcon->width());
   playerIcon->yPos(ship_look.y);
 
-  // UI shtuff
+  // UI movement
   UI->getP1Portrait()->xPos(ship2_look.x - 475);
   UI->getP1Portrait()->yPos(ship2_look.y - 105);
   UI->getP1HealthBar()->xPos(ship2_look.x - 435);
   UI->getP1HealthBar()->yPos(ship2_look.y - 105);
+  UI->getP1WepIndicator()->xPos(ship2_look.x - 436);
+  UI->getP1WepIndicator()->yPos(ship2_look.y - 85);
+  UI->getP1ActiveWep()->xPos(ship2_look.x - 350);
+  UI->getP1ActiveWep()->yPos(ship2_look.y - 85);
 
   UI->getP2Portrait()->xPos(ship_look.x - 475);
   UI->getP2Portrait()->yPos(ship_look.y - 135);
   UI->getP2HealthBar()->xPos(ship_look.x - 435);
   UI->getP2HealthBar()->yPos(ship_look.y - 135);
+  UI->getP2WepIndicator()->xPos(ship_look.x - 436);
+  UI->getP2WepIndicator()->yPos(ship_look.y - 115);
+  UI->getP2ActiveWep()->xPos(ship_look.x - 350);
+  UI->getP2ActiveWep()->yPos(ship_look.y - 115);
 
   for (unsigned long long i = 0; i < bullets.size(); i++)
   {
@@ -399,6 +407,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   camera_two.setZoom(2.0F);
 
   UI->updateLives();
+  UI->updateWeapon();
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
@@ -416,6 +425,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
 
   renderer->render(*UI->getP1Portrait());
   renderer->render(*UI->getP1HealthBar());
+  renderer->render(*UI->getP1WepIndicator());
+  renderer->render(*UI->getP1ActiveWep());
 
   for (unsigned int i = 0; i < tiles.size(); ++i)
   {
@@ -468,6 +479,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // ui render
   renderer->render(*UI->getP2HealthBar());
   renderer->render(*UI->getP2Portrait());
+  renderer->render(*UI->getP2WepIndicator());
+  renderer->render(*UI->getP2ActiveWep());
 }
 bool SceneLevel1::renderMap()
 {

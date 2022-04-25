@@ -78,6 +78,7 @@ bool SceneLevel1::init()
     fireAudio.loadMem(
       buffer.as_unsigned_char(), static_cast<unsigned int>(buffer.length), false, false);
     fireAudio.mVolume = 0.2f;
+    //sshh
     background_audio.mVolume = 0.0f;
   }
   audio_engine.play(background_audio);

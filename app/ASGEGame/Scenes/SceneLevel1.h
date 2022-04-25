@@ -13,7 +13,6 @@
 /// ASGE Sprites
 #include "Sprites/Bullet.h"
 #include "Sprites/Entity.h"
-#include "Sprites/HealthPowerUp.h"
 #include "Sprites/Player.h"
 #include "Sprites/PlayerUI.h"
 #include "Sprites/Sprite.h"
@@ -74,6 +73,9 @@ class SceneLevel1 : public Scene
   ASGE::Point2D player2Look{ 492, 120 };
 
   int collisions = 0;
+
+  /// Health PowerUp
+  std::unique_ptr<Sprite> HealthPowerUp = nullptr;
 
   /// Bullets
   std::vector<std::unique_ptr<ASGE::Sprite>> bullets;

@@ -35,6 +35,12 @@ bool SceneLevel1::init()
   renderMap();
   renderBackground();
 
+  // Health power up
+  HealthPowerUp = std::make_unique<Sprite>(*renderer);
+  HealthPowerUp->initialiseSprite("/data/sprites/Health.png");
+  HealthPowerUp->setPosition(370, 330);
+  HealthPowerUp->setSpriteVariables(16, 16, 3);
+
   // UI Initialisation
   UI = std::make_unique<PlayerUI>(*renderer);
   UI->init();
@@ -338,6 +344,8 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 
   renderer->render(*player1->getSprite());
   renderer->render(*player2->getSprite());
+
+  renderer->render(*HealthPowerUp->getSprite());
 
   // TODO: Convert into "betterBullets"
   for (unsigned long long int i = 0; i < bullets.size(); i++)

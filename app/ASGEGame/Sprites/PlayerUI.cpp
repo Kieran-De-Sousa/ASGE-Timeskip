@@ -24,6 +24,26 @@ void PlayerUI::init()
   p2_portrait->initialiseSprite("data/sprites/Player1Portrait.png");
   p2_portrait->setSpriteVariables(35, 35, 9);
   p2_portrait->setPosition(12.5, 150);
+
+  p1_wep_indicator = std::make_unique<Sprite>(*renderer);
+  p1_wep_indicator->initialiseSprite("data/sprites/Wep-Indicator-Sprite.png");
+  p1_wep_indicator->setSpriteVariables(100, 15, 9);
+  p1_wep_indicator->setPosition(55.75, 206);
+
+  p2_wep_indicator = std::make_unique<Sprite>(*renderer);
+  p2_wep_indicator->initialiseSprite("data/sprites/Wep-Indicator-Sprite.png");
+  p2_wep_indicator->setSpriteVariables(100, 15, 9);
+  p2_wep_indicator->setPosition(55.75, 172);
+
+  p1_active_wep = std::make_unique<Sprite>(*renderer);
+  p1_active_wep->initialiseSprite("data/sprites/weapon-sg.png");
+  p1_active_wep->setSpriteVariables(27.5, 15, 9);
+  p1_active_wep->setPosition(145, 206);
+
+  p2_active_wep = std::make_unique<Sprite>(*renderer);
+  p2_active_wep->initialiseSprite("data/sprites/weapon-sg.png");
+  p2_active_wep->setSpriteVariables(27.5, 15, 9);
+  p2_active_wep->setPosition(145, 172);
 }
 
 // Sprite stuff
@@ -47,11 +67,31 @@ ASGE::Sprite* PlayerUI::getP2Portrait()
   return p2_portrait->getSprite();
 }
 
-// Health stuff
-// might not be needed but its here for now
-void PlayerUI::addHealth(int playerChoice)
+ASGE::Sprite* PlayerUI::getP1WepIndicator()
 {
-  switch (playerChoice)
+  return p1_wep_indicator->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2WepIndicator()
+{
+  return p2_wep_indicator->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP1ActiveWep()
+{
+  return p1_active_wep->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2ActiveWep()
+{
+  return p2_active_wep->getSprite();
+}
+
+// Health stuff
+// might not be needed, but it's here for now
+void PlayerUI::addHealth(int playerID)
+{
+  switch (playerID)
   {
     case 1:
       if (p1_health_val <= 2)
@@ -79,9 +119,9 @@ void PlayerUI::addHealth(int playerChoice)
   }
 }
 
-void PlayerUI::removeHealth(int playerChoice)
+void PlayerUI::removeHealth(int playerID)
 {
-  switch (playerChoice)
+  switch (playerID)
   {
     case 1:
       if (p1_health_val >= 1)
@@ -104,7 +144,7 @@ void PlayerUI::removeHealth(int playerChoice)
       }
       break;
     default:
-      Logging::ERRORS("UI Error 'Mistaken Identity' - No player with that number exists");
+      Logging::ERRORS("UI Error 'Mistaken Identity' - No player with that ID number exists");
       break;
   }
 }
@@ -162,6 +202,72 @@ void PlayerUI::updateLives()
 
     default:
       Logging::ERRORS("UI Error 'Rock-Bottom' - Decreasing health more would make it negative.");
+      break;
+  }
+}
+
+// WEAPON RELATED FUNCTIONS BELOW
+void PlayerUI::updateWeapon()
+{
+  switch (p1_wep_choice)
+  {
+    case 1:
+      p1_active_wep->setSprite("data/sprites/weapon-sg.png");
+      p1_active_wep->setSpriteVariables(27.5, 15, 9);
+      break;
+    case 2:
+      p1_active_wep->setSprite("data/sprites/weapon-mg.png");
+      p1_active_wep->setSpriteVariables(27.5, 15, 9);
+      break;
+  }
+
+  switch (p2_wep_choice)
+  {
+    case 1:
+      p2_active_wep->setSprite("data/sprites/weapon-sg.png");
+      p2_active_wep->setSpriteVariables(27.5, 15, 9);
+      break;
+    case 2:
+      p2_active_wep->setSprite("data/sprites/weapon-mg.png");
+      p2_active_wep->setSpriteVariables(27.5, 15, 9);
+      break;
+  }
+}
+
+void PlayerUI::changeWeapon(int playerID, int wepID)
+{
+  switch (playerID)
+  {
+    case 1:
+      switch (wepID)
+      {
+        case 1:
+          p1_wep_choice = 1;
+          break;
+        case 2:
+          p1_wep_choice = 2;
+          break;
+        default:
+          Logging::ERRORS("UI Error 'Disarmed' - No weapon with that ID exists");
+          break;
+      }
+      break;
+    case 2:
+      switch (wepID)
+      {
+        case 1:
+          p2_wep_choice = 1;
+          break;
+        case 2:
+          p2_wep_choice = 2;
+          break;
+        default:
+          Logging::ERRORS("UI Error 'Disarmed' - No weapon with that ID exists");
+          break;
+      }
+      break;
+    default:
+      Logging::ERRORS("UI Error 'Mistaken Identity' - No player with that ID number exists");
       break;
   }
 }

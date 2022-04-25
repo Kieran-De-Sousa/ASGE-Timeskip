@@ -79,8 +79,8 @@ class SceneManager
 
  protected:
   /// Save a pointer of renderer and input to pass into game scenes
-  std::unique_ptr<ASGE::Renderer> renderer;
-  std::unique_ptr<ASGE::Input> inputs;
+  ASGE::Renderer* renderer;
+  ASGE::Input* inputs;
   /// Scene FSM
   std::shared_ptr<Scene> currentScene;
   std::vector<std::shared_ptr<Scene>> scenes;

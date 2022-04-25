@@ -14,28 +14,30 @@
 #include "Entity.h"
 
 /// Helper Classes
+#include "Bullet.h"
+#include "Components/ControlSchemes.h"
 #include "Components/Timer.h"
 
 /**
  * @brief Player class shared for both players
- * @author Kieran
+ * @authors Kieran
+ * @authors Tom
+ * @authors Asli
  */
 class Player : public Entity
 {
  public:
-  /// ID
-  enum class PlayerID : int
-  {
-    UNKNOWN  = 0,
-    PLAYER_1 = 1,
-    PLAYER_2 = 2
-  };
-
   enum class PlayerState : int
   {
-    IDLE = 0,
+    IDLE    = 0,
     RUNNING = 1,
     JUMPING = 2
+  };
+
+  enum class TimeTravelState : int
+  {
+    PRESENT = 0,
+    PAST    = 1
   };
   /**
    * @brief Constructor w/Param
@@ -56,10 +58,7 @@ class Player : public Entity
   virtual void update(const ASGE::GameTime& us) override;
 
   void updateKeymap(const std::map<int, bool>& key_state) { keymap = key_state; }
-  void updateGamepad(const std::map<int, ASGE::GamePadData>& gamepad_state)
-  {
-    gamepad = gamepad_state;
-  }
+  void updateGamepad(const ASGE::GamePadData& gamepad_state) { gamepad = gamepad_state; }
 
   /// SETTER & GETTER FUNCTIONS
   // Player ID
@@ -71,44 +70,71 @@ class Player : public Entity
   // Jump
   void setJumping(const bool& jumping) { isJumping = jumping; }
   [[nodiscard]] bool getJumping() const { return isJumping; }
+  void setJumpSpeed(const float& value) { j_s = value; }
   // Jump Peaked
   void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
   [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
   // Velocity
   void setVelocity(const float& _x, const float& _y);
   [[nodiscard]] ASGE::Point2D getVelocity() const;
-  void setJumpSpeed(const float& jump) { j_s = jump; }
-
+  // Jump Speed
+  [[nodiscard]] float getJumpSpeed() const { return j_s; }
+  // Bullets
+  [[nodiscard]] const std::vector<std::unique_ptr<ASGE::Sprite>>& getBullets() const
+  {
+    return bullets;
+  }
+  [[nodiscard]] int getCurrentBullet() const { return static_cast<int>(bulletCount); }
 
  protected:
+  //// @note Methods
+  void createBullets();
+  /// Updates
+  void updateAnimations(const ASGE::GameTime& us);
+  void updateBullets(const ASGE::GameTime& us);
+  void shootBullet(const ASGE::GameTime& us);
+
+  /// @note Members
   PlayerID playerID = PlayerID::UNKNOWN;
   /// Inputs
+  // Keyboard
   std::map<int, bool> keymap{};
-  std::map<int, ASGE::GamePadData> gamepad{};
+  ControlSchemeKeyboard keyboard;
+  // Controller
+  ASGE::GamePadData gamepad = ASGE::GamePadData(0, nullptr, nullptr, nullptr);
+  ControlSchemeGamepad controller;
   /// Movement
   // Walking
   const float MOVEMENT_SPEED = 5;
   // Jumping
-  const float JUMP_HEIGHT = 128;
+  const float JUMP_HEIGHT = 64;
   bool gravity            = true;
   bool isGrounded         = false;
   bool isJumping          = false;
   bool isJumpPeaked       = false;
   float newPos            = 0;
+  float j_s               = 0;
   // Position
-  float j_s              = 0;
+  float gravity_f        = 0;
   ASGE::Point2D velocity = { 0, 0 };
+  /// Bullets
+  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
+  std::vector<Vector2> directions;
+  const int DEFAULT_MAG_SIZE = 30;
+  int magSize                = DEFAULT_MAG_SIZE;
+  unsigned int bulletCount   = 0;
+  // TODO: Finish betterBullets
+  std::vector<std::unique_ptr<Bullet>> betterBullets;
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;
 
   /// Animation
-  //ObjRect animation_frames[5];
+  // ObjRect animation_frames[5];
   int animation_index              = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer            = 0.0f;
 
   PlayerState player1 = PlayerState::IDLE;
-  PlayerState player2 = PlayerState::IDLE;
 };
 #endif // ASGEGAME_PLAYER_H

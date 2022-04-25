@@ -79,8 +79,9 @@ class Scene : public std::enable_shared_from_this<Scene>
 
  protected:
   /// Save a pointer of renderer and input to pass into game scenes
-  std::unique_ptr<ASGE::Renderer> renderer;
-  std::unique_ptr<ASGE::Input> inputs;
+  //
+  ASGE::Renderer* renderer;
+  ASGE::Input* inputs;
 
   /// Input System
   // std::string key_callback_id{}; /**< Key Input Callback ID. */

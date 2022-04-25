@@ -38,7 +38,7 @@ class PlayerUI
   std::unique_ptr<Sprite> p2_portrait;
 
   // renderer
-  std::unique_ptr<ASGE::Renderer> renderer;
+  ASGE::Renderer* renderer;
 };
 
 #endif // ASGEGAME_PLAYERUI_H

@@ -12,6 +12,7 @@
 
 /// ASGE Sprites
 #include "Sprites/Bullet.h"
+#include "Sprites/Enemy.h"
 #include "Sprites/Entity.h"
 #include "Sprites/Player.h"
 #include "Sprites/PlayerUI.h"
@@ -27,6 +28,12 @@
 struct ObjRect
 {
   float x, y, w, h;
+};
+
+enum class TimeTravelState : int
+{
+  PRESENT = 0,
+  PAST    = 1
 };
 
 /**
@@ -50,8 +57,12 @@ class SceneLevel1 : public Scene
 
   void renderScene(const ASGE::GameTime& us);
 
-  bool renderMap();
-  bool renderBackground();
+  bool loadPastMap();
+  bool loadPastBackground();
+
+  bool loadPresentMap();
+  bool loadPresentBackground();
+
   void Camera();
   void DebugInfo();
   void initAudio();
@@ -72,17 +83,26 @@ class SceneLevel1 : public Scene
   ASGE::Point2D player1Look{ 492, 120 };
   ASGE::Point2D player2Look{ 492, 120 };
 
+  /// Enemies
+  std::unique_ptr<Enemy> enemy1 = nullptr;
+  std::unique_ptr<Enemy> enemy2 = nullptr;
+
+  int collisions = 0;
+
   /// Bullets
   std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
   std::vector<Vector2> directions;
   int magSize              = 120;
   unsigned int bulletCount = 0;
-  // TODO: Finish betterBullets
-  std::vector<std::unique_ptr<Bullet>> betterBullets;
 
   /// TILED - TILEMAP VECTORS
-  std::vector<std::unique_ptr<ASGE::Sprite>> tilemapContactable;
-  std::vector<std::unique_ptr<ASGE::Sprite>> tilesBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilesPastBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
+  std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
+  std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
+
+  // Switching maps initial state
+  TimeTravelState state = TimeTravelState::PAST;
 
   tmx::Map map;
 

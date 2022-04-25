@@ -39,6 +39,7 @@ class Enemy : public Entity
   void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
   [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
   // Velocity
+  void setActive(const bool& Act) { active = Act; }
 
  protected:
   EnemyType enemyType = EnemyType::UNDEFINED;
@@ -52,6 +53,7 @@ class Enemy : public Entity
   bool isGrounded   = false;
   bool isJumping    = false;
   bool isJumpPeaked = false;
+  bool active       = false;
   float newPos      = 0;
   float j_s         = 0;
 

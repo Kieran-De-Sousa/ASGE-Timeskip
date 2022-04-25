@@ -64,9 +64,7 @@ bool Helper::CollisionDetection::inYBounds(
 [[maybe_unused]] bool Helper::CollisionDetection::playerYChecking(
   const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)
 {
-  return (
-    (sprite_1.v1.y >= sprite_2.v1.y && sprite_1.v1.y <= sprite_2.v3.y) ||
-    (sprite_1.v3.y >= sprite_2.v1.y && sprite_1.v3.y <= sprite_2.v3.y));
+  return ((sprite_1.v1.y >= sprite_2.v1.y && sprite_1.v1.y <= sprite_2.v3.y));
 }
 int Helper::CollisionDetection::resolveCollision(
   const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)

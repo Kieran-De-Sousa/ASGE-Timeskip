@@ -2,29 +2,39 @@
 
 void Enemy::update(const ASGE::GameTime& us)
 {
-  if (directionR)
+  if (enemyType == EnemyType::PASSIVE)
   {
-    sprite->setFlipFlags(ASGE::Sprite::NORMAL);
+    if (directionR)
+    {
+      sprite->setFlipFlags(ASGE::Sprite::NORMAL);
+    }
+    if (!directionR)
+    {
+      sprite->setFlipFlags(ASGE::Sprite::FLIP_X);
+    }
+    if (directionR)
+    {
+      sprite->xPos(sprite->xPos() + p_speed);
+    }
+    if (sprite->xPos() > pointB)
+    {
+      directionR = false;
+    }
+    if (!directionR)
+    {
+      sprite->xPos(sprite->xPos() - p_speed);
+    }
+    if (sprite->xPos() < pointA)
+    {
+      directionR = true;
+    }
   }
-  if (!directionR)
+  if (enemyType == EnemyType::CHASER)
   {
-    sprite->setFlipFlags(ASGE::Sprite::FLIP_X);
-  }
-  if (directionR)
-  {
-    sprite->xPos(sprite->xPos() + p_speed);
-  }
-  if (sprite->xPos() > pointB)
-  {
-    directionR = false;
-  }
-  if (!directionR)
-  {
-    sprite->xPos(sprite->xPos() - p_speed);
-  }
-  if (sprite->xPos() < pointA)
-  {
-    directionR = true;
+    if (active)
+    {
+      sprite->xPos(sprite->xPos() - 3);
+    }
   }
   updateAnimations(us);
   if (gravity)
@@ -51,8 +61,9 @@ Enemy::Enemy(
   float patrolPoint1, float patrolPoint2) :
   Entity(rendererRef1)
 {
-  pointA = patrolPoint1;
-  pointB = patrolPoint2;
+  enemyType = enemy_type;
+  pointA    = patrolPoint1;
+  pointB    = patrolPoint2;
 }
 Enemy::Enemy(ASGE::Renderer& rendererRef) : Entity(rendererRef) {}
 

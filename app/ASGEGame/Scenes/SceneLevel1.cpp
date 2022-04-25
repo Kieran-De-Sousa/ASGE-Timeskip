@@ -78,6 +78,7 @@ bool SceneLevel1::init()
     fireAudio.loadMem(
       buffer.as_unsigned_char(), static_cast<unsigned int>(buffer.length), false, false);
     fireAudio.mVolume = 0.2f;
+    background_audio.mVolume = 0.0f;
   }
   audio_engine.play(background_audio);
   return true;
@@ -92,6 +93,22 @@ void SceneLevel1::input()
   if (keymap[ASGE::KEYS::KEY_Q])
   {
     printf("q is pressed\n");
+    switch(state)
+    {
+      case TimeTravelState::PAST:
+        state = TimeTravelState::PRESENT;
+        DebugInfo();
+        break;
+
+      case TimeTravelState::PRESENT:
+        state = TimeTravelState::PAST;
+        DebugInfo();
+        break;
+    }
+  }
+  if (keymap[ASGE::KEYS::KEY_SPACE])
+  {
+    printf("space is pressed\n");
     switch(state)
     {
       case TimeTravelState::PAST:
@@ -129,98 +146,199 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   player1->update(us);
   player2->update(us);
 
-  for (unsigned long long i = 0; i < PastTiles.size(); i++)
+  switch(state)
   {
-    /// Player 1 Collision Detection
-    if (Helper::CollisionDetection::inXBounds(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-    {
-      if (Helper::CollisionDetection::touchingTop(
-            player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+    case TimeTravelState::PAST:
+      for (unsigned long long i = 0; i < PastTiles.size(); i++)
       {
-        player1->setGrounded(true);
-        player1->getSprite()->yPos(
-          PastTiles[i]->yPos() - player1->getSprite()->height());
-      }
-      else if ((Helper::CollisionDetection::touchingBottom(
-                 player1->getSprite()->getWorldBounds(),
-                 PastTiles[i]->getWorldBounds())))
-      {
-        player1->setJumpSpeed(0);
-        player1->setJumping(false);
-        player1->setJumpPeaked(true);
-        player1->getSprite()->yPos(
-          PastTiles[i]->yPos() + PastTiles[i]->height());
-      }
-    }
-    if (Helper::CollisionDetection::playerYChecking(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-    {
-      if (
-        Helper::CollisionDetection::touchingLeft(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-      {
-        player1->getSprite()->xPos(
-          PastTiles[i]->xPos() + PastTiles[i]->width());
-      }
-      else if (
-        Helper::CollisionDetection::touchingRight(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-      {
-        player1->getSprite()->xPos(
-          PastTiles[i]->xPos() - player1->getSprite()->width());
-      }
-    }
+        /// Player 1 Collision Detection
+        if (Helper::CollisionDetection::inXBounds(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingTop(
+                player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            player1->setGrounded(true);
+            player1->getSprite()->yPos(
+              PastTiles[i]->yPos() - player1->getSprite()->height());
+          }
+          else if ((Helper::CollisionDetection::touchingBottom(
+                     player1->getSprite()->getWorldBounds(),
+                     PastTiles[i]->getWorldBounds())))
+          {
+            player1->setJumpSpeed(0);
+            player1->setJumping(false);
+            player1->setJumpPeaked(true);
+            player1->getSprite()->yPos(
+              PastTiles[i]->yPos() + PastTiles[i]->height());
+          }
+        }
+        if (Helper::CollisionDetection::playerYChecking(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (
+            Helper::CollisionDetection::touchingLeft(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+          {
+            player1->getSprite()->xPos(
+              PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+          else if (
+            Helper::CollisionDetection::touchingRight(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+          {
+            player1->getSprite()->xPos(
+              PastTiles[i]->xPos() - player1->getSprite()->width());
+          }
+        }
 
-    /// Player 2 Collision Detection
-    if (Helper::CollisionDetection::inXBounds(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-    {
-      if (Helper::CollisionDetection::touchingTop(
-            player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-      {
-        player2->setGrounded(true);
-        player2->getSprite()->yPos(
-          PastTiles[i]->yPos() + player2->getSprite()->height());
+        /// Player 2 Collision Detection
+        if (Helper::CollisionDetection::inXBounds(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingTop(
+                player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            player2->setGrounded(true);
+            player2->getSprite()->yPos(
+              PastTiles[i]->yPos() + player2->getSprite()->height());
+          }
+          else if (Helper::CollisionDetection::touchingBottom(
+                     player2->getSprite()->getWorldBounds(),
+                     PastTiles[i]->getWorldBounds()))
+          {
+            player2->setJumpSpeed(0);
+            player2->setJumping(false);
+            player2->setJumpPeaked(true);
+            player2->getSprite()->yPos(
+              PastTiles[i]->yPos() + PastTiles[i]->height());
+          }
+        }
+        if (Helper::CollisionDetection::playerYChecking(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (
+            Helper::CollisionDetection::touchingLeft(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+          {
+            player2->getSprite()->xPos(
+              PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+          else if (
+            Helper::CollisionDetection::touchingRight(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+          {
+            player2->getSprite()->xPos(
+              PastTiles[i]->xPos() - player2->getSprite()->width());
+          }
+        }
       }
-      else if (Helper::CollisionDetection::touchingBottom(
-                 player2->getSprite()->getWorldBounds(),
-                 PastTiles[i]->getWorldBounds()))
+      break;
+    case TimeTravelState::PRESENT:
+      for (unsigned long long i = 0; i < PresentTiles.size(); i++)
       {
-        player2->setJumpSpeed(0);
-        player2->setJumping(false);
-        player2->setJumpPeaked(true);
-        player2->getSprite()->yPos(
-          PastTiles[i]->yPos() + PastTiles[i]->height());
+        /// Player 1 Collision Detection
+        if (Helper::CollisionDetection::inXBounds(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingTop(
+                player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            player1->setGrounded(true);
+            player1->getSprite()->yPos(
+              PresentTiles[i]->yPos() - player1->getSprite()->height());
+          }
+          else if ((Helper::CollisionDetection::touchingBottom(
+                     player1->getSprite()->getWorldBounds(),
+                     PresentTiles[i]->getWorldBounds())))
+          {
+            player1->setJumpSpeed(0);
+            player1->setJumping(false);
+            player1->setJumpPeaked(true);
+            player1->getSprite()->yPos(
+              PresentTiles[i]->yPos() + PresentTiles[i]->height());
+          }
+        }
+        if (Helper::CollisionDetection::playerYChecking(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (
+            Helper::CollisionDetection::touchingLeft(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+          {
+            player1->getSprite()->xPos(
+              PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+          else if (
+            Helper::CollisionDetection::touchingRight(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+          {
+            player1->getSprite()->xPos(
+              PresentTiles[i]->xPos() - player1->getSprite()->width());
+          }
+        }
+
+        /// Player 2 Collision Detection
+        if (Helper::CollisionDetection::inXBounds(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingTop(
+                player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            player2->setGrounded(true);
+            player2->getSprite()->yPos(
+              PresentTiles[i]->yPos() + player2->getSprite()->height());
+          }
+          else if (Helper::CollisionDetection::touchingBottom(
+                     player2->getSprite()->getWorldBounds(),
+                     PresentTiles[i]->getWorldBounds()))
+          {
+            player2->setJumpSpeed(0);
+            player2->setJumping(false);
+            player2->setJumpPeaked(true);
+            player2->getSprite()->yPos(
+              PresentTiles[i]->yPos() + PresentTiles[i]->height());
+          }
+        }
+        if (Helper::CollisionDetection::playerYChecking(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (
+            Helper::CollisionDetection::touchingLeft(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+          {
+            player2->getSprite()->xPos(
+              PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+          else if (
+            Helper::CollisionDetection::touchingRight(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+            !(Helper::CollisionDetection::touchingBottom(
+              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+          {
+            player2->getSprite()->xPos(
+              PresentTiles[i]->xPos() - player2->getSprite()->width());
+          }
+        }
       }
-    }
-    if (Helper::CollisionDetection::playerYChecking(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-    {
-      if (
-        Helper::CollisionDetection::touchingLeft(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-      {
-        player2->getSprite()->xPos(
-          PastTiles[i]->xPos() + PastTiles[i]->width());
-      }
-      else if (
-        Helper::CollisionDetection::touchingRight(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-        !(Helper::CollisionDetection::touchingBottom(
-          player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-      {
-        player2->getSprite()->xPos(
-          PastTiles[i]->xPos() - player2->getSprite()->width());
-      }
-    }
+      break;
   }
+
+
 
   // moving the camera
   if (player1->getSprite()->xPos() > player1Look.x)
@@ -320,7 +438,7 @@ bool SceneLevel1::loadPastMap()
   ASGE::FILEIO::File tile_map;
   if (!tile_map.open("/data/map/PastMap2.tmx"))
   {
-    Logging::ERRORS("init::Failed to load map");
+    Logging::ERRORS("init::Failed to load past map");
     return false;
   }
   ASGE::FILEIO::IOBuffer buffer = tile_map.read();
@@ -379,7 +497,7 @@ bool SceneLevel1::loadPresentMap()
 
   if (!tile_map.open("/data/map/PresentMap2.tmx"))
   {
-    Logging::ERRORS("init::Failed to load map");
+    Logging::ERRORS("init::Failed to load present map");
     return false;
   }
   ASGE::FILEIO::IOBuffer buffer = tile_map.read();

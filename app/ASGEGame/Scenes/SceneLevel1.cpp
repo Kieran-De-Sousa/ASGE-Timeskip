@@ -80,12 +80,6 @@ bool SceneLevel1::init()
   {
     bullets.push_back(renderer->createUniqueSprite());
     directions.emplace_back(0, 0);
-
-    // TODO: Finish below
-    //    auto bullet = std::make_unique<Bullet>(*renderer);
-    //    bullet->initialiseSprite("data/sprites/bulletSprite.png");
-    //    bullet->getSprite()->setGlobalZOrder(6);
-    //    betterBullets.emplace_back(bullet.get());
   }
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -458,11 +452,11 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   /// Bullets
   for (const auto& bullet : player1->getBullets())
   {
-    renderer->render(*bullet);
+    renderer->render(*bullet->getSprite());
   }
   for (const auto& bullet : player2->getBullets())
   {
-    renderer->render(*bullet);
+    renderer->render(*bullet->getSprite());
   }
 }
 

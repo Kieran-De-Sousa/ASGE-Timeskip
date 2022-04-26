@@ -14,11 +14,18 @@ class PlayerUI : public GameComponent
 
   void init();
 
-  // sprite stuff
+  // sprite rendering functions
+  // health functions
   ASGE::Sprite* getP1HealthBar();
   ASGE::Sprite* getP2HealthBar();
+  ASGE::Sprite* getP1HealthNum();
+  ASGE::Sprite* getP2HealthNum();
+
+  // portrait functions
   ASGE::Sprite* getP1Portrait();
   ASGE::Sprite* getP2Portrait();
+
+  // weapon functions
   ASGE::Sprite* getP1WepIndicator();
   ASGE::Sprite* getP2WepIndicator();
   ASGE::Sprite* getP1ActiveWep();
@@ -47,8 +54,12 @@ class PlayerUI : public GameComponent
   // sprite block
   std::unique_ptr<Sprite> p1_health_bar;
   std::unique_ptr<Sprite> p2_health_bar;
+  std::unique_ptr<Sprite> p1_health_num;
+  std::unique_ptr<Sprite> p2_health_num;
+
   std::unique_ptr<Sprite> p1_portrait;
   std::unique_ptr<Sprite> p2_portrait;
+
   std::unique_ptr<Sprite> p1_wep_indicator;
   std::unique_ptr<Sprite> p2_wep_indicator;
   std::unique_ptr<Sprite> p1_active_wep;

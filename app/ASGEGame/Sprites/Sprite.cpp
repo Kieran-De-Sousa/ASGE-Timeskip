@@ -18,6 +18,7 @@ bool Sprite::initialiseSprite(const std::string& filename)
   setPosition(DEFAULT_SPRITE_POSITION[0], DEFAULT_SPRITE_POSITION[1]);
   setSpriteVariables(DEFAULT_SPRITE_VARIABLES[0], DEFAULT_SPRITE_VARIABLES[1], DEFAULT_Z_ORDER);
   sprite->scale(1);
+  sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
   return true;
 }

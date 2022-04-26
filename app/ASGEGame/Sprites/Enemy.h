@@ -20,14 +20,12 @@ class Enemy : public Entity
     RANGED    = 3
   };
 
-  explicit Enemy(
-    ASGE::Renderer& rendererRef1, int health, int attack, Enemy::EnemyType enemy_type,
-    float patrolPoint1, float patrolPoint2);
+  explicit Enemy(ASGE::Renderer& rendererRef, int health, int attack, Enemy::EnemyType enemy_type);
   explicit Enemy(ASGE::Renderer& rendererRef);
   virtual ~Enemy() override = default;
 
-  virtual void update(const ASGE::GameTime& us) override;
-  // virtual void behaviour(const ASGE::GameTime& us) = 0;
+  virtual void behaviour(const ASGE::GameTime& us)        = 0;
+  virtual void updateAnimations(const ASGE::GameTime& us) = 0;
 
   void setGrounded(const bool& grounded) { isGrounded = grounded; }
   [[nodiscard]] bool getGrounded() const { return isGrounded; }
@@ -38,32 +36,23 @@ class Enemy : public Entity
   // Jump Peaked
   void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
   [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
-  // Velocity
-  void setActive(const bool& Act) { active = Act; }
-
-  void shoot();
 
  protected:
   EnemyType enemyType = EnemyType::UNDEFINED;
-  float pointA        = 0;
-  float pointB        = 0;
-  float p_speed       = 1.5F;
-  float c_speed       = 3.0F;
-  bool directionR     = true;
-
+  /// Movement
+  bool directionR = true;
+  float speed     = 0.0F;
+  float newPos    = 0;
+  /// Jumping
+  float j_s         = 0;
   bool gravity      = false;
   bool isGrounded   = false;
   bool isJumping    = false;
   bool isJumpPeaked = false;
-  bool active       = false;
-  float newPos      = 0;
-  float j_s         = 0;
 
   int animation_index              = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer            = 0.0f;
-
-  void updateAnimations(const ASGE::GameTime& us);
 };
 
 #endif // ASGEGAME_ENEMY_H

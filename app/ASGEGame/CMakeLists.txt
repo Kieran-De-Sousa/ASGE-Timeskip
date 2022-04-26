@@ -33,7 +33,9 @@ set(GAME_SOURCES
         Sprites/Enemy.cpp
         Sprites/EnemyChaser.cpp
         Sprites/PlayerUI.cpp
-        Components/ControlSchemes.cpp Sprites/HealthPowerUp.cpp Sprites/HealthPowerUp.h)
+        Components/ControlSchemes.cpp
+        Sprites/HealthPowerUp.cpp
+        Sprites/EnemyPassive.cpp)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

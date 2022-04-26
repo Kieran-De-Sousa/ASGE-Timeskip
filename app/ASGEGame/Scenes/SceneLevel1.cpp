@@ -20,27 +20,27 @@ bool SceneLevel1::init()
   player2->setPosition(88, 240);
 
   /// Enemies
-  enemy1 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
+  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
   enemy1->initialiseSprite("/data/sprites/mushroom.png");
   enemy1->setSpriteVariables(16, 16, 3);
   enemy1->setPosition(421, 367);
 
-  enemy2 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
+  enemy2 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy2->initialiseSprite("/data/sprites/mushroom.png");
   enemy2->setSpriteVariables(16, 16, 3);
   enemy2->setPosition(2670, 241);
 
-  enemy3 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
+  enemy3 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy3->initialiseSprite("/data/sprites/mushroom.png");
   enemy3->setSpriteVariables(16, 16, 3);
   enemy3->setPosition(1840, 178);
 
-  enemy4 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
+  enemy4 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy4->initialiseSprite("/data/sprites/mushroom.png");
   enemy4->setSpriteVariables(16, 16, 3);
   enemy4->setPosition(5303, 244);
 
-  enemy5 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
+  enemy5 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
   enemy5->initialiseSprite("/data/sprites/mushroom.png");
   enemy5->setSpriteVariables(16, 16, 3);
   enemy5->setPosition(3790, 178);
@@ -81,12 +81,6 @@ bool SceneLevel1::init()
   enemy5->getSprite()->srcRect()[2] = 16;
   enemy5->getSprite()->srcRect()[3] = 16;
 
-  enemy1->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy2->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy3->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy4->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy5->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
   loadPastMap();
@@ -103,21 +97,6 @@ bool SceneLevel1::init()
   // UI Initialisation
   UI = std::make_unique<PlayerUI>(*renderer);
   UI->init();
-
-  for (int i = 0; i < magSize; ++i)
-  {
-    bullets.push_back(renderer->createUniqueSprite());
-    directions.emplace_back(0, 0);
-  }
-  for (unsigned long long int i = 0; i < bullets.size(); i++)
-  {
-    bullets[i]->loadTexture("data/sprites/bulletSprite.png");
-    bullets[i]->xPos(-200);
-    bullets[i]->yPos(-200);
-    bullets[i]->width(8);
-    bullets[i]->height(8);
-    bullets[i]->setGlobalZOrder(6);
-  }
 
   audio_engine.init();
 
@@ -146,27 +125,8 @@ void SceneLevel1::input()
   player1->updateKeymap(keymap);
   player2->updateKeymap(keymap);
 
-  if (keymap[ASGE::KEYS::KEY_Q])
-
-    for (unsigned long long i = 0; i < bullets.size(); i++)
-    {
-      // printf("q is pressed\n");
-      switch (state)
-      {
-        case TimeTravelState::PAST:
-          state = TimeTravelState::PRESENT;
-          DebugInfo();
-          break;
-
-        case TimeTravelState::PRESENT:
-          state = TimeTravelState::PAST;
-          DebugInfo();
-          break;
-      }
-    }
-  if (keymap[ASGE::KEYS::KEY_SPACE])
+  if (keymap[ASGE::KEYS::KEY_Q] || keymap[ASGE::KEYS::KEY_SPACE])
   {
-    // printf("space is pressed\n");
     switch (state)
     {
       case TimeTravelState::PAST:
@@ -215,12 +175,6 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   for (auto& gamepad : inputs->getGamePads())
   {
     player1->updateGamepad(gamepad);
-  }
-
-  for (unsigned long long i = 0; i < bullets.size(); i++)
-  {
-    bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
-    bullets[i]->yPos(bullets[i]->yPos() + directions[i].position.y * 8.4F);
   }
 
   player1->update(us);
@@ -491,8 +445,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     DebugInfo();
   }
 
-  UI->updateLives();
-  UI->updateWeapon();
+  UI->update(us);
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}

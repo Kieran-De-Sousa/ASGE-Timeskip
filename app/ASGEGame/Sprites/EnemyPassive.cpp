@@ -1,13 +1,15 @@
-#include "EnemyChaser.h"
+#include "EnemyPassive.h"
 
-EnemyChaser::EnemyChaser(
-  ASGE::Renderer& rendererRef, int health, int attack, Enemy::EnemyType enemy) :
-  Enemy(rendererRef, health, attack, enemy)
+EnemyPassive::EnemyPassive(
+  ASGE::Renderer& rendererRef, int health, int attack, Enemy::EnemyType enemy, float patrolPoint1,
+  float patrolPoint2) :
+  Enemy(rendererRef, health, attack, enemy),
+  pointA(patrolPoint1), pointB(patrolPoint2)
 {
-  speed = ENEMY_CHASER_SPEED;
+  speed = ENEMY_PASSIVE_SPEED;
 }
 
-void EnemyChaser::update(const ASGE::GameTime& us)
+void EnemyPassive::update(const ASGE::GameTime& us)
 {
   behaviour(us);
   updateAnimations(us);
@@ -31,16 +33,29 @@ void EnemyChaser::update(const ASGE::GameTime& us)
     // gravity = true;
   }
 }
-
-void EnemyChaser::behaviour(const ASGE::GameTime& us)
+void EnemyPassive::behaviour(const ASGE::GameTime& us)
 {
-  if (isActive)
+  if (sprite->xPos() > pointB)
   {
+    directionR = false;
+  }
+  if (sprite->xPos() < pointA)
+  {
+    directionR = true;
+  }
+  if (directionR)
+  {
+    sprite->setFlipFlags(ASGE::Sprite::NORMAL);
+    sprite->xPos(sprite->xPos() + speed);
+  }
+  else if (!directionR)
+  {
+    sprite->setFlipFlags(ASGE::Sprite::FLIP_X);
     sprite->xPos(sprite->xPos() - speed);
   }
 }
 
-void EnemyChaser::updateAnimations(const ASGE::GameTime& us)
+void EnemyPassive::updateAnimations(const ASGE::GameTime& us)
 {
   animation_timer += static_cast<float>(us.deltaInSecs());
 

@@ -33,8 +33,6 @@ class Entity : public Sprite
   explicit Entity(ASGE::Renderer& rendererRef) : Sprite(rendererRef) {}
   ~Entity() override = default;
 
-  virtual void update(const ASGE::GameTime& us) override {}
-
   /// SETTER & GETTER FUNCTIONS
   // Health
   void setHealth(int health) { entityHealth = health; }
@@ -49,6 +47,5 @@ class Entity : public Sprite
  protected:
   int entityHealth = 0;
   int entityAttack = 0;
-  // int entityState = IDLE;
 };
 #endif // ASGEGAME_ENTITY_H

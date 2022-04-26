@@ -62,6 +62,12 @@ void PlayerUI::init()
   p2_active_wep->setPosition(145, 172);
 }
 
+void PlayerUI::update(const ASGE::GameTime& us)
+{
+  updateLives();
+  updateWeapon();
+}
+
 // vv BLOCK OF RENDERING FUNCTIONS vv
 // Sprite stuff
 ASGE::Sprite* PlayerUI::getP1HealthBar()

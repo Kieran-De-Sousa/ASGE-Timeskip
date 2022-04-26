@@ -13,6 +13,8 @@
 /// ASGE Sprites
 #include "Sprites/Bullet.h"
 #include "Sprites/Enemy.h"
+#include "Sprites/EnemyChaser.h"
+#include "Sprites/EnemyPassive.h"
 #include "Sprites/Entity.h"
 #include "Sprites/Player.h"
 #include "Sprites/PlayerUI.h"
@@ -84,22 +86,16 @@ class SceneLevel1 : public Scene
   ASGE::Point2D player2Look{ 492, 120 };
 
   /// Enemies
-  std::unique_ptr<Enemy> enemy1 = nullptr;
-  std::unique_ptr<Enemy> enemy2 = nullptr;
-  std::unique_ptr<Enemy> enemy3 = nullptr;
-  std::unique_ptr<Enemy> enemy4 = nullptr;
-  std::unique_ptr<Enemy> enemy5 = nullptr;
+  std::unique_ptr<EnemyPassive> enemy1 = nullptr;
+  std::unique_ptr<EnemyChaser> enemy2  = nullptr;
+  std::unique_ptr<EnemyChaser> enemy3  = nullptr;
+  std::unique_ptr<EnemyChaser> enemy4  = nullptr;
+  std::unique_ptr<EnemyPassive> enemy5 = nullptr;
 
   int collisions = 0;
 
   /// Health PowerUp
   std::unique_ptr<Sprite> HealthPowerUp = nullptr;
-
-  /// Bullets
-  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
-  std::vector<Vector2> directions;
-  int magSize              = 120;
-  unsigned int bulletCount = 0;
 
   /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPastBackground;

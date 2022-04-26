@@ -35,7 +35,7 @@ class PlayerUI : public GameComponent
   void removeHealth(int playerID);
   void addHealth(int playerID);
 
-  virtual void update(const ASGE::GameTime& us) override {}
+  virtual void update(const ASGE::GameTime& us) override;
   void updateLives();
 
   // weapon stuff

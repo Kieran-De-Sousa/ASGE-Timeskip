@@ -65,14 +65,14 @@ std::shared_ptr<Scene> SceneManager::sceneFactory(const GameScene& gameScene)
 void SceneManager::checkCurrentSceneState()
 {
   /// Grabs state of current scene every frame
-  const SceneStatus CURRENT_STATE = currentScene->getSceneStatus();
+  currentSceneStatus = currentScene->getSceneStatus();
   // Update state to exit game if required
-  exitGame = CURRENT_STATE.exit_game;
-  if (CURRENT_STATE.change_scene)
+  exitGame = currentSceneStatus.exit_game;
+  if (currentSceneStatus.change_scene)
   {
     for (const auto& scene : scenes)
     {
-      if (scene->getScene() == CURRENT_STATE.new_scene)
+      if (scene->getScene() == currentSceneStatus.new_scene)
       {
         setCurrentScene(scene);
       }
@@ -91,7 +91,10 @@ void SceneManager::input()
 }
 void SceneManager::update(const ASGE::GameTime& us)
 {
-  currentScene->update(us);
+  if (!currentSceneStatus.pause_scene)
+  {
+    currentScene->update(us);
+  }
 }
 void SceneManager::render(const ASGE::GameTime& us)
 {
@@ -99,5 +102,8 @@ void SceneManager::render(const ASGE::GameTime& us)
 }
 void SceneManager::fixedUpdate(const ASGE::GameTime& us)
 {
-  currentScene->fixedUpdate(us);
+  if (!currentSceneStatus.pause_scene)
+  {
+    currentScene->fixedUpdate(us);
+  }
 }

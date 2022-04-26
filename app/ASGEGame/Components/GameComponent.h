@@ -14,7 +14,8 @@ class GameComponent
     SPRITE  = 1,
     BULLET  = 2,
     ENEMY   = 3,
-    PLAYER  = 4
+    PLAYER  = 4,
+    UI      = 5
   };
   explicit GameComponent() = default;
   virtual ~GameComponent() = default;

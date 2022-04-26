@@ -425,6 +425,12 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     player1Look.x = player1->getSprite()->xPos();
   }
+
+  if (player2->getSprite()->xPos() > player2Look.x)
+  {
+    player2Look.x = player2->getSprite()->xPos();
+  }
+
   player1Look.y = player1->getSprite()->yPos();
   player2Look.y = player2->getSprite()->yPos();
   // stopping player exit
@@ -432,8 +438,17 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     player1->getSprite()->xPos(player1Look.x - 960);
   }
+
+  if (player2->getSprite()->xPos() < player2Look.x - 960)
+  {
+    player2->getSprite()->xPos(player2Look.x - 960);
+  }
+
   camera_one.lookAt(player1Look);
   camera_one.setZoom(2.0F);
+
+  camera_two.lookAt(player2Look);
+  camera_two.setZoom(2.0F);
 
   if (keymap[ASGE::KEYS::KEY_F])
   {

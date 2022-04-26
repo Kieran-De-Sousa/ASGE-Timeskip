@@ -23,17 +23,27 @@ bool SceneLevel1::init()
   enemy1 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
   enemy1->initialiseSprite("/data/sprites/mushroom.png");
   enemy1->setSpriteVariables(16, 16, 3);
-  enemy1->setPosition(310, 368);
+  enemy1->setPosition(421, 367);
 
   enemy2 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
   enemy2->initialiseSprite("/data/sprites/mushroom.png");
   enemy2->setSpriteVariables(16, 16, 3);
-  enemy2->setPosition(970, 368);
+  enemy2->setPosition(2670, 241);
 
   enemy3 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
   enemy3->initialiseSprite("/data/sprites/mushroom.png");
   enemy3->setSpriteVariables(16, 16, 3);
   enemy3->setPosition(1840, 178);
+
+  enemy4 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
+  enemy4->initialiseSprite("/data/sprites/mushroom.png");
+  enemy4->setSpriteVariables(16, 16, 3);
+  enemy4->setPosition(5303, 244);
+
+  enemy5 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
+  enemy5->initialiseSprite("/data/sprites/mushroom.png");
+  enemy5->setSpriteVariables(16, 16, 3);
+  enemy5->setPosition(3790, 178);
 
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
@@ -61,9 +71,21 @@ bool SceneLevel1::init()
   enemy3->getSprite()->srcRect()[2] = 16;
   enemy3->getSprite()->srcRect()[3] = 16;
 
+  enemy4->getSprite()->srcRect()[0] = 0;
+  enemy4->getSprite()->srcRect()[1] = 0;
+  enemy4->getSprite()->srcRect()[2] = 16;
+  enemy4->getSprite()->srcRect()[3] = 16;
+
+  enemy5->getSprite()->srcRect()[0] = 0;
+  enemy5->getSprite()->srcRect()[1] = 0;
+  enemy5->getSprite()->srcRect()[2] = 16;
+  enemy5->getSprite()->srcRect()[3] = 16;
+
   enemy1->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
   enemy2->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
   enemy3->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  enemy4->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  enemy5->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -206,12 +228,14 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   enemy1->update(us);
   enemy2->update(us);
   enemy3->update(us);
+  enemy4->update(us);
+  enemy5->update(us);
 
   if (Helper::CollisionDetection::isInside(
         player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
   {
     player1->setHealth(player1->getHealth() + 1);
-
+    UI->addHealth(2);
     HealthPowerUp->getSprite()->xPos(-300);
   }
 
@@ -219,7 +243,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
         player2->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
   {
     player2->setHealth(player2->getHealth() + 1);
-
+    UI->addHealth(1);
     HealthPowerUp->getSprite()->xPos(-300);
   }
 
@@ -532,6 +556,8 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   renderer->render(*enemy1->getSprite());
   renderer->render(*enemy2->getSprite());
   renderer->render(*enemy3->getSprite());
+  renderer->render(*enemy4->getSprite());
+  renderer->render(*enemy5->getSprite());
   renderer->render(*HealthPowerUp->getSprite());
   /// Bullets
   for (const auto& bullet : player1->getBullets())

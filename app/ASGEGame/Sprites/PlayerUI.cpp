@@ -124,23 +124,23 @@ void PlayerUI::addHealth(int playerID)
   switch (playerID)
   {
     case 1:
-      if (p1_health_val <= 2)
+      if (p1_health_val <= 4)
       {
         p1_health_val += 1;
       }
       else
       {
-        Logging::ERRORS("UI Error 'Overheal' - Cannot have > 3 lives");
+        Logging::ERRORS("UI Error 'Overheal' - Cannot have > 5 lives");
       }
       break;
     case 2:
-      if (p2_health_val <= 2)
+      if (p2_health_val <= 4)
       {
         p2_health_val += 1;
       }
       else
       {
-        Logging::ERRORS("UI Error 'Overheal' - Cannot have > 3 lives");
+        Logging::ERRORS("UI Error 'Overheal' - Cannot have > 5 lives");
       }
       break;
     default:

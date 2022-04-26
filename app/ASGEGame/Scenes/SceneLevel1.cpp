@@ -195,22 +195,6 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   enemy2->update(us);
   enemy3->update(us);
 
-  if (Helper::CollisionDetection::isInside(
-        player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
-  {
-    player1->setHealth(player1->getHealth() + 1);
-
-    HealthPowerUp->getSprite()->xPos(-300);
-  }
-
-  if (Helper::CollisionDetection::isInside(
-        player2->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
-  {
-    player2->setHealth(player2->getHealth() + 1);
-
-    HealthPowerUp->getSprite()->xPos(-300);
-  }
-
   if (
     (enemy2->getSprite()->xPos() - player1->getSprite()->xPos() < 128) ||
     (enemy2->getSprite()->xPos() - player2->getSprite()->xPos() < 128))

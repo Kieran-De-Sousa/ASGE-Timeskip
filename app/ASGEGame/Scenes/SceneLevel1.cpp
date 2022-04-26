@@ -28,12 +28,12 @@ bool SceneLevel1::init()
   enemy2 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
   enemy2->initialiseSprite("/data/sprites/mushroom.png");
   enemy2->setSpriteVariables(16, 16, 3);
-  enemy2->setPosition(530, 368);
+  enemy2->setPosition(970, 368);
 
   enemy3 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
   enemy3->initialiseSprite("/data/sprites/mushroom.png");
   enemy3->setSpriteVariables(16, 16, 3);
-  enemy3->setPosition(600, 368);
+  enemy3->setPosition(1840, 178);
 
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;

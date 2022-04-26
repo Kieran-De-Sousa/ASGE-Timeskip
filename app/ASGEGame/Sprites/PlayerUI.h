@@ -18,24 +18,39 @@ class PlayerUI
   ASGE::Sprite* getP2HealthBar();
   ASGE::Sprite* getP1Portrait();
   ASGE::Sprite* getP2Portrait();
+  ASGE::Sprite* getP1WepIndicator();
+  ASGE::Sprite* getP2WepIndicator();
+  ASGE::Sprite* getP1ActiveWep();
+  ASGE::Sprite* getP2ActiveWep();
 
   // health stuff
-  void removeHealth(int playerChoice);
-  void addHealth(int playerChoice);
+  void removeHealth(int playerID);
+  void addHealth(int playerID);
 
   void updateLives();
 
-  // Position stuff
-  // Nothing here yet.
+  // weapon stuff
+  void updateWeapon();
+  void changeWeapon(int playerID, int wepID);
 
  private:
   // random vars
   int p1_health_val = 3;
   int p2_health_val = 3;
+
+  // weapon stuff: 1 = Machine Gun, 2 = Shotgun
+  int p1_wep_choice = 1;
+  int p2_wep_choice = 1;
+
+  // sprite block
   std::unique_ptr<Sprite> p1_health_bar;
   std::unique_ptr<Sprite> p2_health_bar;
   std::unique_ptr<Sprite> p1_portrait;
   std::unique_ptr<Sprite> p2_portrait;
+  std::unique_ptr<Sprite> p1_wep_indicator;
+  std::unique_ptr<Sprite> p2_wep_indicator;
+  std::unique_ptr<Sprite> p1_active_wep;
+  std::unique_ptr<Sprite> p2_active_wep;
 
   // renderer
   ASGE::Renderer* renderer;

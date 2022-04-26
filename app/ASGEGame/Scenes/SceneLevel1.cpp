@@ -86,12 +86,6 @@ bool SceneLevel1::init()
   {
     bullets.push_back(renderer->createUniqueSprite());
     directions.emplace_back(0, 0);
-
-    // TODO: Finish below
-    //    auto bullet = std::make_unique<Bullet>(*renderer);
-    //    bullet->initialiseSprite("data/sprites/bulletSprite.png");
-    //    bullet->getSprite()->setGlobalZOrder(6);
-    //    betterBullets.emplace_back(bullet.get());
   }
   for (unsigned long long int i = 0; i < bullets.size(); i++)
   {
@@ -131,21 +125,23 @@ void SceneLevel1::input()
   player2->updateKeymap(keymap);
 
   if (keymap[ASGE::KEYS::KEY_Q])
-  {
-    // printf("q is pressed\n");
-    switch (state)
-    {
-      case TimeTravelState::PAST:
-        state = TimeTravelState::PRESENT;
-        DebugInfo();
-        break;
 
-      case TimeTravelState::PRESENT:
-        state = TimeTravelState::PAST;
-        DebugInfo();
-        break;
+    for (unsigned long long i = 0; i < bullets.size(); i++)
+    {
+      // printf("q is pressed\n");
+      switch (state)
+      {
+        case TimeTravelState::PAST:
+          state = TimeTravelState::PRESENT;
+          DebugInfo();
+          break;
+
+        case TimeTravelState::PRESENT:
+          state = TimeTravelState::PAST;
+          DebugInfo();
+          break;
+      }
     }
-  }
   if (keymap[ASGE::KEYS::KEY_SPACE])
   {
     // printf("space is pressed\n");
@@ -166,16 +162,24 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
-  // UI shtuff
+  // UI movement
   UI->getP1Portrait()->xPos(player2Look.x - 475);
   UI->getP1Portrait()->yPos(player2Look.y - 105);
   UI->getP1HealthBar()->xPos(player2Look.x - 435);
   UI->getP1HealthBar()->yPos(player2Look.y - 105);
+  UI->getP1WepIndicator()->xPos(player2Look.x - 436);
+  UI->getP1WepIndicator()->yPos(player2Look.y - 85);
+  UI->getP1ActiveWep()->xPos(player2Look.x - 350);
+  UI->getP1ActiveWep()->yPos(player2Look.y - 85);
 
   UI->getP2Portrait()->xPos(player1Look.x - 475);
   UI->getP2Portrait()->yPos(player1Look.y - 135);
   UI->getP2HealthBar()->xPos(player1Look.x - 435);
   UI->getP2HealthBar()->yPos(player1Look.y - 135);
+  UI->getP2WepIndicator()->xPos(player1Look.x - 436);
+  UI->getP2WepIndicator()->yPos(player1Look.y - 115);
+  UI->getP2ActiveWep()->xPos(player1Look.x - 350);
+  UI->getP2ActiveWep()->yPos(player1Look.y - 115);
 
   // retrieve all connected gamepads and store their states
   for (auto& gamepad : inputs->getGamePads())
@@ -425,6 +429,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   }
 
   UI->updateLives();
+  UI->updateWeapon();
 }
 
 // UI->updateLives();
@@ -439,6 +444,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   renderScene(us);
   renderer->render(*UI->getP1Portrait());
   renderer->render(*UI->getP1HealthBar());
+  renderer->render(*UI->getP1WepIndicator());
+  renderer->render(*UI->getP1ActiveWep());
 
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
@@ -446,6 +453,8 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   renderScene(us);
   renderer->render(*UI->getP2HealthBar());
   renderer->render(*UI->getP2Portrait());
+  renderer->render(*UI->getP2WepIndicator());
+  renderer->render(*UI->getP2ActiveWep());
 }
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)
@@ -482,11 +491,11 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
   /// Bullets
   for (const auto& bullet : player1->getBullets())
   {
-    renderer->render(*bullet);
+    renderer->render(*bullet->getSprite());
   }
   for (const auto& bullet : player2->getBullets())
   {
-    renderer->render(*bullet);
+    renderer->render(*bullet->getSprite());
   }
 }
 

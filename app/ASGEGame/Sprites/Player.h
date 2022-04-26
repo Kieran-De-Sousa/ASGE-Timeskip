@@ -80,10 +80,7 @@ class Player : public Entity
   // Jump Speed
   [[nodiscard]] float getJumpSpeed() const { return j_s; }
   // Bullets
-  [[nodiscard]] const std::vector<std::unique_ptr<ASGE::Sprite>>& getBullets() const
-  {
-    return bullets;
-  }
+  [[nodiscard]] const std::vector<std::unique_ptr<Bullet>>& getBullets() const { return bullets; }
   [[nodiscard]] int getCurrentBullet() const { return static_cast<int>(bulletCount); }
 
  protected:
@@ -118,13 +115,12 @@ class Player : public Entity
   float gravity_f        = 0;
   ASGE::Point2D velocity = { 0, 0 };
   /// Bullets
-  std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
-  std::vector<Vector2> directions;
-  const int DEFAULT_MAG_SIZE = 30;
-  int magSize                = DEFAULT_MAG_SIZE;
-  unsigned int bulletCount   = 0;
-  // TODO: Finish betterBullets
-  std::vector<std::unique_ptr<Bullet>> betterBullets;
+  std::vector<std::unique_ptr<Bullet>> bullets;
+  const float DEFAULT_BULLET_VELOCITY = 8.4F;
+  const unsigned int DEFAULT_MAG_SIZE = 30;
+  unsigned int magSize                = DEFAULT_MAG_SIZE;
+  const unsigned int MAXIMUM_BULLETS  = 45;
+  unsigned int bulletCount            = 0;
   /// Timers
   Timer powerUpTimer;
   float powerUpDuration = 20;

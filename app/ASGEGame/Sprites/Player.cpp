@@ -94,19 +94,13 @@ ASGE::Point2D Player::getVelocity() const
 void Player::createBullets()
 {
   /// Bullets
-  for (int i = 0; i < magSize; ++i)
+  for (unsigned int i = 0; i < MAXIMUM_BULLETS; ++i)
   {
-    bullets.push_back(renderer->createUniqueSprite());
-    directions.emplace_back(0, 0);
-  }
-  for (auto& bullet : bullets)
-  {
-    bullet->loadTexture("/data/sprites/bulletSprite.png");
-    bullet->xPos(-200);
-    bullet->yPos(-200);
-    bullet->width(8);
-    bullet->height(8);
-    bullet->setGlobalZOrder(6);
+    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*renderer);
+    bullet->initialiseSprite("data/sprites/bulletSprite.png");
+    bullet->setSpriteVariables(8, 8, 6);
+    bullet->setPosition(-200, -200);
+    bullets.emplace_back(std::move(bullet));
   }
 }
 
@@ -147,10 +141,11 @@ void Player::updateAnimations(const ASGE::GameTime& us)
 
 void Player::updateBullets(const ASGE::GameTime& us)
 {
-  for (unsigned long long i = 0; i < bullets.size(); i++)
+  for (auto& bullet : bullets)
   {
-    bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
-    bullets[i]->yPos(bullets[i]->yPos() + directions[i].position.y * 8.4F);
+    bullet->setPosition(
+      bullet->getSprite()->xPos() + DEFAULT_BULLET_VELOCITY * bullet->direction.position.x,
+      bullet->getSprite()->yPos() + DEFAULT_BULLET_VELOCITY * bullet->direction.position.y);
   }
 }
 
@@ -158,20 +153,20 @@ void Player::shootBullet(const ASGE::GameTime& us)
 {
   if (sprite->flipFlags() == ASGE::Sprite::FLIP_X)
   {
-    bullets[bulletCount]->xPos(sprite->xPos() - bullets[bulletCount]->width());
-    bullets[bulletCount]->yPos(
-      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->height());
-    directions[bulletCount].position.x = -1;
+    bullets[bulletCount]->setPosition(
+      sprite->xPos() - bullets[bulletCount]->getSprite()->width(),
+      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->getSprite()->height());
+    bullets[bulletCount]->direction.position.x = -1;
   }
-  if (getSprite()->flipFlags() == ASGE::Sprite::NORMAL)
+  else if (sprite->flipFlags() == ASGE::Sprite::NORMAL)
   {
-    bullets[bulletCount]->xPos(sprite->xPos() + sprite->width());
-    bullets[bulletCount]->yPos(
-      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->height());
-    directions[bulletCount].position.x = 1;
+    bullets[bulletCount]->setPosition(
+      sprite->xPos() + bullets[bulletCount]->getSprite()->width(),
+      sprite->yPos() + sprite->height() / 2 - bullets[bulletCount]->getSprite()->height());
+    bullets[bulletCount]->direction.position.x = 1;
   }
   bulletCount++;
-  if (bulletCount > 25)
+  if (bulletCount > magSize)
   {
     bulletCount = 0;
   }

@@ -90,6 +90,9 @@ class SceneLevel1 : public Scene
 
   int collisions = 0;
 
+  /// Health PowerUp
+  std::unique_ptr<Sprite> HealthPowerUp = nullptr;
+
   /// Bullets
   std::vector<std::unique_ptr<ASGE::Sprite>> bullets;
   std::vector<Vector2> directions;

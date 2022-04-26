@@ -48,6 +48,12 @@ class Scene : public std::enable_shared_from_this<Scene>
    * @param game_scene Enum type of game scene to transition to
    */
   void setNewScene(const GameScene& game_scene);
+  /**
+   * @brief Set the pause state of the current scene, which prevents update/fixed
+   * updates on the scene
+   * @param paused Set pause state of screen
+   */
+  void setPauseScreen(const bool& paused);
 
   /**
    * @brief Update keymap with current state of keyboard & mouse
@@ -79,12 +85,10 @@ class Scene : public std::enable_shared_from_this<Scene>
 
  protected:
   /// Save a pointer of renderer and input to pass into game scenes
-  //
   ASGE::Renderer* renderer;
   ASGE::Input* inputs;
 
   /// Input System
-  // std::string key_callback_id{}; /**< Key Input Callback ID. */
   std::map<int, bool> keymap{};
   std::map<int, ASGE::GamePadData> gamepad_state{};
 

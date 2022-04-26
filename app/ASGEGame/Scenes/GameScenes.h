@@ -36,6 +36,7 @@ struct SceneStatus
   GameScene current_scene = GameScene::UNDEFINED;
   GameScene new_scene     = GameScene::UNDEFINED;
   bool change_scene       = false;
+  bool pause_scene        = false;
   bool exit_game          = false;
 };
 

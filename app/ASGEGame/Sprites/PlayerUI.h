@@ -1,15 +1,16 @@
 #ifndef ASGEGAME_PLAYERUI_H
 #define ASGEGAME_PLAYERUI_H
 
+#include "Components/GameComponent.h"
 #include "Sprite.h"
 #include <Engine/Sprite.hpp>
 
-class PlayerUI
+class PlayerUI : public GameComponent
 {
  public:
   // initialisation stuff
   explicit PlayerUI(ASGE::Renderer& rendererRef);
-  virtual ~PlayerUI() = default;
+  virtual ~PlayerUI() override = default;
 
   void init();
 
@@ -27,6 +28,7 @@ class PlayerUI
   void removeHealth(int playerID);
   void addHealth(int playerID);
 
+  virtual void update(const ASGE::GameTime& us) override {}
   void updateLives();
 
   // weapon stuff

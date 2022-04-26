@@ -84,6 +84,7 @@ class SceneManager
   /// Scene FSM
   std::shared_ptr<Scene> currentScene;
   std::vector<std::shared_ptr<Scene>> scenes;
+  SceneStatus currentSceneStatus;
   bool exitGame = false;
 };
 

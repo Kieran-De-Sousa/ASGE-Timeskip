@@ -1,6 +1,9 @@
 #include "PlayerUI.h"
 
-PlayerUI::PlayerUI(ASGE::Renderer& rendererRef) : renderer(&rendererRef) {}
+PlayerUI::PlayerUI(ASGE::Renderer& rendererRef) : renderer(&rendererRef)
+{
+  type = GameComponent::ComponentType::UI;
+}
 
 void PlayerUI::init()
 {

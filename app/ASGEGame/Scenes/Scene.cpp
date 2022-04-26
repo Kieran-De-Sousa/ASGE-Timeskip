@@ -10,9 +10,13 @@ void Scene::keyHandler(const ASGE::SharedEventData& data)
   const auto* key  = dynamic_cast<const ASGE::KeyEvent*>(data.get());
   keymap[key->key] = key->action != ASGE::KEYS::KEY_RELEASED;
 
-  if (key->key == ASGE::KEYS::KEY_ESCAPE)
+  if (keymap[ASGE::KEYS::KEY_ESCAPE])
   {
     sceneStatus.exit_game = true;
+  }
+  if (keymap[ASGE::KEYS::KEY_P])
+  {
+    setPauseScreen(!sceneStatus.pause_scene);
   }
 }
 
@@ -35,4 +39,8 @@ void Scene::setNewScene(const GameScene& game_scene)
 {
   sceneStatus.new_scene    = game_scene;
   sceneStatus.change_scene = true;
+}
+void Scene::setPauseScreen(const bool& paused)
+{
+  sceneStatus.pause_scene = paused;
 }

@@ -182,7 +182,7 @@ void SceneLevel2::updatePlayers(const ASGE::GameTime& us, Player* player)
         /// Exit Check
         if (player->getSprite()->getWorldBounds().v3.x >= pastExitPos.x)
         {
-          setNewScene(GameScene::LEVEL_2);
+          setNewScene(GameScene::LEVEL_3);
         }
 
         if (Helper::CollisionDetection::inYBounds(

@@ -79,6 +79,10 @@ class SceneLevel3 : public Scene
   std::unique_ptr<EnemyChaser> enemy2  = nullptr;
   std::unique_ptr<EnemyChaser> enemy3  = nullptr;
   std::unique_ptr<EnemyPassive> enemy4 = nullptr;
+  std::unique_ptr<EnemyPassive> enemy5 = nullptr;
+  std::unique_ptr<EnemyChaser> enemy6 = nullptr;
+  std::unique_ptr<EnemyChaser> enemy7 = nullptr;
+  std::unique_ptr<EnemyPassive> enemy8 = nullptr;
 
   int collisions = 0;
 
@@ -90,7 +94,16 @@ class SceneLevel3 : public Scene
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
-  tmx::Vector2<float>pastEnemyPos;
+  tmx::Vector2<float>pastEnemy1Pos;
+  tmx::Vector2<float>pastEnemy2Pos;
+  tmx::Vector2<float>pastEnemy3Pos;
+  tmx::Vector2<float>pastEnemy4Pos;
+
+  tmx::Vector2<float>presentEnemy1Pos;
+  tmx::Vector2<float>presentEnemy2Pos;
+  tmx::Vector2<float>presentEnemy3Pos;
+  tmx::Vector2<float>presentEnemy4Pos;
+
 
   // Switching maps initial state
   TimeTravelState state = TimeTravelState::PAST;

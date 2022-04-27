@@ -20,7 +20,7 @@ bool SceneLevel2::init()
   player2->setPosition(88, 240);
 
   /// Enemies
-  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
+  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 350);
   enemy1->initialiseSprite("/data/sprites/mushroom.png");
   enemy1->setSpriteVariables(16, 16, 3);
   enemy1->setPosition(370, 337);

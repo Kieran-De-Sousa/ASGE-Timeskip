@@ -20,20 +20,25 @@ bool SceneLevel3::init()
   player2->setPosition(88, 240);
 
   /// Enemies
-  enemy1 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
-  enemy1->initialiseSprite("/data/sprites/mushroom.png");
-  enemy1->setSpriteVariables(16, 16, 3);
-  enemy1->setPosition(310, 368);
+  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
+  enemy1->initialiseSprite("/data/sprites/slimeA.png");
+  enemy1->setSpriteVariables(256, 16, 3);
+  enemy1->setPosition(421, 367);
 
-  enemy2 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::CHASER, 530, 530);
-  enemy2->initialiseSprite("/data/sprites/mushroom.png");
-  enemy2->setSpriteVariables(16, 16, 3);
-  enemy2->setPosition(970, 368);
+  enemy2 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
+  enemy2->initialiseSprite("/data/sprites/IDS.png");
+  enemy2->setSpriteVariables(256, 27, 3);
+  enemy2->setPosition(2670, 241);
 
-  enemy3 = std::make_unique<Enemy>(*renderer, 5, 1, Enemy::EnemyType::RANGED, 530, 530);
-  enemy3->initialiseSprite("/data/sprites/mushroom.png");
-  enemy3->setSpriteVariables(16, 16, 3);
-  enemy3->setPosition(1840, 178);
+  enemy3 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
+  enemy3->initialiseSprite("/data/sprites/CultistWalk.png");
+  enemy3->setSpriteVariables(192, 32, 3);
+  enemy3->setPosition(5303, 244);
+
+  enemy4 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
+  enemy4->initialiseSprite("/data/sprites/WormWalk.png");
+  enemy4->setSpriteVariables(16, 32, 3);
+  enemy4->setPosition(3790, 178);
 
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
@@ -53,17 +58,19 @@ bool SceneLevel3::init()
 
   enemy2->getSprite()->srcRect()[0] = 0;
   enemy2->getSprite()->srcRect()[1] = 0;
-  enemy2->getSprite()->srcRect()[2] = 16;
-  enemy2->getSprite()->srcRect()[3] = 16;
+  enemy2->getSprite()->srcRect()[2] = 27;
+  enemy2->getSprite()->srcRect()[3] = 27;
 
   enemy3->getSprite()->srcRect()[0] = 0;
   enemy3->getSprite()->srcRect()[1] = 0;
-  enemy3->getSprite()->srcRect()[2] = 16;
-  enemy3->getSprite()->srcRect()[3] = 16;
+  enemy3->getSprite()->srcRect()[2] = 32;
+  enemy3->getSprite()->srcRect()[3] = 32;
 
-  enemy1->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy2->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-  enemy3->getSprite()->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+  enemy4->getSprite()->srcRect()[0] = 0;
+  enemy4->getSprite()->srcRect()[1] = 0;
+  enemy4->getSprite()->srcRect()[2] = 32;
+  enemy4->getSprite()->srcRect()[3] = 32;
+
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -82,25 +89,10 @@ bool SceneLevel3::init()
   UI = std::make_unique<PlayerUI>(*renderer);
   UI->init();
 
-  for (int i = 0; i < magSize; ++i)
-  {
-    bullets.push_back(renderer->createUniqueSprite());
-    directions.emplace_back(0, 0);
-  }
-  for (unsigned long long int i = 0; i < bullets.size(); i++)
-  {
-    bullets[i]->loadTexture("data/sprites/bulletSprite.png");
-    bullets[i]->xPos(-200);
-    bullets[i]->yPos(-200);
-    bullets[i]->width(8);
-    bullets[i]->height(8);
-    bullets[i]->setGlobalZOrder(6);
-  }
-
   audio_engine.init();
 
   ASGE::FILEIO::File bg_audio_file;
-  if (bg_audio_file.open("/data/audio/bgm_action_4.mp3")) // open the file
+  if (bg_audio_file.open("/data/audio/Level3Audio.mp3")) // open the file
   {
     static auto buffer = bg_audio_file.read(); // read its contents
     background_audio.loadMem(
@@ -124,27 +116,8 @@ void SceneLevel3::input()
   player1->updateKeymap(keymap);
   player2->updateKeymap(keymap);
 
-  if (keymap[ASGE::KEYS::KEY_Q])
-
-    for (unsigned long long i = 0; i < bullets.size(); i++)
-    {
-      // printf("q is pressed\n");
-      switch (state)
-      {
-        case TimeTravelState::PAST:
-          state = TimeTravelState::PRESENT;
-          DebugInfo();
-          break;
-
-        case TimeTravelState::PRESENT:
-          state = TimeTravelState::PAST;
-          DebugInfo();
-          break;
-      }
-    }
-  if (keymap[ASGE::KEYS::KEY_SPACE])
+  if (keymap[ASGE::KEYS::KEY_Q] || keymap[ASGE::KEYS::KEY_SPACE])
   {
-    // printf("space is pressed\n");
     switch (state)
     {
       case TimeTravelState::PAST:
@@ -195,23 +168,18 @@ void SceneLevel3::update(const ASGE::GameTime& us)
     player1->updateGamepad(gamepad);
   }
 
-  for (unsigned long long i = 0; i < bullets.size(); i++)
-  {
-    bullets[i]->xPos(bullets[i]->xPos() + directions[i].position.x * 8.4F);
-    bullets[i]->yPos(bullets[i]->yPos() + directions[i].position.y * 8.4F);
-  }
-
   player1->update(us);
   player2->update(us);
   enemy1->update(us);
   enemy2->update(us);
   enemy3->update(us);
+  enemy4->update(us);
 
   if (Helper::CollisionDetection::isInside(
         player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
   {
     player1->setHealth(player1->getHealth() + 1);
-
+    UI->addHealth(2);
     HealthPowerUp->getSprite()->xPos(-300);
   }
 
@@ -219,7 +187,7 @@ void SceneLevel3::update(const ASGE::GameTime& us)
         player2->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
   {
     player2->setHealth(player2->getHealth() + 1);
-
+    UI->addHealth(1);
     HealthPowerUp->getSprite()->xPos(-300);
   }
 
@@ -467,8 +435,7 @@ void SceneLevel3::update(const ASGE::GameTime& us)
     DebugInfo();
   }
 
-  UI->updateLives();
-  UI->updateWeapon();
+  UI->update(us);
 }
 
 void SceneLevel3::fixedUpdate(const ASGE::GameTime& us) {}
@@ -532,6 +499,7 @@ void SceneLevel3::renderScene(const ASGE::GameTime& us)
   renderer->render(*enemy1->getSprite());
   renderer->render(*enemy2->getSprite());
   renderer->render(*enemy3->getSprite());
+  renderer->render(*enemy4->getSprite());
   renderer->render(*HealthPowerUp->getSprite());
   /// Bullets
   for (const auto& bullet : player1->getBullets())
@@ -547,7 +515,7 @@ void SceneLevel3::renderScene(const ASGE::GameTime& us)
 bool SceneLevel3::loadPastMap()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/map/Level3PastMap.tmx"))
+  if (!tile_map.open("data/map/Level3PastMap.tmx"))
   {
     Logging::ERRORS("init::Failed to load past map");
     return false;
@@ -606,7 +574,7 @@ bool SceneLevel3::loadPresentMap()
 {
   ASGE::FILEIO::File tile_map;
 
-  if (!tile_map.open("/data/map/Level3PresentMap.tmx"))
+  if (!tile_map.open("data/map/Level3PresentMap.tmx"))
   {
     Logging::ERRORS("init::Failed to load present map");
     return false;
@@ -666,7 +634,7 @@ bool SceneLevel3::loadPresentMap()
 bool SceneLevel3::loadPastBackground()
 {
   ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("/data/map/Level3PastMap.tmx"))
+  if (!tile_map.open("data/map/Level3PastMap.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;
@@ -718,7 +686,7 @@ bool SceneLevel3::loadPresentBackground()
 {
   ASGE::FILEIO::File tile_map;
 
-  if (!tile_map.open("/data/map/Level3PresentMap.tmx"))
+  if (!tile_map.open("data/map/Level3PresentMap.tmx"))
   {
     Logging::ERRORS("init::Failed to load map");
     return false;

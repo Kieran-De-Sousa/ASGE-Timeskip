@@ -27,17 +27,6 @@
 #include "soloud.h"
 #include "soloud_wav.h"
 
-struct ObjRect
-{
-  float x, y, w, h;
-};
-
-enum class TimeTravelState : int
-{
-  PRESENT = 0,
-  PAST    = 1
-};
-
 /**
  * @brief Level 1 scene
  * @details

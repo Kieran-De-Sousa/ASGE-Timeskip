@@ -5,6 +5,7 @@
 #include "Scenes/Scene.h"
 #include "Scenes/SceneLevel1.h"
 #include "Scenes/SceneLevel2.h"
+#include "Scenes/SceneLevel3.h"
 #include "Scenes/SceneMainMenu.h"
 
 /// State Tracking

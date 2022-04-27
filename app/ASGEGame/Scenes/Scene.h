@@ -95,6 +95,13 @@ class Scene : public std::enable_shared_from_this<Scene>
   /// Scene State Data
   SceneStatus sceneStatus;
   const SceneStatus DEFAULT_SCENE_STATUS;
+
+  //// Game State
+  enum class TimeTravelState : int
+  {
+    PRESENT = 0,
+    PAST    = 1
+  };
 };
 
 #endif // ASGEGAME_SCENE_H

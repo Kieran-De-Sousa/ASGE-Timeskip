@@ -40,7 +40,7 @@ void SceneMainMenu::input()
       switch (state)
       {
         case MenuState::PLAY:
-          setNewScene(GameScene::LEVEL_1);
+          setNewScene(GameScene::LEVEL_2);
           break;
         case MenuState::LEVELSELECT:
           setNewScene(GameScene::LEVEL_SELECT);

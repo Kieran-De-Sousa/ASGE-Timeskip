@@ -50,12 +50,19 @@ std::shared_ptr<Scene> SceneManager::sceneFactory(const GameScene& gameScene)
   switch (gameScene)
   {
     case GameScene::MAIN_MENU:
+    {
       return std::make_shared<SceneMainMenu>(*renderer, *inputs, gameScene);
+    }
     case GameScene::LEVEL_1:
+    {
       return std::make_shared<SceneLevel1>(*renderer, *inputs, gameScene);
+    }
+    case GameScene::LEVEL_2:
+    {
+      return std::make_shared<SceneLevel2>(*renderer, *inputs, gameScene);
+    }
     /// @Note: Cannot compile with 'Default', meaning all enumeration cases are required.
     case GameScene::UNDEFINED:
-    case GameScene::LEVEL_2:
     case GameScene::LEVEL_SELECT:
       return nullptr;
       /// ADD MORE CASES AS MORE SCENES ARE CREATED!

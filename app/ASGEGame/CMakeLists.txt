@@ -35,7 +35,7 @@ set(GAME_SOURCES
         Sprites/PlayerUI.cpp
         Components/ControlSchemes.cpp
         Sprites/HealthPowerUp.cpp
-        Sprites/EnemyPassive.cpp)
+        Sprites/EnemyPassive.cpp Scenes/SceneLevel2.cpp Scenes/SceneLevel2.h)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

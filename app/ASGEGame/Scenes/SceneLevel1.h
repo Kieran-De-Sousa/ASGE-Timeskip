@@ -53,9 +53,7 @@ class SceneLevel1 : public Scene
 
   /// Map loading
   bool loadPastMap();
-  bool loadPastBackground();
   bool loadPresentMap();
-  bool loadPresentBackground();
 
   void DebugInfo();
   void initAudio();

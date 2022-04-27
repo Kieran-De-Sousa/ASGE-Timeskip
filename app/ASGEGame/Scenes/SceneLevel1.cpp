@@ -12,8 +12,6 @@ bool SceneLevel1::init()
   /// Create maps and populate vectors
   loadPastMap();
   loadPresentMap();
-  loadPastBackground();
-  loadPresentBackground();
 
   player1 = std::make_shared<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
@@ -172,11 +170,10 @@ void SceneLevel1::update(const ASGE::GameTime& us)
       }
       updatePlayers(us, player.get());
     }
-
     else if (component_type == GameComponent::ComponentType::UI)
     {
-      std::shared_ptr<PlayerUI> player = std::static_pointer_cast<PlayerUI>(component);
-      player->setLocations(player1Look, player2Look);
+      std::shared_ptr<PlayerUI> ui = std::static_pointer_cast<PlayerUI>(component);
+      ui->setLocations(player1Look, player2Look);
     }
   }
 
@@ -332,6 +329,39 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
   }
 }
 
+void SceneLevel1::updateCamera(const ASGE::GameTime& us)
+{
+  // moving the camera
+  if (player1->getSprite()->xPos() > player1Look.x)
+  {
+    player1Look.x = player1->getSprite()->xPos();
+  }
+
+  if (player2->getSprite()->xPos() > player2Look.x)
+  {
+    player2Look.x = player2->getSprite()->xPos();
+  }
+
+  player1Look.y = player1->getSprite()->yPos();
+  player2Look.y = player2->getSprite()->yPos();
+  // stopping player exit
+  if (player1->getSprite()->xPos() < player1Look.x - 960)
+  {
+    player1->getSprite()->xPos(player1Look.x - 960);
+  }
+
+  if (player2->getSprite()->xPos() < player2Look.x - 960)
+  {
+    player2->getSprite()->xPos(player2Look.x - 960);
+  }
+
+  camera_one.lookAt(player1Look);
+  camera_one.setZoom(2.0F);
+
+  camera_two.lookAt(player2Look);
+  camera_two.setZoom(2.0F);
+}
+
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}
 
 void SceneLevel1::render(const ASGE::GameTime& us)
@@ -383,43 +413,45 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
 {
   if (state == TimeTravelState::PAST)
   {
-    for (unsigned int i = 0; i < tilesPastBackground.size(); ++i)
+    for (auto& pastBackground : tilesPastBackground)
     {
-      renderer->render(*tilesPastBackground[i]);
+      renderer->render(*pastBackground);
     }
-    for (unsigned int i = 0; i < PastTiles.size(); ++i)
+    for (auto& PastTile : PastTiles)
     {
-      renderer->render(*PastTiles[i]);
+      renderer->render(*PastTile);
     }
   }
   if (state == TimeTravelState::PRESENT)
   {
-    for (unsigned int i = 0; i < tilesPresentBackground.size(); ++i)
+    for (auto& presentBackground : tilesPresentBackground)
     {
-      renderer->render(*tilesPresentBackground[i]);
+      renderer->render(*presentBackground);
     }
-    for (unsigned int i = 0; i < PresentTiles.size(); ++i)
+    for (auto& PresentTile : PresentTiles)
     {
-      renderer->render(*PresentTiles[i]);
+      renderer->render(*PresentTile);
     }
   }
 
-  renderer->render(*player1->getSprite());
-  renderer->render(*player2->getSprite());
-  renderer->render(*enemy1->getSprite());
-  renderer->render(*enemy2->getSprite());
-  renderer->render(*enemy3->getSprite());
-  renderer->render(*enemy4->getSprite());
-  renderer->render(*enemy5->getSprite());
-  renderer->render(*HealthPowerUp->getSprite());
-  /// Bullets
-  for (const auto& bullet : player1->getBullets())
+  for (auto& component : gameComponents)
   {
-    renderer->render(*bullet->getSprite());
-  }
-  for (const auto& bullet : player2->getBullets())
-  {
-    renderer->render(*bullet->getSprite());
+    if (
+      component->getComponentType() != GameComponent::ComponentType::UNKNOWN &&
+      component->getComponentType() != GameComponent::ComponentType::UI)
+    {
+      std::shared_ptr<Sprite> sprite = std::static_pointer_cast<Sprite>(component);
+      renderer->render(*sprite->getSprite());
+      if (component->getComponentType() == GameComponent::ComponentType::PLAYER)
+      {
+        std::shared_ptr<Player> player = std::static_pointer_cast<Player>(sprite);
+        /// Bullets
+        for (const auto& bullet : player->getBullets())
+        {
+          renderer->render(*bullet->getSprite());
+        }
+      }
+    }
   }
 }
 
@@ -455,6 +487,27 @@ bool SceneLevel1::loadPastMap()
             {
               auto& sprite = PastTiles.emplace_back(renderer->createUniqueSprite());
 
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
+            else
+            {
+              auto& sprite = tilesPastBackground.emplace_back(renderer->createUniqueSprite());
               if (sprite->loadTexture(tile->imagePath))
               {
                 sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
@@ -548,6 +601,27 @@ bool SceneLevel1::loadPresentMap()
                 sprite->setGlobalZOrder(1);
               }
             }
+            else
+            {
+              auto& sprite = tilesPresentBackground.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
           }
         }
       }
@@ -571,145 +645,6 @@ bool SceneLevel1::loadPresentMap()
   return true;
 }
 
-bool SceneLevel1::loadPastBackground()
-{
-  ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("data/map/PastMap2.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tilemapPastContactable from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            auto& sprite = tilesPastBackground.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-            }
-          }
-        }
-      }
-    }
-  }
-  return true;
-}
-
-bool SceneLevel1::loadPresentBackground()
-{
-  ASGE::FILEIO::File tile_map;
-
-  if (!tile_map.open("data/map/PresentMap2.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  /// All collidable objects are checked within the init function as their location is will remain
-  /// the same during gameplay, i.e: they remain static.
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tiles from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            /// All contactable objects can be checked within this if statement, currently only
-            /// walls but easily expandable with additional || / or
-            auto& sprite = tilesPresentBackground.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-            }
-          }
-        }
-      }
-    }
-  }
-  return true;
-}
-
-void SceneLevel1::updateCamera(const ASGE::GameTime& us)
-{
-  // moving the camera
-  if (player1->getSprite()->xPos() > player1Look.x)
-  {
-    player1Look.x = player1->getSprite()->xPos();
-  }
-
-  if (player2->getSprite()->xPos() > player2Look.x)
-  {
-    player2Look.x = player2->getSprite()->xPos();
-  }
-
-  player1Look.y = player1->getSprite()->yPos();
-  player2Look.y = player2->getSprite()->yPos();
-  // stopping player exit
-  if (player1->getSprite()->xPos() < player1Look.x - 960)
-  {
-    player1->getSprite()->xPos(player1Look.x - 960);
-  }
-
-  if (player2->getSprite()->xPos() < player2Look.x - 960)
-  {
-    player2->getSprite()->xPos(player2Look.x - 960);
-  }
-
-  camera_one.lookAt(player1Look);
-  camera_one.setZoom(2.0F);
-
-  camera_two.lookAt(player2Look);
-  camera_two.setZoom(2.0F);
-}
 void SceneLevel1::DebugInfo()
 {
   /// Beware Ugly Code in the name of debug

@@ -175,32 +175,8 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 
     else if (component_type == GameComponent::ComponentType::UI)
     {
-      // UI movement
-      // health updating
-      UI->getP1HealthBar()->xPos(player2Look.x - 435);
-      UI->getP1HealthBar()->yPos(player2Look.y - 105);
-      UI->getP1HealthNum()->xPos(player2Look.x - 335);
-      UI->getP1HealthNum()->yPos(player2Look.y - 105);
-      UI->getP2HealthBar()->xPos(player1Look.x - 435);
-      UI->getP2HealthBar()->yPos(player1Look.y - 135);
-      UI->getP2HealthNum()->xPos(player1Look.x - 335);
-      UI->getP2HealthNum()->yPos(player1Look.y - 135);
-
-      // portrait updating
-      UI->getP1Portrait()->xPos(player2Look.x - 475);
-      UI->getP1Portrait()->yPos(player2Look.y - 105);
-      UI->getP2Portrait()->xPos(player1Look.x - 475);
-      UI->getP2Portrait()->yPos(player1Look.y - 135);
-
-      // weapon updating
-      UI->getP1WepIndicator()->xPos(player2Look.x - 436);
-      UI->getP1WepIndicator()->yPos(player2Look.y - 85);
-      UI->getP1ActiveWep()->xPos(player2Look.x - 350);
-      UI->getP1ActiveWep()->yPos(player2Look.y - 85);
-      UI->getP2WepIndicator()->xPos(player1Look.x - 436);
-      UI->getP2WepIndicator()->yPos(player1Look.y - 115);
-      UI->getP2ActiveWep()->xPos(player1Look.x - 350);
-      UI->getP2ActiveWep()->yPos(player1Look.y - 115);
+      std::shared_ptr<PlayerUI> player = std::static_pointer_cast<PlayerUI>(component);
+      player->setLocations(player1Look, player2Look);
     }
   }
 
@@ -462,6 +438,14 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   renderer->render(*UI->getP1WepIndicator());
   renderer->render(*UI->getP1ActiveWep());
 
+  // P1 kill count UI render
+  renderer->render(*UI->getP1KillsIndicator());
+  renderer->render(*UI->getP1KillCount());
+  if (UI->getP1KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP1KillCountExtra());
+  }
+
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
@@ -474,6 +458,14 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   // P2 weapon UI render
   renderer->render(*UI->getP2WepIndicator());
   renderer->render(*UI->getP2ActiveWep());
+
+  // P2 kill count render
+  renderer->render(*UI->getP2KillsIndicator());
+  renderer->render(*UI->getP2KillCount());
+  if (UI->getP2KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP2KillCountExtra());
+  }
 }
 
 void SceneLevel1::renderScene(const ASGE::GameTime& us)

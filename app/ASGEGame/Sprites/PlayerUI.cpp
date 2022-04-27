@@ -60,6 +60,37 @@ void PlayerUI::init()
   p2_active_wep->initialiseSprite("data/sprites/weapon-sg.png");
   p2_active_wep->setSpriteVariables(27.5, 15, 9);
   p2_active_wep->setPosition(145, 172);
+
+  // kill count stuff
+  p1_kills_indicator = std::make_unique<Sprite>(*renderer);
+  p1_kills_indicator->initialiseSprite("data/sprites/kill-indicator.png");
+  p1_kills_indicator->setSpriteVariables(100, 15, 9);
+  p1_kills_indicator->setPosition(50, 182.5);
+
+  p2_kills_indicator = std::make_unique<Sprite>(*renderer);
+  p2_kills_indicator->initialiseSprite("data/sprites/kill-indicator.png");
+  p2_kills_indicator->setSpriteVariables(100, 15, 9);
+  p2_kills_indicator->setPosition(50, 150);
+
+  p1_kill_count = std::make_unique<Sprite>(*renderer);
+  p1_kill_count->initialiseSprite("data/sprites/0-Lives.png");
+  p1_kill_count->setSpriteVariables(15, 15, 9);
+  p1_kill_count->setPosition(50, 182.5);
+
+  p2_kill_count = std::make_unique<Sprite>(*renderer);
+  p2_kill_count->initialiseSprite("data/sprites/0-Lives.png");
+  p2_kill_count->setSpriteVariables(15, 15, 9);
+  p2_kill_count->setPosition(50, 150);
+
+  extra_p1_kill_count = std::make_unique<Sprite>(*renderer);
+  extra_p1_kill_count->initialiseSprite("data/sprites/0-Lives.png");
+  extra_p1_kill_count->setSpriteVariables(15, 15, 9);
+  extra_p1_kill_count->setPosition(50, 150);
+
+  extra_p2_kill_count = std::make_unique<Sprite>(*renderer);
+  extra_p2_kill_count->initialiseSprite("data/sprites/0-Lives.png");
+  extra_p2_kill_count->setSpriteVariables(15, 15, 9);
+  extra_p2_kill_count->setPosition(50, 150);
 }
 
 void PlayerUI::update(const ASGE::GameTime& us)
@@ -121,7 +152,49 @@ ASGE::Sprite* PlayerUI::getP2ActiveWep()
 {
   return p2_active_wep->getSprite();
 }
+
+// kill count functions
+ASGE::Sprite* PlayerUI::getP1KillsIndicator()
+{
+  return p1_kills_indicator->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2KillsIndicator()
+{
+  return p2_kills_indicator->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP1KillCount()
+{
+  return p1_kill_count->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2KillCount()
+{
+  return p2_kill_count->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP1KillCountExtra()
+{
+  return extra_p1_kill_count->getSprite();
+}
+
+ASGE::Sprite* PlayerUI::getP2KillCountExtra()
+{
+  return extra_p2_kill_count->getSprite();
+}
 // ^^ END OF RENDERING FUNCTIONS ^^
+
+// Value returns
+int PlayerUI::getP1KillCountVal()
+{
+  return p1_kills_val;
+}
+
+int PlayerUI::getP2KillCountVal()
+{
+  return p2_kills_val;
+}
 
 // Health stuff
 // might not be needed, but it's here for now
@@ -326,4 +399,44 @@ void PlayerUI::changeWeapon(int playerID, int wepID)
       Logging::ERRORS("UI Error 'Mistaken Identity' - No player with that ID number exists");
       break;
   }
+}
+
+void PlayerUI::setLocations(const ASGE::Point2D& player1, const ASGE::Point2D& player2)
+{
+  // UI movement
+  // health updating
+  getP1HealthBar()->xPos(player2.x - 435);
+  getP1HealthBar()->yPos(player2.y - 105);
+  getP1HealthNum()->xPos(player2.x - 335);
+  getP1HealthNum()->yPos(player2.y - 105);
+  getP2HealthBar()->xPos(player1.x - 435);
+  getP2HealthBar()->yPos(player1.y - 135);
+  getP2HealthNum()->xPos(player1.x - 335);
+  getP2HealthNum()->yPos(player1.y - 135);
+
+  // portrait updating
+  getP1Portrait()->xPos(player2.x - 475);
+  getP1Portrait()->yPos(player2.y - 105);
+  getP2Portrait()->xPos(player1.x - 475);
+  getP2Portrait()->yPos(player1.y - 135);
+
+  // weapon updating
+  getP1WepIndicator()->xPos(player2.x - 436);
+  getP1WepIndicator()->yPos(player2.y - 85);
+  getP1ActiveWep()->xPos(player2.x - 350);
+  getP1ActiveWep()->yPos(player2.y - 85);
+  getP2WepIndicator()->xPos(player1.x - 436);
+  getP2WepIndicator()->yPos(player1.y - 115);
+  getP2ActiveWep()->xPos(player1.x - 350);
+  getP2ActiveWep()->yPos(player1.y - 115);
+
+  // kill count updating
+  getP1KillsIndicator()->xPos(player2.x - 305);
+  getP1KillsIndicator()->yPos(player2.y - 105);
+  getP1KillCount()->xPos(player2.x - 205);
+  getP1KillCount()->yPos(player2.y - 105);
+  getP2KillsIndicator()->xPos(player1.x - 305);
+  getP2KillsIndicator()->yPos(player1.y - 135);
+  getP2KillCount()->xPos(player1.x - 205);
+  getP2KillCount()->yPos(player1.y - 135);
 }

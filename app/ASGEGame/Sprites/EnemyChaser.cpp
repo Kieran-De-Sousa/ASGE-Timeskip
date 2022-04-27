@@ -5,12 +5,17 @@ EnemyChaser::EnemyChaser(
   Enemy(rendererRef, health, attack, enemy)
 {
   speed = ENEMY_CHASER_SPEED;
+  // gravity = true;
 }
 
 void EnemyChaser::update(const ASGE::GameTime& us)
 {
   behaviour(us);
   updateAnimations(us);
+  if (enemyType == EnemyType::CHASER)
+  {
+    gravity = true;
+  }
 
   if (gravity)
   {
@@ -28,7 +33,7 @@ void EnemyChaser::update(const ASGE::GameTime& us)
   }
   if ((!isGrounded || isJumpPeaked) && !isJumping)
   {
-    // gravity = true;
+    gravity = true;
   }
 }
 

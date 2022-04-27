@@ -11,8 +11,6 @@ bool SceneLevel3::init()
 
   loadPastMap();
   loadPresentMap();
-  loadPastBackground();
-  loadPresentBackground();
 
   player1 = std::make_unique<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
@@ -79,7 +77,6 @@ bool SceneLevel3::init()
   enemy4->getSprite()->srcRect()[2] = 32;
   enemy4->getSprite()->srcRect()[3] = 32;
   enemy1->setTotalAnimFrames(8);
-
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -567,6 +564,27 @@ bool SceneLevel3::loadPastMap()
                 sprite->setGlobalZOrder(1);
               }
             }
+            else
+            {
+              auto& sprite = tilesPastBackground.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
           }
         }
       }
@@ -579,8 +597,6 @@ bool SceneLevel3::loadPastMap()
         if (object.getName() == "Enemy1")
         {
           pastEnemy1Pos = object.getPosition();
-          std::cout<<std::to_string(pastEnemy1Pos.x);
-
         }
         else if (object.getName() == "Enemy2")
         {
@@ -593,6 +609,14 @@ bool SceneLevel3::loadPastMap()
         else if (object.getName() == "Enemy4")
         {
           pastEnemy4Pos = object.getPosition();
+        }
+        else if (object.getName() == "StartPoint")
+        {
+          pastSpawnPos = object.getPosition();
+        }
+        else if (object.getName() == "EndPoint")
+        {
+          pastExitPos = object.getPosition();
         }
       }
     }
@@ -652,6 +676,27 @@ bool SceneLevel3::loadPresentMap()
                 sprite->setGlobalZOrder(1);
               }
             }
+            else
+            {
+              auto& sprite = tilesPresentBackground.emplace_back(renderer->createUniqueSprite());
+              if (sprite->loadTexture(tile->imagePath))
+              {
+                sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
+                sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
+                sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
+                sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
+
+                sprite->width(static_cast<float>(tile->imageSize.x));
+                sprite->height(static_cast<float>(tile->imageSize.y));
+
+                sprite->scale(1);
+                sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
+
+                sprite->xPos(static_cast<float>(col * tile->imageSize.x));
+                sprite->yPos(static_cast<float>(row * tile->imageSize.y));
+                sprite->setGlobalZOrder(1);
+              }
+            }
           }
         }
       }
@@ -664,7 +709,6 @@ bool SceneLevel3::loadPresentMap()
         if (object.getName() == "Enemy1")
         {
           presentEnemy1Pos = object.getPosition();
-
         }
         else if (object.getName() == "Enemy2")
         {
@@ -681,114 +725,6 @@ bool SceneLevel3::loadPresentMap()
       }
     }
   }
-  return true;
-}
-
-bool SceneLevel3::loadPastBackground()
-{
-  ASGE::FILEIO::File tile_map;
-  if (!tile_map.open("data/map/Level3PastMap.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tilemapPastContactable from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            auto& sprite = tilesPastBackground.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-            }
-          }
-        }
-      }
-    }
-  }
-  return true;
-}
-
-bool SceneLevel3::loadPresentBackground()
-{
-  ASGE::FILEIO::File tile_map;
-
-  if (!tile_map.open("data/map/Level3PresentMap.tmx"))
-  {
-    Logging::ERRORS("init::Failed to load map");
-    return false;
-  }
-  ASGE::FILEIO::IOBuffer buffer = tile_map.read();
-  std::string file_string(buffer.as_char(), buffer.length);
-  map.loadFromString(file_string, ".");
-
-  /// All collidable objects are checked within the init function as their location is will remain
-  /// the same during gameplay, i.e: they remain static.
-  for (const auto& layer : map.getLayers())
-  {
-    if (layer->getType() == tmx::Layer::Type::Tile)
-    {
-      auto tile_layer = layer->getLayerAs<tmx::TileLayer>();
-      /// Look up tiles from a layer in a tile set
-      for (unsigned int row = 0; row < layer->getSize().y; row++)
-      {
-        for (unsigned int col = 0; col < layer->getSize().x; col++)
-        {
-          auto tile_info = tile_layer.getTiles()[row * tile_layer.getSize().x + col];
-          auto tile      = map.getTilesets()[0].getTile(tile_info.ID);
-          if (tile != nullptr)
-          {
-            /// All contactable objects can be checked within this if statement, currently only
-            /// walls but easily expandable with additional || / or
-            auto& sprite = tilesPresentBackground.emplace_back(renderer->createUniqueSprite());
-            if (sprite->loadTexture(tile->imagePath))
-            {
-              sprite->srcRect()[0] = static_cast<float>(tile->imagePosition.x);
-              sprite->srcRect()[1] = static_cast<float>(tile->imagePosition.y);
-              sprite->srcRect()[2] = static_cast<float>(tile->imageSize.x);
-              sprite->srcRect()[3] = static_cast<float>(tile->imageSize.y);
-
-              sprite->width(static_cast<float>(tile->imageSize.x));
-              sprite->height(static_cast<float>(tile->imageSize.y));
-
-              sprite->scale(1);
-              sprite->setMagFilter(ASGE::Texture2D::MagFilter::NEAREST);
-
-              sprite->xPos(static_cast<float>(col * tile->imageSize.x));
-              sprite->yPos(static_cast<float>(row * tile->imageSize.y));
-            }
-          }
-        }
-      }
-    }
-  }
-
   return true;
 }
 

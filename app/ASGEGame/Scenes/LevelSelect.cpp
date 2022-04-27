@@ -54,6 +54,18 @@ void SceneLevelSelect::input()
   {
     if (keymap[ASGE::KEYS::KEY_ENTER])
     {
+      switch (state)
+      {
+        case LevelSelectState::LEVEL1:
+          setNewScene(GameScene::LEVEL_1);
+          break;
+        case LevelSelectState::LEVEL2:
+          setNewScene(GameScene::LEVEL_2);
+          break;
+        case LevelSelectState::BACK:
+          setNewScene(GameScene::MAIN_MENU);
+          break;
+      }
     }
   }
 

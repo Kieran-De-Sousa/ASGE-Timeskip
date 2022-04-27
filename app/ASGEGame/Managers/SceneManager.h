@@ -2,6 +2,7 @@
 #define ASGEGAME_SCENEMANAGER_H
 
 /// Scenes
+#include "Scenes/LevelSelect.h"
 #include "Scenes/Scene.h"
 #include "Scenes/SceneLevel1.h"
 #include "Scenes/SceneLevel2.h"

@@ -8,6 +8,7 @@
 #include "Scenes/SceneLevel2.h"
 #include "Scenes/SceneLevel3.h"
 #include "Scenes/SceneMainMenu.h"
+#include "Scenes/WinScene.h"
 
 /// State Tracking
 #include "Scenes/GameScenes.h"

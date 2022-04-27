@@ -20,30 +20,25 @@ bool SceneLevel2::init()
   player2->setPosition(88, 240);
 
   /// Enemies
-  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
+  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 350);
   enemy1->initialiseSprite("/data/sprites/mushroom.png");
   enemy1->setSpriteVariables(16, 16, 3);
-  enemy1->setPosition(421, 367);
+  enemy1->setPosition(370, 337);
 
   enemy2 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy2->initialiseSprite("/data/sprites/mushroom.png");
   enemy2->setSpriteVariables(16, 16, 3);
-  enemy2->setPosition(2670, 241);
+  enemy2->setPosition(822, 400);
 
   enemy3 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy3->initialiseSprite("/data/sprites/mushroom.png");
   enemy3->setSpriteVariables(16, 16, 3);
-  enemy3->setPosition(1840, 178);
+  enemy3->setPosition(1171, 272);
 
   enemy4 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy4->initialiseSprite("/data/sprites/mushroom.png");
   enemy4->setSpriteVariables(16, 16, 3);
-  enemy4->setPosition(5303, 244);
-
-  enemy5 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
-  enemy5->initialiseSprite("/data/sprites/mushroom.png");
-  enemy5->setSpriteVariables(16, 16, 3);
-  enemy5->setPosition(3790, 178);
+  enemy4->setPosition(3283, 335);
 
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
@@ -75,11 +70,6 @@ bool SceneLevel2::init()
   enemy4->getSprite()->srcRect()[1] = 0;
   enemy4->getSprite()->srcRect()[2] = 16;
   enemy4->getSprite()->srcRect()[3] = 16;
-
-  enemy5->getSprite()->srcRect()[0] = 0;
-  enemy5->getSprite()->srcRect()[1] = 0;
-  enemy5->getSprite()->srcRect()[2] = 16;
-  enemy5->getSprite()->srcRect()[3] = 16;
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
@@ -181,7 +171,6 @@ void SceneLevel2::update(const ASGE::GameTime& us)
   enemy2->update(us);
   enemy3->update(us);
   enemy4->update(us);
-  enemy5->update(us);
 
   if (Helper::CollisionDetection::isInside(
         player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
@@ -533,7 +522,6 @@ void SceneLevel2::renderScene(const ASGE::GameTime& us)
   renderer->render(*enemy2->getSprite());
   renderer->render(*enemy3->getSprite());
   renderer->render(*enemy4->getSprite());
-  renderer->render(*enemy5->getSprite());
   renderer->render(*HealthPowerUp->getSprite());
   /// Bullets
   for (const auto& bullet : player1->getBullets())

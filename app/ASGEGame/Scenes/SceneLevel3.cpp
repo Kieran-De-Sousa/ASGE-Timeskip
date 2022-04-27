@@ -9,6 +9,11 @@ bool SceneLevel3::init()
 {
   setDefaultSceneStatus();
 
+  loadPastMap();
+  loadPresentMap();
+  loadPastBackground();
+  loadPresentBackground();
+
   player1 = std::make_unique<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
   player1->setSpriteVariables(24, 24, 3);
@@ -20,25 +25,25 @@ bool SceneLevel3::init()
   player2->setPosition(88, 240);
 
   /// Enemies
-  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 300, 500);
-  enemy1->initialiseSprite("/data/sprites/slimeA.png");
-  enemy1->setSpriteVariables(256, 16, 3);
-  enemy1->setPosition(421, 367);
+  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 500, 600);
+  enemy1->initialiseSprite("/data/sprites/SlimeA.png");
+  enemy1->setSpriteVariables(16, 16, 3);
+  enemy1->setPosition(700, 240);
 
   enemy2 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy2->initialiseSprite("/data/sprites/IDS.png");
-  enemy2->setSpriteVariables(256, 27, 3);
-  enemy2->setPosition(2670, 241);
+  enemy2->setSpriteVariables(27, 27, 3);
+  enemy2->setPosition(2724, 336);
 
   enemy3 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
   enemy3->initialiseSprite("/data/sprites/CultistWalk.png");
-  enemy3->setSpriteVariables(192, 32, 3);
-  enemy3->setPosition(5303, 244);
+  enemy3->setSpriteVariables(32, 32, 3);
+  enemy3->setPosition(5363, 361);
 
   enemy4 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
   enemy4->initialiseSprite("/data/sprites/WormWalk.png");
-  enemy4->setSpriteVariables(16, 32, 3);
-  enemy4->setPosition(3790, 178);
+  enemy4->setSpriteVariables(32, 32, 3);
+  enemy4->setPosition(2496, 326);
 
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
@@ -78,10 +83,6 @@ bool SceneLevel3::init()
 
   camera_one.lookAt(player1Look);
   camera_two.lookAt(player2Look);
-  loadPastMap();
-  loadPresentMap();
-  loadPastBackground();
-  loadPresentBackground();
 
   // Health power up
   HealthPowerUp = std::make_unique<Sprite>(*renderer);
@@ -272,10 +273,10 @@ void SceneLevel3::update(const ASGE::GameTime& us)
                 player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
           {
             player2->setGrounded(true);
-            player2->getSprite()->yPos(PastTiles[i]->yPos() + player2->getSprite()->height());
+            player2->getSprite()->yPos(PastTiles[i]->yPos() - player2->getSprite()->height());
           }
-          else if (Helper::CollisionDetection::touchingBottom(
-                     player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          else if ((Helper::CollisionDetection::touchingBottom(
+                     player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
           {
             player2->setJumpSpeed(0);
             player2->setJumping(false);
@@ -365,10 +366,10 @@ void SceneLevel3::update(const ASGE::GameTime& us)
                 player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
           {
             player2->setGrounded(true);
-            player2->getSprite()->yPos(PresentTiles[i]->yPos() + player2->getSprite()->height());
+            player2->getSprite()->yPos(PresentTiles[i]->yPos() - player2->getSprite()->height());
           }
-          else if (Helper::CollisionDetection::touchingBottom(
-                     player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          else if ((Helper::CollisionDetection::touchingBottom(
+                     player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
           {
             player2->setJumpSpeed(0);
             player2->setJumping(false);
@@ -577,19 +578,21 @@ bool SceneLevel3::loadPastMap()
       {
         if (object.getName() == "Enemy1")
         {
-          pastEnemyPos = object.getPosition();
+          pastEnemy1Pos = object.getPosition();
+          std::cout<<std::to_string(pastEnemy1Pos.x);
+
         }
         else if (object.getName() == "Enemy2")
         {
-          pastEnemyPos = object.getPosition();
+          pastEnemy2Pos = object.getPosition();
         }
         else if (object.getName() == "Enemy3")
         {
-          pastEnemyPos = object.getPosition();
+          pastEnemy3Pos = object.getPosition();
         }
         else if (object.getName() == "Enemy4")
         {
-          pastEnemyPos = object.getPosition();
+          pastEnemy4Pos = object.getPosition();
         }
       }
     }
@@ -653,8 +656,31 @@ bool SceneLevel3::loadPresentMap()
         }
       }
     }
-  }
+    if (layer->getType() == tmx::Layer::Type::Object)
+    {
+      auto object_layer = layer->getLayerAs<tmx::ObjectGroup>();
+      for (const auto& object : object_layer.getObjects())
+      {
+        if (object.getName() == "Enemy1")
+        {
+          presentEnemy1Pos = object.getPosition();
 
+        }
+        else if (object.getName() == "Enemy2")
+        {
+          presentEnemy2Pos = object.getPosition();
+        }
+        else if (object.getName() == "Enemy3")
+        {
+          presentEnemy3Pos = object.getPosition();
+        }
+        else if (object.getName() == "Enemy4")
+        {
+          presentEnemy4Pos = object.getPosition();
+        }
+      }
+    }
+  }
   return true;
 }
 

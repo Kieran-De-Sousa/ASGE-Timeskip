@@ -90,6 +90,7 @@ class SceneLevel3 : public Scene
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
+  tmx::Vector2<float>pastEnemyPos;
 
   // Switching maps initial state
   TimeTravelState state = TimeTravelState::PAST;

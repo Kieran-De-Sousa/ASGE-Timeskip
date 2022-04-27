@@ -47,7 +47,7 @@ void EnemyChaser::updateAnimations(const ASGE::GameTime& us)
   if (animation_timer > ANIMATION_FRAME_RATE)
   {
     animation_index += 1;
-    if (animation_index > 3)
+    if (animation_index > total_frames)
     {
       animation_index = 0;
     }

@@ -55,21 +55,25 @@ bool SceneLevel3::init()
   enemy1->getSprite()->srcRect()[1] = 0;
   enemy1->getSprite()->srcRect()[2] = 16;
   enemy1->getSprite()->srcRect()[3] = 16;
+  enemy1->setTotalAnimFrames(15);
 
   enemy2->getSprite()->srcRect()[0] = 0;
   enemy2->getSprite()->srcRect()[1] = 0;
   enemy2->getSprite()->srcRect()[2] = 27;
   enemy2->getSprite()->srcRect()[3] = 27;
+  enemy1->setTotalAnimFrames(7);
 
   enemy3->getSprite()->srcRect()[0] = 0;
   enemy3->getSprite()->srcRect()[1] = 0;
   enemy3->getSprite()->srcRect()[2] = 32;
   enemy3->getSprite()->srcRect()[3] = 32;
+  enemy1->setTotalAnimFrames(5);
 
   enemy4->getSprite()->srcRect()[0] = 0;
   enemy4->getSprite()->srcRect()[1] = 0;
   enemy4->getSprite()->srcRect()[2] = 32;
   enemy4->getSprite()->srcRect()[3] = 32;
+  enemy1->setTotalAnimFrames(8);
 
 
   camera_one.lookAt(player1Look);
@@ -563,6 +567,29 @@ bool SceneLevel3::loadPastMap()
               }
             }
           }
+        }
+      }
+    }
+    if (layer->getType() == tmx::Layer::Type::Object)
+    {
+      auto object_layer = layer->getLayerAs<tmx::ObjectGroup>();
+      for (const auto& object : object_layer.getObjects())
+      {
+        if (object.getName() == "Enemy1")
+        {
+          pastEnemyPos = object.getPosition();
+        }
+        else if (object.getName() == "Enemy2")
+        {
+          pastEnemyPos = object.getPosition();
+        }
+        else if (object.getName() == "Enemy3")
+        {
+          pastEnemyPos = object.getPosition();
+        }
+        else if (object.getName() == "Enemy4")
+        {
+          pastEnemyPos = object.getPosition();
         }
       }
     }

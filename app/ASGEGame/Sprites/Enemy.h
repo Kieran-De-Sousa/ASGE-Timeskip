@@ -37,6 +37,8 @@ class Enemy : public Entity
   void setJumpPeaked(const bool& peaked) { isJumpPeaked = peaked; }
   [[nodiscard]] bool getJumpPeaked() const { return isJumpPeaked; }
 
+  void setTotalAnimFrames(const int& frames) { total_frames = frames; }
+
  protected:
   EnemyType enemyType = EnemyType::UNDEFINED;
   /// Movement
@@ -51,6 +53,7 @@ class Enemy : public Entity
   bool isJumpPeaked = false;
 
   int animation_index              = 0;
+  int total_frames                 = 0;
   const float ANIMATION_FRAME_RATE = 0.1f;
   float animation_timer            = 0.0f;
 };

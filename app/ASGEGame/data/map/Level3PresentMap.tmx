@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="180" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="8">
  <tileset firstgid="1" name="alien-planet-tileset" tilewidth="32" tileheight="32" tilecount="864" columns="12">
-  <image source="data/map/alien-planet-tileset.png" width="384" height="2304"/>
+  <image source="alien-planet-tileset.png" width="384" height="2304"/>
  </tileset>
  <tileset firstgid="865" name="castle_tileset_part1" tilewidth="32" tileheight="32" tilecount="672" columns="16">
   <image source="castle_tileset_part1.png" width="512" height="1344"/>

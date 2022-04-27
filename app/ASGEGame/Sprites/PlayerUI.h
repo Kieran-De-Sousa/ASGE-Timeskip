@@ -44,6 +44,10 @@ class PlayerUI : public GameComponent
   int getP1KillCountVal();
   int getP2KillCountVal();
 
+  // kill count
+  void increaseKillCount(int playerChoice);
+  void updateKillCount();
+
   // health stuff
   void removeHealth(int playerID);
   void addHealth(int playerID);

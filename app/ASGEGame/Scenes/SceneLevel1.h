@@ -47,16 +47,16 @@ class SceneLevel1 : public Scene
   virtual void render(const ASGE::GameTime& us) override;
 
   void updatePlayers(const ASGE::GameTime& us, Player* player);
+  void updateCamera(const ASGE::GameTime& us);
 
   void renderScene(const ASGE::GameTime& us);
 
+  /// Map loading
   bool loadPastMap();
   bool loadPastBackground();
-
   bool loadPresentMap();
   bool loadPresentBackground();
 
-  void Camera();
   void DebugInfo();
   void initAudio();
 
@@ -97,14 +97,17 @@ class SceneLevel1 : public Scene
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
-  /// std::vector<std::unique_ptr<ASGE::Sprite>> currentTileState;
+
+  std::vector<std::shared_ptr<ASGE::Sprite>> currentTileState;
+
   tmx::Vector2<float> pastSpawnPos;
   tmx::Vector2<float> pastExitPos;
   tmx::Vector2<float> presentSpawnPos;
   tmx::Vector2<float> presentExitPos;
 
   // Switching maps initial state
-  TimeTravelState state = TimeTravelState::PAST;
+  TimeTravelState state    = TimeTravelState::PAST;
+  TimeTravelState newState = TimeTravelState::PAST;
 
   tmx::Map map;
 

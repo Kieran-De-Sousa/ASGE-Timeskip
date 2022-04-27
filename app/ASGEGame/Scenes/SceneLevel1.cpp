@@ -151,21 +151,28 @@ void SceneLevel1::input()
 
 void SceneLevel1::update(const ASGE::GameTime& us)
 {
+  /// Update the camera
+  updateCamera(us);
+
   for (auto& component : gameComponents)
   {
     /// Tick every components update function
     component->update(us);
+
+    /// Get component type to static cast into appropriate type
     const auto& component_type = component->getComponentType();
     if (component_type == GameComponent::ComponentType::PLAYER)
     {
       std::shared_ptr<Player> player = std::static_pointer_cast<Player>(component);
-      // retrieve all connected gamepads and store their states
+      /// Retrieve all connected gamepads and store their states
       for (auto& gamepad : inputs->getGamePads())
       {
+        // TODO: Pass into specific player
         player->updateGamepad(gamepad);
       }
       updatePlayers(us, player.get());
     }
+
     else if (component_type == GameComponent::ComponentType::UI)
     {
       // UI movement
@@ -197,67 +204,6 @@ void SceneLevel1::update(const ASGE::GameTime& us)
     }
   }
 
-  if (Helper::CollisionDetection::isInside(
-        player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
-  {
-    player1->setHealth(player1->getHealth() + 1);
-    UI->addHealth(2);
-    HealthPowerUp->getSprite()->xPos(-300);
-  }
-
-  if (Helper::CollisionDetection::isInside(
-        player2->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
-  {
-    player2->setHealth(player2->getHealth() + 1);
-    UI->addHealth(1);
-    HealthPowerUp->getSprite()->xPos(-300);
-  }
-
-  if (
-    (enemy2->getSprite()->xPos() - player1->getSprite()->xPos() < 128) ||
-    (enemy2->getSprite()->xPos() - player2->getSprite()->xPos() < 128))
-  {
-    enemy2->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
-    enemy2->setActive(true);
-  }
-  if (
-    (enemy3->getSprite()->xPos() - player1->getSprite()->xPos() < 256) ||
-    (enemy3->getSprite()->xPos() - player2->getSprite()->xPos() < 256))
-  {
-    enemy3->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
-    enemy3->setActive(true);
-  }
-
-  // moving the camera
-  if (player1->getSprite()->xPos() > player1Look.x)
-  {
-    player1Look.x = player1->getSprite()->xPos();
-  }
-
-  if (player2->getSprite()->xPos() > player2Look.x)
-  {
-    player2Look.x = player2->getSprite()->xPos();
-  }
-
-  player1Look.y = player1->getSprite()->yPos();
-  player2Look.y = player2->getSprite()->yPos();
-  // stopping player exit
-  if (player1->getSprite()->xPos() < player1Look.x - 960)
-  {
-    player1->getSprite()->xPos(player1Look.x - 960);
-  }
-
-  if (player2->getSprite()->xPos() < player2Look.x - 960)
-  {
-    player2->getSprite()->xPos(player2Look.x - 960);
-  }
-
-  camera_one.lookAt(player1Look);
-  camera_one.setZoom(2.0F);
-
-  camera_two.lookAt(player2Look);
-  camera_two.setZoom(2.0F);
-
   if (keymap[ASGE::KEYS::KEY_F])
   {
     audio_engine.play(fireAudio);
@@ -269,7 +215,7 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
   switch (state)
   {
     case TimeTravelState::PAST:
-      for (unsigned long long i = 0; i < PastTiles.size(); i++)
+      for (unsigned long long i = 0; i < PastTiles.size(); ++i)
       {
         /// Exit Check
         if (player->getSprite()->getWorldBounds().v3.x >= pastExitPos.x)
@@ -328,7 +274,7 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
       }
       break;
     case TimeTravelState::PRESENT:
-      for (unsigned long long i = 0; i < PresentTiles.size(); i++)
+      for (unsigned long long i = 0; i < PresentTiles.size(); ++i)
       {
         /// Exit Check
         if (player->getSprite()->getWorldBounds().v3.x >= presentExitPos.x)
@@ -386,6 +332,27 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
         }
       }
       break;
+  }
+
+  /// Health pick up
+  if (Helper::CollisionDetection::isInside(
+        player->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
+  {
+    player->setHealth(player->getHealth() + 1);
+    UI->addHealth(static_cast<int>(player->getPlayerID()));
+    HealthPowerUp->getSprite()->xPos(-300);
+  }
+
+  /// Enemy detection radius
+  if (enemy2->getSprite()->xPos() - player->getSprite()->xPos() < 128)
+  {
+    enemy2->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+    enemy2->setActive(true);
+  }
+  if (enemy3->getSprite()->xPos() - player->getSprite()->xPos() < 256)
+  {
+    enemy3->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+    enemy3->setActive(true);
   }
 }
 
@@ -719,7 +686,38 @@ bool SceneLevel1::loadPresentBackground()
   return true;
 }
 
-void SceneLevel1::Camera() {}
+void SceneLevel1::updateCamera(const ASGE::GameTime& us)
+{
+  // moving the camera
+  if (player1->getSprite()->xPos() > player1Look.x)
+  {
+    player1Look.x = player1->getSprite()->xPos();
+  }
+
+  if (player2->getSprite()->xPos() > player2Look.x)
+  {
+    player2Look.x = player2->getSprite()->xPos();
+  }
+
+  player1Look.y = player1->getSprite()->yPos();
+  player2Look.y = player2->getSprite()->yPos();
+  // stopping player exit
+  if (player1->getSprite()->xPos() < player1Look.x - 960)
+  {
+    player1->getSprite()->xPos(player1Look.x - 960);
+  }
+
+  if (player2->getSprite()->xPos() < player2Look.x - 960)
+  {
+    player2->getSprite()->xPos(player2Look.x - 960);
+  }
+
+  camera_one.lookAt(player1Look);
+  camera_one.setZoom(2.0F);
+
+  camera_two.lookAt(player2Look);
+  camera_two.setZoom(2.0F);
+}
 void SceneLevel1::DebugInfo()
 {
   /// Beware Ugly Code in the name of debug

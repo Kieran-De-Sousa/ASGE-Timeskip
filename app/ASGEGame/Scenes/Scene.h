@@ -96,7 +96,7 @@ class Scene : public std::enable_shared_from_this<Scene>
   SceneStatus sceneStatus;
   const SceneStatus DEFAULT_SCENE_STATUS;
 
-  //// Game State
+  /// Game State
   enum class TimeTravelState : int
   {
     PRESENT = 0,

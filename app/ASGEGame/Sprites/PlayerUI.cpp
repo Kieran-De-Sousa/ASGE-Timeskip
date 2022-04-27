@@ -130,9 +130,9 @@ void PlayerUI::addHealth(int playerID)
   switch (playerID)
   {
     case 1:
-      if (p1_health_val <= 4)
+      if (p2_health_val <= 4)
       {
-        p1_health_val += 1;
+        p2_health_val += 1;
       }
       else
       {
@@ -140,9 +140,9 @@ void PlayerUI::addHealth(int playerID)
       }
       break;
     case 2:
-      if (p2_health_val <= 4)
+      if (p1_health_val <= 4)
       {
-        p2_health_val += 1;
+        p1_health_val += 1;
       }
       else
       {
@@ -160,9 +160,9 @@ void PlayerUI::removeHealth(int playerID)
   switch (playerID)
   {
     case 1:
-      if (p1_health_val >= 1)
+      if (p2_health_val >= 1)
       {
-        p1_health_val -= 1;
+        p2_health_val -= 1;
       }
       else
       {
@@ -170,9 +170,9 @@ void PlayerUI::removeHealth(int playerID)
       }
       break;
     case 2:
-      if (p2_health_val >= 1)
+      if (p1_health_val >= 1)
       {
-        p2_health_val -= 1;
+        p1_health_val -= 1;
       }
       else
       {
@@ -298,10 +298,10 @@ void PlayerUI::changeWeapon(int playerID, int wepID)
       switch (wepID)
       {
         case 1:
-          p1_wep_choice = 1;
+          p2_wep_choice = 1;
           break;
         case 2:
-          p1_wep_choice = 2;
+          p2_wep_choice = 2;
           break;
         default:
           Logging::ERRORS("UI Error 'Disarmed' - No weapon with that ID exists");
@@ -312,10 +312,10 @@ void PlayerUI::changeWeapon(int playerID, int wepID)
       switch (wepID)
       {
         case 1:
-          p2_wep_choice = 1;
+          p1_wep_choice = 1;
           break;
         case 2:
-          p2_wep_choice = 2;
+          p1_wep_choice = 2;
           break;
         default:
           Logging::ERRORS("UI Error 'Disarmed' - No weapon with that ID exists");

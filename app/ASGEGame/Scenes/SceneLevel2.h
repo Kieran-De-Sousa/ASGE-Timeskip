@@ -84,7 +84,6 @@ class SceneLevel2 : public Scene
   std::unique_ptr<EnemyChaser> enemy2  = nullptr;
   std::unique_ptr<EnemyChaser> enemy3  = nullptr;
   std::unique_ptr<EnemyChaser> enemy4  = nullptr;
-  std::unique_ptr<EnemyPassive> enemy5 = nullptr;
 
   std::vector<std::shared_ptr<GameComponent>> gameComponents;
   /// Players

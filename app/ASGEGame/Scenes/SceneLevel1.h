@@ -46,6 +46,8 @@ class SceneLevel1 : public Scene
   virtual void fixedUpdate(const ASGE::GameTime& us) override;
   virtual void render(const ASGE::GameTime& us) override;
 
+  void updatePlayers(const ASGE::GameTime& us, Player* player);
+
   void renderScene(const ASGE::GameTime& us);
 
   bool loadPastMap();
@@ -68,29 +70,38 @@ class SceneLevel1 : public Scene
   ASGE::Camera camera_one{ 1920, 560 };
   ASGE::Camera camera_two{ 1920, 560 };
 
+  /// Container
+  std::vector<std::shared_ptr<GameComponent>> gameComponents;
+
   /// Players
-  std::unique_ptr<Player> player1 = nullptr;
-  std::unique_ptr<Player> player2 = nullptr;
+  std::shared_ptr<Player> player1 = nullptr;
+  std::shared_ptr<Player> player2 = nullptr;
   ASGE::Point2D player1Look{ 492, 120 };
   ASGE::Point2D player2Look{ 492, 120 };
 
   /// Enemies
-  std::unique_ptr<EnemyPassive> enemy1 = nullptr;
-  std::unique_ptr<EnemyChaser> enemy2  = nullptr;
-  std::unique_ptr<EnemyChaser> enemy3  = nullptr;
-  std::unique_ptr<EnemyChaser> enemy4  = nullptr;
-  std::unique_ptr<EnemyPassive> enemy5 = nullptr;
-
-  int collisions = 0;
+  std::shared_ptr<EnemyPassive> enemy1 = nullptr;
+  std::shared_ptr<EnemyChaser> enemy2  = nullptr;
+  std::shared_ptr<EnemyChaser> enemy3  = nullptr;
+  std::shared_ptr<EnemyChaser> enemy4  = nullptr;
+  std::shared_ptr<EnemyPassive> enemy5 = nullptr;
 
   /// Health PowerUp
-  std::unique_ptr<Sprite> HealthPowerUp = nullptr;
+  std::shared_ptr<Sprite> HealthPowerUp = nullptr;
+
+  /// UI
+  std::shared_ptr<PlayerUI> UI = nullptr;
 
   /// TILED - TILEMAP VECTORS
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPastBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> tilesPresentBackground;
   std::vector<std::unique_ptr<ASGE::Sprite>> PresentTiles;
   std::vector<std::unique_ptr<ASGE::Sprite>> PastTiles;
+  /// std::vector<std::unique_ptr<ASGE::Sprite>> currentTileState;
+  tmx::Vector2<float> pastSpawnPos;
+  tmx::Vector2<float> pastExitPos;
+  tmx::Vector2<float> presentSpawnPos;
+  tmx::Vector2<float> presentExitPos;
 
   // Switching maps initial state
   TimeTravelState state = TimeTravelState::PAST;
@@ -100,9 +111,6 @@ class SceneLevel1 : public Scene
   SoLoud::Soloud audio_engine;
   SoLoud::Wav background_audio;
   SoLoud::Wav fireAudio;
-
-  // ui test shenanigans
-  std::unique_ptr<PlayerUI> UI = nullptr;
 };
 
 #endif // ASGEGAME_SCENELEVEL1_H

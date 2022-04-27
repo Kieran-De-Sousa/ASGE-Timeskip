@@ -27,6 +27,7 @@ set(GAME_SOURCES
         Scenes/SceneMainMenu.cpp
         "Scenes/GameScenes.h"
         Scenes/SceneLevel1.cpp
+        Scenes/SceneLevel3.cpp
         Scenes/LevelSelect.cpp
         Components/Vector2.cpp
         Components/Helper.cpp

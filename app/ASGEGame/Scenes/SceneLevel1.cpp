@@ -182,6 +182,10 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   {
     audio_engine.play(fireAudio);
   }
+  if (keymap[ASGE::KEYS::KEY_SLASH])
+  {
+    audio_engine.play(fireAudio);
+  }
 }
 
 void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)

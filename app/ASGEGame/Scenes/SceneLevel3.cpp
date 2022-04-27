@@ -178,6 +178,10 @@ void SceneLevel3::update(const ASGE::GameTime& us)
   {
     audio_engine.play(fireAudio);
   }
+  if (keymap[ASGE::KEYS::KEY_SLASH])
+  {
+    audio_engine.play(fireAudio);
+  }
 }
 
 void SceneLevel3::updatePlayers(const ASGE::GameTime& us, Player* player)
@@ -190,7 +194,7 @@ void SceneLevel3::updatePlayers(const ASGE::GameTime& us, Player* player)
         /// Exit Check
         if (player->getSprite()->getWorldBounds().v3.x >= pastExitPos.x)
         {
-          setNewScene(GameScene::MAIN_MENU);
+          setNewScene(GameScene::WIN_SCENE);
         }
 
         if (Helper::CollisionDetection::inYBounds(
@@ -249,7 +253,7 @@ void SceneLevel3::updatePlayers(const ASGE::GameTime& us, Player* player)
         //        /// Exit Check
         //        if (player->getSprite()->getWorldBounds().v3.x >= presentExitPos.x)
         //        {
-        //          setNewScene(GameScene::LEVEL_3);
+        //          setNewScene(GameScene::WIN_SCENE);
         //        }
         /// Enemies
         if (Helper::CollisionDetection::inYBounds(

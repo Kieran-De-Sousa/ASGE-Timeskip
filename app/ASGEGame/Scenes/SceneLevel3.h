@@ -124,15 +124,6 @@ class SceneLevel3 : public Scene
   SoLoud::Soloud audio_engine;
   SoLoud::Wav background_audio;
   SoLoud::Wav fireAudio;
-<<<<<<< Updated upstream
-
-  /// UI
-  std::shared_ptr<PlayerUI> UI = nullptr;
-
-  /// Container
-  std::vector<std::shared_ptr<GameComponent>> gameComponents;
-  == == == =
->>>>>>> Stashed changes
 };
 
 #endif // ASGEGAME_SCENELEVEL3_H

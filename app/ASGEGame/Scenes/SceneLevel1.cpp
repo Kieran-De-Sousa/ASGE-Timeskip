@@ -205,6 +205,51 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
             enemy2->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
           }
         }
+        if (Helper::CollisionDetection::inXBounds(
+              enemy2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy2->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inYBounds(
+              enemy3->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy3->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy3->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inXBounds(
+              enemy3->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy3->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy3->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inYBounds(
+              enemy4->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy4->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy4->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inXBounds(
+              enemy4->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy4->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+          {
+            enemy4->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+          }
+        }
         /// Player Collision Detection
         if (Helper::CollisionDetection::inXBounds(
               player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
@@ -264,7 +309,51 @@ void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
             enemy2->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
           }
         }
-        /// Player Collision Detection
+        if (Helper::CollisionDetection::inXBounds(
+              enemy2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy2->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inYBounds(
+              enemy3->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy3->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy3->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inXBounds(
+              enemy3->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy3->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy3->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inYBounds(
+              enemy4->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingLeft(
+                enemy4->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy4->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        }
+        if (Helper::CollisionDetection::inXBounds(
+              enemy4->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+        {
+          if (Helper::CollisionDetection::touchingBottom(
+                enemy4->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+          {
+            enemy4->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+          }
+        } /// Player Collision Detection
         if (Helper::CollisionDetection::inXBounds(
               player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
         {

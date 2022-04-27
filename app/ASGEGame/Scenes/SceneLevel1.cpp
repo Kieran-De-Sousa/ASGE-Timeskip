@@ -565,11 +565,11 @@ bool SceneLevel1::loadPresentMap()
       auto object_layer = layer->getLayerAs<tmx::ObjectGroup>();
       for (const auto& object : object_layer.getObjects())
       {
-        if (object.getName() == "Entrance")
+        if (object.getName() == "StartPoint")
         {
           presentSpawnPos = object.getPosition();
         }
-        else if (object.getName() == "Exit")
+        else if (object.getName() == "EndPoint")
         {
           presentExitPos = object.getPosition();
         }

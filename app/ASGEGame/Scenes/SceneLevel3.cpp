@@ -87,9 +87,10 @@ bool SceneLevel3::init()
   HealthPowerUp->setPosition(370, 330);
   HealthPowerUp->setSpriteVariables(16, 16, 3);
 
-  // UI Initialisation
-  UI = std::make_unique<PlayerUI>(*renderer);
+  /// UI Initialisation
+  UI = std::make_shared<PlayerUI>(*renderer);
   UI->init();
+  gameComponents.emplace_back(UI);
 
   audio_engine.init();
 
@@ -137,32 +138,20 @@ void SceneLevel3::input()
 
 void SceneLevel3::update(const ASGE::GameTime& us)
 {
-  // UI movement
-  // health updating
-  UI->getP1HealthBar()->xPos(player2Look.x - 435);
-  UI->getP1HealthBar()->yPos(player2Look.y - 105);
-  UI->getP1HealthNum()->xPos(player2Look.x - 335);
-  UI->getP1HealthNum()->yPos(player2Look.y - 105);
-  UI->getP2HealthBar()->xPos(player1Look.x - 435);
-  UI->getP2HealthBar()->yPos(player1Look.y - 135);
-  UI->getP2HealthNum()->xPos(player1Look.x - 335);
-  UI->getP2HealthNum()->yPos(player1Look.y - 135);
+  for (auto& component : gameComponents)
+  {
+    /// Tick every components update function
+    component->update(us);
 
-  // portrait updating
-  UI->getP1Portrait()->xPos(player2Look.x - 475);
-  UI->getP1Portrait()->yPos(player2Look.y - 105);
-  UI->getP2Portrait()->xPos(player1Look.x - 475);
-  UI->getP2Portrait()->yPos(player1Look.y - 135);
+    /// Get component type to static cast into appropriate type
+    const auto& component_type = component->getComponentType();
 
-  // weapon updating
-  UI->getP1WepIndicator()->xPos(player2Look.x - 436);
-  UI->getP1WepIndicator()->yPos(player2Look.y - 85);
-  UI->getP1ActiveWep()->xPos(player2Look.x - 350);
-  UI->getP1ActiveWep()->yPos(player2Look.y - 85);
-  UI->getP2WepIndicator()->xPos(player1Look.x - 436);
-  UI->getP2WepIndicator()->yPos(player1Look.y - 115);
-  UI->getP2ActiveWep()->xPos(player1Look.x - 350);
-  UI->getP2ActiveWep()->yPos(player1Look.y - 115);
+    if (component_type == GameComponent::ComponentType::UI)
+    {
+      std::shared_ptr<PlayerUI> ui = std::static_pointer_cast<PlayerUI>(component);
+      ui->setLocations(player1Look, player2Look);
+    }
+  }
 
   // retrieve all connected gamepads and store their states
   for (auto& gamepad : inputs->getGamePads())
@@ -436,8 +425,6 @@ void SceneLevel3::update(const ASGE::GameTime& us)
   {
     DebugInfo();
   }
-
-  UI->update(us);
 }
 
 void SceneLevel3::fixedUpdate(const ASGE::GameTime& us) {}
@@ -457,6 +444,14 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   renderer->render(*UI->getP1WepIndicator());
   renderer->render(*UI->getP1ActiveWep());
 
+  // P1 kill count UI render
+  renderer->render(*UI->getP1KillsIndicator());
+  renderer->render(*UI->getP1KillCount());
+  if (UI->getP1KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP1KillCountExtra());
+  }
+
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
@@ -469,6 +464,14 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   // P2 weapon UI render
   renderer->render(*UI->getP2WepIndicator());
   renderer->render(*UI->getP2ActiveWep());
+
+  // P2 kill count render
+  renderer->render(*UI->getP2KillsIndicator());
+  renderer->render(*UI->getP2KillCount());
+  if (UI->getP2KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP2KillCountExtra());
+  }
 }
 
 void SceneLevel3::renderScene(const ASGE::GameTime& us)

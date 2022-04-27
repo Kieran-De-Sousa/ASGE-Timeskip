@@ -373,6 +373,14 @@ void SceneLevel2::render(const ASGE::GameTime& us)
   renderer->render(*UI->getP1WepIndicator());
   renderer->render(*UI->getP1ActiveWep());
 
+  // P1 kill count UI render
+  renderer->render(*UI->getP1KillsIndicator());
+  renderer->render(*UI->getP1KillCount());
+  if (UI->getP1KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP1KillCountExtra());
+  }
+
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
@@ -385,6 +393,14 @@ void SceneLevel2::render(const ASGE::GameTime& us)
   // P2 weapon UI render
   renderer->render(*UI->getP2WepIndicator());
   renderer->render(*UI->getP2ActiveWep());
+
+  // P2 kill count render
+  renderer->render(*UI->getP2KillsIndicator());
+  renderer->render(*UI->getP2KillCount());
+  if (UI->getP2KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP2KillCountExtra());
+  }
 }
 
 void SceneLevel2::renderScene(const ASGE::GameTime& us)

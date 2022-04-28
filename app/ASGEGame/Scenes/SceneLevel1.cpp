@@ -165,9 +165,21 @@ void SceneLevel1::update(const ASGE::GameTime& us)
       /// Retrieve all connected gamepads and store their states
       for (auto& gamepad : inputs->getGamePads())
       {
-        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_CIRCLE])
+        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_GUIDE] != 0u)
         {
           setPauseScreen(!sceneStatus.pause_scene);
+        }
+        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_GUIDE] != 0u)
+        {
+          switch (state)
+          {
+            case TimeTravelState::PAST:
+              state = TimeTravelState::PRESENT;
+              break;
+            case TimeTravelState::PRESENT:
+              state = TimeTravelState::PAST;
+              break;
+          }
         }
 
         if (gamepad.idx == 0)

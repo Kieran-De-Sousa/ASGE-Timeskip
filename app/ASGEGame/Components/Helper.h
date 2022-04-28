@@ -20,10 +20,7 @@ namespace Helper
      * @return boolean result
      */
     bool isInside(const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2);
-    bool in
-
-      bool
-      onTop(const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface);
+    bool onTop(const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface);
     bool onBottom(const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface);
     bool onLeft(const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface);
     bool onRight(const ASGE::SpriteBounds& sprite, const ASGE::SpriteBounds& surface);

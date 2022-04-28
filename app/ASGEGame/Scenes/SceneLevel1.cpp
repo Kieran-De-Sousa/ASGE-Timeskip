@@ -13,6 +13,7 @@ bool SceneLevel1::init()
   loadPastMap();
   loadPresentMap();
 
+  /// Players
   player1 = std::make_shared<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
   player1->setSpriteVariables(24, 24, 3);
@@ -178,6 +179,10 @@ void SceneLevel1::update(const ASGE::GameTime& us)
   }
 
   if (keymap[ASGE::KEYS::KEY_F])
+  {
+    audio_engine.play(fireAudio);
+  }
+  if (keymap[ASGE::KEYS::KEY_SLASH])
   {
     audio_engine.play(fireAudio);
   }

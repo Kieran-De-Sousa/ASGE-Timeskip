@@ -85,7 +85,7 @@ void PlayerUI::init()
   extra_p1_kill_count = std::make_unique<Sprite>(*renderer);
   extra_p1_kill_count->initialiseSprite("data/sprites/0-Lives.png");
   extra_p1_kill_count->setSpriteVariables(15, 15, 9);
-  extra_p1_kill_count->setPosition(50, 150);
+  extra_p1_kill_count->setPosition(50, 182.5);
 
   extra_p2_kill_count = std::make_unique<Sprite>(*renderer);
   extra_p2_kill_count->initialiseSprite("data/sprites/0-Lives.png");
@@ -184,17 +184,6 @@ ASGE::Sprite* PlayerUI::getP2KillCountExtra()
   return extra_p2_kill_count->getSprite();
 }
 // ^^ END OF RENDERING FUNCTIONS ^^
-
-// Value returns
-int PlayerUI::getP1KillCountVal()
-{
-  return p1_kills_val;
-}
-
-int PlayerUI::getP2KillCountVal()
-{
-  return p2_kills_val;
-}
 
 // Health stuff
 // might not be needed, but it's here for now
@@ -401,6 +390,211 @@ void PlayerUI::changeWeapon(int playerID, int wepID)
   }
 }
 
+void PlayerUI::increaseKillCount(int playerChoice)
+{
+  switch (playerChoice)
+  {
+    case 1:
+      if (p2_kills_val <= 14)
+      {
+        p2_kills_val += 1;
+      }
+      else
+      {
+        Logging::ERRORS("UI Error 'Bloodthirsty' - Number would exceed total number of enemies");
+      }
+      break;
+
+    case 2:
+      if (p1_kills_val <= 14)
+      {
+        p1_kills_val += 1;
+      }
+      else
+      {
+        Logging::ERRORS("UI Error 'Bloodthirsty' - Number would exceed total number of enemies");
+      }
+      break;
+
+    default:
+      Logging::ERRORS("UI Error 'Mistaken Identity' - No player with that ID number exists");
+      break;
+  }
+}
+
+void PlayerUI::updateKillCount()
+{
+  switch (p1_kills_val)
+  {
+    case 13:
+      p1_kill_count->setSprite("data/sprites/1-Life.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p1_kill_count->setSprite("data/sprites/3-Lives.png");
+      extra_p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 12:
+      p1_kill_count->setSprite("data/sprites/1-Life.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p1_kill_count->setSprite("data/sprites/2-Lives.png");
+      extra_p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 11:
+      p1_kill_count->setSprite("data/sprites/1-Life.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p1_kill_count->setSprite("data/sprites/1-Life.png");
+      extra_p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 10:
+      p1_kill_count->setSprite("data/sprites/1-Life.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p1_kill_count->setSprite("data/sprites/0-Lives.png");
+      extra_p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 9:
+      p1_kill_count->setSprite("data/sprites/9.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 8:
+      p1_kill_count->setSprite("data/sprites/8.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 7:
+      p1_kill_count->setSprite("data/sprites/7.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 6:
+      p1_kill_count->setSprite("data/sprites/6.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 5:
+      p1_kill_count->setSprite("data/sprites/5-Lives.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 4:
+      p1_kill_count->setSprite("data/sprites/4-Lives.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 3:
+      p1_kill_count->setSprite("data/sprites/3-Lives.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 2:
+      p1_kill_count->setSprite("data/sprites/2-Lives.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 1:
+      p1_kill_count->setSprite("data/sprites/1-Life.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 0:
+      p1_kill_count->setSprite("data/sprites/0-Lives.png");
+      p1_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    default:
+      Logging::ERRORS("UI Error 'Bloodthirsty' - Number would exceed total number of enemies");
+      break;
+  }
+  switch (p2_kills_val)
+  {
+    case 13:
+      p2_kill_count->setSprite("data/sprites/1-Life.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p2_kill_count->setSprite("data/sprites/3-Lives.png");
+      extra_p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 12:
+      p2_kill_count->setSprite("data/sprites/1-Life.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p2_kill_count->setSprite("data/sprites/2-Lives.png");
+      extra_p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 11:
+      p2_kill_count->setSprite("data/sprites/1-Life.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p2_kill_count->setSprite("data/sprites/1-Life.png");
+      extra_p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 10:
+      p2_kill_count->setSprite("data/sprites/1-Life.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      extra_p2_kill_count->setSprite("data/sprites/0-Lives.png");
+      extra_p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 9:
+      p2_kill_count->setSprite("data/sprites/9.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 8:
+      p2_kill_count->setSprite("data/sprites/8.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 7:
+      p2_kill_count->setSprite("data/sprites/7.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 6:
+      p2_kill_count->setSprite("data/sprites/6.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+    case 5:
+      p2_kill_count->setSprite("data/sprites/5-Lives.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 4:
+      p2_kill_count->setSprite("data/sprites/4-Lives.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 3:
+      p2_kill_count->setSprite("data/sprites/3-Lives.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 2:
+      p2_kill_count->setSprite("data/sprites/2-Lives.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 1:
+      p2_kill_count->setSprite("data/sprites/1-Life.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    case 0:
+      p2_kill_count->setSprite("data/sprites/0-Lives.png");
+      p2_kill_count->setSpriteVariables(15, 15, 9);
+      break;
+
+    default:
+      Logging::ERRORS("UI Error 'Bloodthirsty' - Number would exceed total number of enemies");
+      break;
+  }
+}
+
+// Value returns
+int PlayerUI::getP1KillCountVal()
+{
+  return p1_kills_val;
+}
+
+int PlayerUI::getP2KillCountVal()
+{
+  return p2_kills_val;
+}
+
 void PlayerUI::setLocations(const ASGE::Point2D& player1, const ASGE::Point2D& player2)
 {
   // UI movement
@@ -439,4 +633,19 @@ void PlayerUI::setLocations(const ASGE::Point2D& player1, const ASGE::Point2D& p
   getP2KillsIndicator()->yPos(player1.y - 135);
   getP2KillCount()->xPos(player1.x - 205);
   getP2KillCount()->yPos(player1.y - 135);
+
+  if (p1_kills_val >= 10)
+  {
+    getP1KillCountExtra()->xPos(player2.x - 195);
+    getP1KillCountExtra()->yPos(player2.y - 105);
+  }
+  if (p2_kills_val >= 10)
+  {
+    getP2KillCountExtra()->xPos(player1.x - 195);
+    getP2KillCountExtra()->yPos(player1.y - 135);
+  }
+
+  updateWeapon();
+  updateLives();
+  updateKillCount();
 }

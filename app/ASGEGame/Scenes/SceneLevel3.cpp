@@ -9,87 +9,96 @@ bool SceneLevel3::init()
 {
   setDefaultSceneStatus();
 
+  /// Create maps and populate vectors
   loadPastMap();
   loadPresentMap();
 
-  player1 = std::make_unique<Player>(*renderer, 1);
+  /// Players
+  player1 = std::make_shared<Player>(*renderer, 1);
   player1->initialiseSprite("/data/sprites/Player1Animation.png");
   player1->setSpriteVariables(24, 24, 3);
-  player1->setPosition(64, 240);
-
-  player2 = std::make_unique<Player>(*renderer, 2);
-  player2->initialiseSprite("/data/sprites/Player2Animation.png");
-  player2->setSpriteVariables(24, 24, 3);
-  player2->setPosition(88, 240);
-
-  /// Enemies
-  enemy1 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 500, 600);
-  enemy1->initialiseSprite("/data/sprites/SlimeA.png");
-  enemy1->setSpriteVariables(16, 16, 3);
-  enemy1->setPosition(700, 240);
-
-  enemy2 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
-  enemy2->initialiseSprite("/data/sprites/IDS.png");
-  enemy2->setSpriteVariables(27, 27, 3);
-  enemy2->setPosition(2724, 336);
-
-  enemy3 = std::make_unique<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
-  enemy3->initialiseSprite("/data/sprites/CultistWalk.png");
-  enemy3->setSpriteVariables(32, 32, 3);
-  enemy3->setPosition(5363, 361);
-
-  enemy4 = std::make_unique<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
-  enemy4->initialiseSprite("/data/sprites/WormWalk.png");
-  enemy4->setSpriteVariables(32, 32, 3);
-  enemy4->setPosition(2496, 326);
-
+  player1->setPosition(pastSpawnPos.x, pastSpawnPos.y);
   /// Animations
   player1->getSprite()->srcRect()[0] = 0;
   player1->getSprite()->srcRect()[1] = 0;
   player1->getSprite()->srcRect()[2] = 32;
   player1->getSprite()->srcRect()[3] = 32;
+  gameComponents.emplace_back(player1);
 
+  player2 = std::make_shared<Player>(*renderer, 2);
+  player2->initialiseSprite("/data/sprites/Player2Animation.png");
+  player2->setSpriteVariables(24, 24, 3);
+  player2->setPosition(pastSpawnPos.x, pastSpawnPos.y);
+  /// Animations
   player2->getSprite()->srcRect()[0] = 0;
   player2->getSprite()->srcRect()[1] = 0;
   player2->getSprite()->srcRect()[2] = 32;
   player2->getSprite()->srcRect()[3] = 32;
+  gameComponents.emplace_back(player2);
 
+  /// Enemies
+  enemy1 = std::make_shared<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 500, 600);
+  enemy1->initialiseSprite("/data/sprites/SlimeA.png");
+  enemy1->setSpriteVariables(16, 16, 3);
+  enemy1->setPosition(pastEnemy1Pos.x, pastEnemy1Pos.y);
+  /// Animations
   enemy1->getSprite()->srcRect()[0] = 0;
   enemy1->getSprite()->srcRect()[1] = 0;
   enemy1->getSprite()->srcRect()[2] = 16;
   enemy1->getSprite()->srcRect()[3] = 16;
   enemy1->setTotalAnimFrames(15);
+  gameComponents.emplace_back(enemy1);
 
+  enemy2 = std::make_shared<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
+  enemy2->initialiseSprite("/data/sprites/IDS.png");
+  enemy2->setSpriteVariables(27, 27, 3);
+  enemy2->setPosition(pastEnemy2Pos.x, pastEnemy2Pos.y);
+  /// Animations
   enemy2->getSprite()->srcRect()[0] = 0;
   enemy2->getSprite()->srcRect()[1] = 0;
   enemy2->getSprite()->srcRect()[2] = 27;
   enemy2->getSprite()->srcRect()[3] = 27;
-  enemy1->setTotalAnimFrames(7);
+  enemy2->setTotalAnimFrames(7);
+  gameComponents.emplace_back(enemy2);
 
+  enemy3 = std::make_shared<EnemyChaser>(*renderer, 5, 1, Enemy::EnemyType::CHASER);
+  enemy3->initialiseSprite("/data/sprites/CultistWalk.png");
+  enemy3->setSpriteVariables(32, 32, 3);
+  enemy3->setPosition(pastEnemy3Pos.x, pastEnemy3Pos.y);
+  /// Animations
   enemy3->getSprite()->srcRect()[0] = 0;
   enemy3->getSprite()->srcRect()[1] = 0;
   enemy3->getSprite()->srcRect()[2] = 32;
   enemy3->getSprite()->srcRect()[3] = 32;
-  enemy1->setTotalAnimFrames(5);
+  enemy3->setTotalAnimFrames(5);
+  gameComponents.emplace_back(enemy3);
 
+  enemy4 = std::make_shared<EnemyPassive>(*renderer, 5, 1, Enemy::EnemyType::PASSIVE, 530, 530);
+  enemy4->initialiseSprite("/data/sprites/WormWalk.png");
+  enemy4->setSpriteVariables(32, 32, 3);
+  enemy4->setPosition(pastEnemy4Pos.x, pastEnemy4Pos.y);
+  /// Animations
   enemy4->getSprite()->srcRect()[0] = 0;
   enemy4->getSprite()->srcRect()[1] = 0;
   enemy4->getSprite()->srcRect()[2] = 32;
   enemy4->getSprite()->srcRect()[3] = 32;
-  enemy1->setTotalAnimFrames(8);
+  enemy4->setTotalAnimFrames(8);
+  gameComponents.emplace_back(enemy4);
 
-  camera_one.lookAt(player1Look);
-  camera_two.lookAt(player2Look);
-
-  // Health power up
-  HealthPowerUp = std::make_unique<Sprite>(*renderer);
+  /// Health power up
+  HealthPowerUp = std::make_shared<Sprite>(*renderer);
   HealthPowerUp->initialiseSprite("/data/sprites/Health.png");
   HealthPowerUp->setPosition(370, 330);
   HealthPowerUp->setSpriteVariables(16, 16, 3);
+  gameComponents.emplace_back(HealthPowerUp);
 
-  // UI Initialisation
-  UI = std::make_unique<PlayerUI>(*renderer);
+  /// UI Initialisation
+  UI = std::make_shared<PlayerUI>(*renderer);
   UI->init();
+  gameComponents.emplace_back(UI);
+
+  camera_one.lookAt(player1Look);
+  camera_two.lookAt(player2Look);
 
   audio_engine.init();
 
@@ -137,82 +146,57 @@ void SceneLevel3::input()
 
 void SceneLevel3::update(const ASGE::GameTime& us)
 {
-  // UI movement
-  // health updating
-  UI->getP1HealthBar()->xPos(player2Look.x - 435);
-  UI->getP1HealthBar()->yPos(player2Look.y - 105);
-  UI->getP1HealthNum()->xPos(player2Look.x - 335);
-  UI->getP1HealthNum()->yPos(player2Look.y - 105);
-  UI->getP2HealthBar()->xPos(player1Look.x - 435);
-  UI->getP2HealthBar()->yPos(player1Look.y - 135);
-  UI->getP2HealthNum()->xPos(player1Look.x - 335);
-  UI->getP2HealthNum()->yPos(player1Look.y - 135);
+  /// Update the camera
+  updateCamera(us);
 
-  // portrait updating
-  UI->getP1Portrait()->xPos(player2Look.x - 475);
-  UI->getP1Portrait()->yPos(player2Look.y - 105);
-  UI->getP2Portrait()->xPos(player1Look.x - 475);
-  UI->getP2Portrait()->yPos(player1Look.y - 135);
-
-  // weapon updating
-  UI->getP1WepIndicator()->xPos(player2Look.x - 436);
-  UI->getP1WepIndicator()->yPos(player2Look.y - 85);
-  UI->getP1ActiveWep()->xPos(player2Look.x - 350);
-  UI->getP1ActiveWep()->yPos(player2Look.y - 85);
-  UI->getP2WepIndicator()->xPos(player1Look.x - 436);
-  UI->getP2WepIndicator()->yPos(player1Look.y - 115);
-  UI->getP2ActiveWep()->xPos(player1Look.x - 350);
-  UI->getP2ActiveWep()->yPos(player1Look.y - 115);
-
-  // retrieve all connected gamepads and store their states
-  for (auto& gamepad : inputs->getGamePads())
+  for (auto& component : gameComponents)
   {
-    player1->updateGamepad(gamepad);
+    /// Tick every components update function
+    component->update(us);
+
+    /// Get component type to static cast into appropriate type
+    const auto& component_type = component->getComponentType();
+    if (component_type == GameComponent::ComponentType::PLAYER)
+    {
+      std::shared_ptr<Player> player = std::static_pointer_cast<Player>(component);
+      /// Retrieve all connected gamepads and store their states
+      for (auto& gamepad : inputs->getGamePads())
+      {
+        // TODO: Pass into specific player
+        player->updateGamepad(gamepad);
+      }
+      updatePlayers(us, player.get());
+    }
+    else if (component_type == GameComponent::ComponentType::UI)
+    {
+      std::shared_ptr<PlayerUI> ui = std::static_pointer_cast<PlayerUI>(component);
+      ui->setLocations(player1Look, player2Look);
+    }
   }
 
-  player1->update(us);
-  player2->update(us);
-  enemy1->update(us);
-  enemy2->update(us);
-  enemy3->update(us);
-  enemy4->update(us);
-
-  if (Helper::CollisionDetection::isInside(
-        player1->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
+  if (keymap[ASGE::KEYS::KEY_F])
   {
-    player1->setHealth(player1->getHealth() + 1);
-    UI->addHealth(2);
-    HealthPowerUp->getSprite()->xPos(-300);
+    audio_engine.play(fireAudio);
   }
-
-  if (Helper::CollisionDetection::isInside(
-        player2->getSprite()->getWorldBounds(), HealthPowerUp->getSprite()->getWorldBounds()))
+  if (keymap[ASGE::KEYS::KEY_SLASH])
   {
-    player2->setHealth(player2->getHealth() + 1);
-    UI->addHealth(1);
-    HealthPowerUp->getSprite()->xPos(-300);
+    audio_engine.play(fireAudio);
   }
+}
 
-  if (
-    (enemy2->getSprite()->xPos() - player1->getSprite()->xPos() < 128) ||
-    (enemy2->getSprite()->xPos() - player2->getSprite()->xPos() < 128))
-  {
-    enemy2->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
-    enemy2->setActive(true);
-  }
-  if (
-    (enemy3->getSprite()->xPos() - player1->getSprite()->xPos() < 256) ||
-    (enemy3->getSprite()->xPos() - player2->getSprite()->xPos() < 256))
-  {
-    enemy3->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
-    enemy3->setActive(true);
-  }
-
+void SceneLevel3::updatePlayers(const ASGE::GameTime& us, Player* player)
+{
   switch (state)
   {
     case TimeTravelState::PAST:
-      for (unsigned long long i = 0; i < PastTiles.size(); i++)
+      for (unsigned long long i = 0; i < PastTiles.size(); ++i)
       {
+        /// Exit Check
+        if (player->getSprite()->getWorldBounds().v3.x >= pastExitPos.x)
+        {
+          setNewScene(GameScene::WIN_SCENE);
+        }
+
         if (Helper::CollisionDetection::inYBounds(
               enemy2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
         {
@@ -222,90 +206,56 @@ void SceneLevel3::update(const ASGE::GameTime& us)
             enemy2->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
           }
         }
-        /// Player 1 Collision Detection
+        /// Player Collision Detection
         if (Helper::CollisionDetection::inXBounds(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
         {
           if (Helper::CollisionDetection::touchingTop(
-                player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+                player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
           {
-            player1->setGrounded(true);
-            player1->getSprite()->yPos(PastTiles[i]->yPos() - player1->getSprite()->height());
+            player->setGrounded(true);
+            player->getSprite()->yPos(PastTiles[i]->yPos() - player->getSprite()->height());
           }
           else if ((Helper::CollisionDetection::touchingBottom(
-                     player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+                     player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
           {
-            player1->setJumpSpeed(0);
-            player1->setJumping(false);
-            player1->setJumpPeaked(true);
-            player1->getSprite()->yPos(PastTiles[i]->yPos() + PastTiles[i]->height());
+            player->setJumpSpeed(0);
+            player->setJumping(false);
+            player->setJumpPeaked(true);
+            player->getSprite()->yPos(PastTiles[i]->yPos() + PastTiles[i]->height());
           }
         }
         if (Helper::CollisionDetection::playerYChecking(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
         {
           if (
             Helper::CollisionDetection::touchingLeft(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
             !(Helper::CollisionDetection::touchingBottom(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
           {
-            player1->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
+            player->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
           }
           else if (
             Helper::CollisionDetection::touchingRight(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
             !(Helper::CollisionDetection::touchingBottom(
-              player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
+              player->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
           {
-            player1->getSprite()->xPos(PastTiles[i]->xPos() - player1->getSprite()->width());
-          }
-        }
-
-        /// Player 2 Collision Detection
-        if (Helper::CollisionDetection::inXBounds(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-        {
-          if (Helper::CollisionDetection::touchingTop(
-                player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-          {
-            player2->setGrounded(true);
-            player2->getSprite()->yPos(PastTiles[i]->yPos() - player2->getSprite()->height());
-          }
-          else if ((Helper::CollisionDetection::touchingBottom(
-                     player1->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-          {
-            player2->setJumpSpeed(0);
-            player2->setJumping(false);
-            player2->setJumpPeaked(true);
-            player2->getSprite()->yPos(PastTiles[i]->yPos() + PastTiles[i]->height());
-          }
-        }
-        if (Helper::CollisionDetection::playerYChecking(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()))
-        {
-          if (
-            Helper::CollisionDetection::touchingLeft(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-            !(Helper::CollisionDetection::touchingBottom(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-          {
-            player2->getSprite()->xPos(PastTiles[i]->xPos() + PastTiles[i]->width());
-          }
-          else if (
-            Helper::CollisionDetection::touchingRight(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds()) &&
-            !(Helper::CollisionDetection::touchingBottom(
-              player2->getSprite()->getWorldBounds(), PastTiles[i]->getWorldBounds())))
-          {
-            player2->getSprite()->xPos(PastTiles[i]->xPos() - player2->getSprite()->width());
+            player->getSprite()->xPos(PastTiles[i]->xPos() - player->getSprite()->width());
           }
         }
       }
       break;
     case TimeTravelState::PRESENT:
-      for (unsigned long long i = 0; i < PresentTiles.size(); i++)
+      for (unsigned long long i = 0; i < PresentTiles.size(); ++i)
       {
+        //        /// Exit Check
+        //        if (player->getSprite()->getWorldBounds().v3.x >= presentExitPos.x)
+        //        {
+        //          setNewScene(GameScene::WIN_SCENE);
+        //        }
+        /// Enemies
         if (Helper::CollisionDetection::inYBounds(
               enemy2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
         {
@@ -315,129 +265,95 @@ void SceneLevel3::update(const ASGE::GameTime& us)
             enemy2->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
           }
         }
-        /// Player 1 Collision Detection
+        /// Player Collision Detection
         if (Helper::CollisionDetection::inXBounds(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
         {
           if (Helper::CollisionDetection::touchingTop(
-                player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+                player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
           {
-            player1->setGrounded(true);
-            player1->getSprite()->yPos(PresentTiles[i]->yPos() - player1->getSprite()->height());
+            player->setGrounded(true);
+            player->getSprite()->yPos(PresentTiles[i]->yPos() - player->getSprite()->height());
           }
           else if ((Helper::CollisionDetection::touchingBottom(
-                     player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+                     player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
           {
-            player1->setJumpSpeed(0);
-            player1->setJumping(false);
-            player1->setJumpPeaked(true);
-            player1->getSprite()->yPos(PresentTiles[i]->yPos() + PresentTiles[i]->height());
+            player->setJumpSpeed(0);
+            player->setJumping(false);
+            player->setJumpPeaked(true);
+            player->getSprite()->yPos(PresentTiles[i]->yPos() + PresentTiles[i]->height());
           }
         }
         if (Helper::CollisionDetection::playerYChecking(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
         {
           if (
             Helper::CollisionDetection::touchingLeft(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
             !(Helper::CollisionDetection::touchingBottom(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
           {
-            player1->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
+            player->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
           }
           else if (
             Helper::CollisionDetection::touchingRight(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
             !(Helper::CollisionDetection::touchingBottom(
-              player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
+              player->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
           {
-            player1->getSprite()->xPos(PresentTiles[i]->xPos() - player1->getSprite()->width());
-          }
-        }
-
-        /// Player 2 Collision Detection
-        if (Helper::CollisionDetection::inXBounds(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
-        {
-          if (Helper::CollisionDetection::touchingTop(
-                player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
-          {
-            player2->setGrounded(true);
-            player2->getSprite()->yPos(PresentTiles[i]->yPos() - player2->getSprite()->height());
-          }
-          else if ((Helper::CollisionDetection::touchingBottom(
-                     player1->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
-          {
-            player2->setJumpSpeed(0);
-            player2->setJumping(false);
-            player2->setJumpPeaked(true);
-            player2->getSprite()->yPos(PresentTiles[i]->yPos() + PresentTiles[i]->height());
-          }
-        }
-        if (Helper::CollisionDetection::playerYChecking(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()))
-        {
-          if (
-            Helper::CollisionDetection::touchingLeft(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
-            !(Helper::CollisionDetection::touchingBottom(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
-          {
-            player2->getSprite()->xPos(PresentTiles[i]->xPos() + PresentTiles[i]->width());
-          }
-          else if (
-            Helper::CollisionDetection::touchingRight(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds()) &&
-            !(Helper::CollisionDetection::touchingBottom(
-              player2->getSprite()->getWorldBounds(), PresentTiles[i]->getWorldBounds())))
-          {
-            player2->getSprite()->xPos(PresentTiles[i]->xPos() - player2->getSprite()->width());
+            player->getSprite()->xPos(PresentTiles[i]->xPos() - player->getSprite()->width());
           }
         }
       }
       break;
   }
 
-  // moving the camera
-  if (player1->getSprite()->xPos() > player1Look.x)
+  /// Enemy detection radius
+  if (enemy2->getSprite()->xPos() - player->getSprite()->xPos() < 128)
   {
-    player1Look.x = player1->getSprite()->xPos();
+    enemy2->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+    enemy2->setActive(true);
   }
-
-  if (player2->getSprite()->xPos() > player2Look.x)
+  if (enemy3->getSprite()->xPos() - player->getSprite()->xPos() < 256)
   {
-    player2Look.x = player2->getSprite()->xPos();
+    enemy3->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+    enemy3->setActive(true);
   }
+}
 
-  player1Look.y = player1->getSprite()->yPos();
-  player2Look.y = player2->getSprite()->yPos();
-  // stopping player exit
-  if (player1->getSprite()->xPos() < player1Look.x - 960)
+void SceneLevel3::updateCamera(const ASGE::GameTime& us)
+{
   {
-    player1->getSprite()->xPos(player1Look.x - 960);
+    // moving the camera
+    if (player1->getSprite()->xPos() > player1Look.x)
+    {
+      player1Look.x = player1->getSprite()->xPos();
+    }
+
+    if (player2->getSprite()->xPos() > player2Look.x)
+    {
+      player2Look.x = player2->getSprite()->xPos();
+    }
+
+    player1Look.y = player1->getSprite()->yPos();
+    player2Look.y = player2->getSprite()->yPos();
+    // stopping player exit
+    if (player1->getSprite()->xPos() < player1Look.x - 960)
+    {
+      player1->getSprite()->xPos(player1Look.x - 960);
+    }
+
+    if (player2->getSprite()->xPos() < player2Look.x - 960)
+    {
+      player2->getSprite()->xPos(player2Look.x - 960);
+    }
+
+    camera_one.lookAt(player1Look);
+    camera_one.setZoom(2.0F);
+
+    camera_two.lookAt(player2Look);
+    camera_two.setZoom(2.0F);
   }
-
-  if (player2->getSprite()->xPos() < player2Look.x - 960)
-  {
-    player2->getSprite()->xPos(player2Look.x - 960);
-  }
-
-  camera_one.lookAt(player1Look);
-  camera_one.setZoom(2.0F);
-
-  camera_two.lookAt(player2Look);
-  camera_two.setZoom(2.0F);
-
-  if (keymap[ASGE::KEYS::KEY_F])
-  {
-    audio_engine.play(fireAudio);
-  }
-  if (keymap[ASGE::KEYS::KEY_SPACE])
-  {
-    DebugInfo();
-  }
-
-  UI->update(us);
 }
 
 void SceneLevel3::fixedUpdate(const ASGE::GameTime& us) {}
@@ -457,6 +373,14 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   renderer->render(*UI->getP1WepIndicator());
   renderer->render(*UI->getP1ActiveWep());
 
+  // P1 kill count UI render
+  renderer->render(*UI->getP1KillsIndicator());
+  renderer->render(*UI->getP1KillCount());
+  if (UI->getP1KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP1KillCountExtra());
+  }
+
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
@@ -469,6 +393,14 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   // P2 weapon UI render
   renderer->render(*UI->getP2WepIndicator());
   renderer->render(*UI->getP2ActiveWep());
+
+  // P2 kill count render
+  renderer->render(*UI->getP2KillsIndicator());
+  renderer->render(*UI->getP2KillCount());
+  if (UI->getP2KillCountVal() >= 10)
+  {
+    renderer->render(*UI->getP2KillCountExtra());
+  }
 }
 
 void SceneLevel3::renderScene(const ASGE::GameTime& us)
@@ -728,7 +660,6 @@ bool SceneLevel3::loadPresentMap()
   return true;
 }
 
-void SceneLevel3::Camera() {}
 void SceneLevel3::DebugInfo()
 {
   /// Beware Ugly Code in the name of debug

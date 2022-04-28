@@ -33,7 +33,7 @@ void ControlSchemeKeyboard::generatePlayer1ControlScheme()
   LOOK_RIGHT  = ASGE::KEYS::KEY_J;
   LOOK_UP     = ASGE::KEYS::KEY_I;
   LOOK_DOWN   = ASGE::KEYS::KEY_K;
-  SHOOT       = ASGE::KEYS::KEY_R;
+  SHOOT       = ASGE::KEYS::KEY_F;
   TIME_TRAVEL = ASGE::KEYS::KEY_Q;
 }
 /// Player 2

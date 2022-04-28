@@ -15,16 +15,15 @@ enum class GameScene : int
   LEVEL_SELECT = 2,
   LEVEL_1      = 3,
   LEVEL_2      = 4,
-  LEVEL_3      = 5
+  LEVEL_3      = 5,
+  WIN_SCENE    = 6
   /// Insert more scenes here
 };
 /// Provides enum iteration (Used for creating all game scenes in scene manager)
-static const std::vector<GameScene> ALL_GAMESCENES{ GameScene::UNDEFINED,
-                                                    GameScene::MAIN_MENU,
-                                                    GameScene::LEVEL_SELECT,
-                                                    GameScene::LEVEL_1,
-                                                    GameScene::LEVEL_2,
-                                                    GameScene::LEVEL_3};
+static const std::vector<GameScene> ALL_GAMESCENES{ GameScene::UNDEFINED,    GameScene::MAIN_MENU,
+                                                    GameScene::LEVEL_SELECT, GameScene::LEVEL_1,
+                                                    GameScene::LEVEL_2,      GameScene::LEVEL_3,
+                                                    GameScene::WIN_SCENE };
 
 /**
  * @brief Data struct holding relevant information for every game scene

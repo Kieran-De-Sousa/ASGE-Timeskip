@@ -10,10 +10,10 @@ bool SceneLevelSelect::init()
 {
   setDefaultSceneStatus();
   renderer->setClearColour(ASGE::COLOURS::BLACK);
-  game_font = renderer->loadFont("/data/fonts/machine-gunk.ttf", 100, 10);
+  game_font = renderer->loadFont("/data/fonts/Contra.ttf", 100, 10);
   Title.setFont(*game_font).setString("TIMESKIP").setPosition({ 350, 500 }).setScale(1.5);
 
-  Level1.setFont(*game_font).setString("LEVEL1 .").setPosition({ 360, 600 }).setScale(0.5);
+  Level1.setFont(*game_font).setString(">> LEVEL1").setPosition({ 360, 600 }).setScale(0.5);
   Level2.setFont(*game_font).setString("LEVEL2").setPosition({ 360, 700 }).setScale(0.5);
   Back.setFont(*game_font).setString("QUIT").setPosition({ 360, 800 }).setScale(0.5);
 
@@ -57,10 +57,10 @@ void SceneLevelSelect::input()
       switch (state)
       {
         case LevelSelectState::LEVEL1:
-          setNewScene(GameScene::LEVEL_1);
+          setNewScene(GameScene::MAIN_MENU);
           break;
         case LevelSelectState::LEVEL2:
-          setNewScene(GameScene::LEVEL_2);
+          setNewScene(GameScene::LEVEL_SELECT);
           break;
         case LevelSelectState::BACK:
           setNewScene(GameScene::MAIN_MENU);
@@ -72,19 +72,19 @@ void SceneLevelSelect::input()
   switch (state)
   {
     case LevelSelectState::LEVEL1:
-      Level1.setString("LEVEL1 .");
+      Level1.setString(">> LEVEL1");
       Level2.setString("LEVEL2");
       Back.setString("BACK");
       break;
     case LevelSelectState::LEVEL2:
       Level1.setString("LEVEL1");
-      Level2.setString("LEVEL2 .");
+      Level2.setString(">> LEVEL2");
       Back.setString("BACK");
       break;
     case LevelSelectState::BACK:
       Level1.setString("LEVEL1");
       Level2.setString("LEVEL2");
-      Back.setString("BACK .");
+      Back.setString(">> BACK");
       break;
   }
 }

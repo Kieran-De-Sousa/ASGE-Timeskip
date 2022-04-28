@@ -104,10 +104,11 @@ int Helper::CollisionDetection::resolveCollision(
   //  }
   return 0;
 }
+
 bool Helper::CollisionDetection::isInside(
   const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)
 {
-  if (inYBounds(sprite_1, sprite_2))
+  if (inColYBounds(sprite_1, sprite_2))
   {
     if (inXBounds(sprite_1, sprite_2))
     {
@@ -115,4 +116,11 @@ bool Helper::CollisionDetection::isInside(
     }
   }
   return false;
+}
+bool Helper::CollisionDetection::inColYBounds(
+  const ASGE::SpriteBounds& sprite_1, const ASGE::SpriteBounds& sprite_2)
+{
+  return (
+    (sprite_1.v1.y >= sprite_2.v1.y && sprite_1.v1.y <= sprite_2.v4.y) ||
+    (sprite_1.v3.y >= sprite_2.v1.y && sprite_1.v3.y <= sprite_2.v4.y));
 }

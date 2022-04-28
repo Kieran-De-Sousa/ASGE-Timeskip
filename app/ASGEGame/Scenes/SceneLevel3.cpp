@@ -165,7 +165,7 @@ void SceneLevel3::update(const ASGE::GameTime& us)
         {
           setPauseScreen(!sceneStatus.pause_scene);
         }
-        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_GUIDE] != 0u)
+        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_Y] != 0u)
         {
           switch (state)
           {

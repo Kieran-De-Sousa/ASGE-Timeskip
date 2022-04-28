@@ -50,7 +50,7 @@ class SceneLevel2 : public Scene
   void updateCamera(const ASGE::GameTime& us);
   void checkEnemies(const ASGE::GameTime& us, Enemy* enemy);
 
-  void renderScene(const ASGE::GameTime& us);
+  void renderScene(const ASGE::GameTime& us, const TimeTravelState& timeTravelState);
 
   /// Map loading
   bool loadPastMap();
@@ -101,9 +101,6 @@ class SceneLevel2 : public Scene
   tmx::Vector2<float> pastExitPos;
   tmx::Vector2<float> presentSpawnPos;
   tmx::Vector2<float> presentExitPos;
-
-  // Switching maps initial state
-  TimeTravelState state = TimeTravelState::PAST;
 
   tmx::Map level2map;
 

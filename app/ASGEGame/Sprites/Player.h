@@ -16,6 +16,7 @@
 /// Helper Classes
 #include "Bullet.h"
 #include "Components/ControlSchemes.h"
+#include "Components/TimeTravel.h"
 #include "Components/Timer.h"
 
 /**
@@ -32,12 +33,6 @@ class Player : public Entity
     IDLE    = 0,
     RUNNING = 1,
     JUMPING = 2
-  };
-
-  enum class TimeTravelState : int
-  {
-    PRESENT = 0,
-    PAST    = 1
   };
   /**
    * @brief Constructor w/Param
@@ -64,6 +59,9 @@ class Player : public Entity
   // Player ID
   void setPlayerID(const int& id) { playerID = static_cast<PlayerID>(id); }
   [[nodiscard]] PlayerID getPlayerID() const { return playerID; }
+  // Time Travel
+  void setTimeTravel(const TimeTravelState& state) { timeState = state; }
+  [[nodiscard]] TimeTravelState getTimeState() const { return timeState; }
   // Grounded
   void setGrounded(const bool& grounded) { isGrounded = grounded; }
   [[nodiscard]] bool getGrounded() const { return isGrounded; }
@@ -92,7 +90,9 @@ class Player : public Entity
   void shootBullet(const ASGE::GameTime& us);
 
   /// @note Members
-  PlayerID playerID = PlayerID::UNKNOWN;
+  PlayerID playerID         = PlayerID::UNKNOWN;
+  TimeTravelState timeState = TimeTravelState::PAST;
+  float timestate_timer     = 0.0f;
   /// Inputs
   // Keyboard
   std::map<int, bool> keymap{};

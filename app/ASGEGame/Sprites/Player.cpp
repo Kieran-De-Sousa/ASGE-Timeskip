@@ -24,6 +24,8 @@ void Player::update(const ASGE::GameTime& us)
   /// Update bullet positions
   updateBullets(us);
 
+  timestate_timer += static_cast<float>(us.deltaInSecs());
+
   /// Jump
   if ((keymap[keyboard.MOVE_UP] || (gamepad.buttons[controller.MOVE_UP] != 0u)) && isGrounded)
   {
@@ -59,6 +61,24 @@ void Player::update(const ASGE::GameTime& us)
   if (keymap[keyboard.SHOOT] || (gamepad.buttons[controller.SHOOT] != 0u))
   {
     shootBullet(us);
+  }
+
+  /// Time travel
+  if (keymap[keyboard.TIME_TRAVEL] || (gamepad.buttons[controller.TIME_TRAVEL] != 0u))
+  {
+    if (timestate_timer >= 1.0f)
+    {
+      switch (timeState)
+      {
+        case TimeTravelState::PAST:
+          timeState = TimeTravelState::PRESENT;
+          break;
+        case TimeTravelState::PRESENT:
+          timeState = TimeTravelState::PAST;
+          break;
+      }
+      timestate_timer = 0.0f;
+    }
   }
 
   if (gravity)

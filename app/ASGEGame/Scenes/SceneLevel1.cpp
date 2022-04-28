@@ -132,19 +132,6 @@ void SceneLevel1::input()
 {
   player1->updateKeymap(keymap);
   player2->updateKeymap(keymap);
-
-  if (keymap[ASGE::KEYS::KEY_Q] || keymap[ASGE::KEYS::KEY_SPACE])
-  {
-    switch (state)
-    {
-      case TimeTravelState::PAST:
-        state = TimeTravelState::PRESENT;
-        break;
-      case TimeTravelState::PRESENT:
-        state = TimeTravelState::PAST;
-        break;
-    }
-  }
 }
 
 void SceneLevel1::update(const ASGE::GameTime& us)
@@ -168,18 +155,6 @@ void SceneLevel1::update(const ASGE::GameTime& us)
         if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_GUIDE] != 0u)
         {
           setPauseScreen(!sceneStatus.pause_scene);
-        }
-        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_Y] != 0u)
-        {
-          switch (state)
-          {
-            case TimeTravelState::PAST:
-              state = TimeTravelState::PRESENT;
-              break;
-            case TimeTravelState::PRESENT:
-              state = TimeTravelState::PAST;
-              break;
-          }
         }
 
         if (gamepad.idx == 0)
@@ -217,7 +192,7 @@ void SceneLevel1::update(const ASGE::GameTime& us)
 
 void SceneLevel1::updatePlayers(const ASGE::GameTime& us, Player* player)
 {
-  switch (state)
+  switch (player->getTimeState())
   {
     case TimeTravelState::PAST:
       for (unsigned long long i = 0; i < PastTiles.size(); ++i)
@@ -515,7 +490,7 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   /// Bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
-  renderScene(us);
+  renderScene(us, player1->getTimeState());
   // P1 health UI render
   renderer->render(*UI->getP1Portrait());
   renderer->render(*UI->getP1HealthBar());
@@ -536,7 +511,7 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
-  renderScene(us);
+  renderScene(us, player2->getTimeState());
   // P2 health UI render
   renderer->render(*UI->getP2HealthBar());
   renderer->render(*UI->getP2Portrait());
@@ -555,9 +530,9 @@ void SceneLevel1::render(const ASGE::GameTime& us)
   }
 }
 
-void SceneLevel1::renderScene(const ASGE::GameTime& us)
+void SceneLevel1::renderScene(const ASGE::GameTime& us, const TimeTravelState& timeTravelState)
 {
-  if (state == TimeTravelState::PAST)
+  if (timeTravelState == TimeTravelState::PAST)
   {
     for (auto& pastBackground : tilesPastBackground)
     {
@@ -568,7 +543,7 @@ void SceneLevel1::renderScene(const ASGE::GameTime& us)
       renderer->render(*PastTile);
     }
   }
-  if (state == TimeTravelState::PRESENT)
+  if (timeTravelState == TimeTravelState::PRESENT)
   {
     for (auto& presentBackground : tilesPresentBackground)
     {

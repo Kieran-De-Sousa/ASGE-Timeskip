@@ -381,7 +381,7 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   /// Bottom view
   renderer->setViewport(ASGE::Viewport{ 0, 560, 1920, 560 });
   renderer->setProjectionMatrix(camera_two.getView());
-  renderScene(us, player1->getTimeState());
+  renderScene(us, player2->getTimeState());
   // P1 health UI render
   renderer->render(*UI->getP1Portrait());
   renderer->render(*UI->getP1HealthBar());
@@ -402,7 +402,7 @@ void SceneLevel3::render(const ASGE::GameTime& us)
   /// Top view
   renderer->setViewport(ASGE::Viewport{ 0, 0, 1920, 560 });
   renderer->setProjectionMatrix(camera_one.getView());
-  renderScene(us, player2->getTimeState());
+  renderScene(us, player1->getTimeState());
   // P2 health UI render
   renderer->render(*UI->getP2HealthBar());
   renderer->render(*UI->getP2Portrait());

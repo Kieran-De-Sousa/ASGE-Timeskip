@@ -51,6 +51,7 @@ ASGENetGame::~ASGENetGame()
  */
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 {
+  /// !!!!!!!!!!!PAUSE THE GAME WITH P!!!!!!!!!!!!!
   scene_manager->keyHandler(data);
   scene_manager->input();
 }

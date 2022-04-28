@@ -130,7 +130,6 @@ bool SceneLevel1::init()
 
 void SceneLevel1::input()
 {
-  // TODO: updateGamepad() for players
   player1->updateKeymap(keymap);
   player2->updateKeymap(keymap);
 
@@ -166,10 +165,21 @@ void SceneLevel1::update(const ASGE::GameTime& us)
       /// Retrieve all connected gamepads and store their states
       for (auto& gamepad : inputs->getGamePads())
       {
-        // TODO: Pass into specific player
-        player->updateGamepad(gamepad);
+        if (gamepad.idx == 0)
+        {
+          player1->updateGamepad(gamepad);
+        }
+        else
+        {
+          player2->updateGamepad(gamepad);
+        }
       }
       updatePlayers(us, player.get());
+    }
+    else if (component_type == GameComponent::ComponentType::ENEMY)
+    {
+      std::shared_ptr<Enemy> enemy = std::static_pointer_cast<Enemy>(component);
+      checkEnemies(us, enemy.get());
     }
     else if (component_type == GameComponent::ComponentType::UI)
     {
@@ -459,6 +469,26 @@ void SceneLevel1::updateCamera(const ASGE::GameTime& us)
 
   camera_two.lookAt(player2Look);
   camera_two.setZoom(2.0F);
+}
+
+void SceneLevel1::checkEnemies(const ASGE::GameTime& us, Enemy* enemy)
+{
+  for (const auto& bullet : player1->getBullets())
+  {
+    if (Helper::CollisionDetection::isInside(
+          bullet->getSprite()->getWorldBounds(), enemy->getSprite()->getWorldBounds()))
+    {
+      enemy->getSprite()->xPos(10000);
+    }
+  }
+  for (const auto& bullet : player2->getBullets())
+  {
+    if (Helper::CollisionDetection::isInside(
+          bullet->getSprite()->getWorldBounds(), enemy->getSprite()->getWorldBounds()))
+    {
+      enemy->getSprite()->xPos(10000);
+    }
+  }
 }
 
 void SceneLevel1::fixedUpdate(const ASGE::GameTime& us) {}

@@ -123,7 +123,6 @@ bool SceneLevel3::init()
 
 void SceneLevel3::input()
 {
-  // TODO: updateGamepad() for players
   player1->updateKeymap(keymap);
   player2->updateKeymap(keymap);
 
@@ -162,8 +161,14 @@ void SceneLevel3::update(const ASGE::GameTime& us)
       /// Retrieve all connected gamepads and store their states
       for (auto& gamepad : inputs->getGamePads())
       {
-        // TODO: Pass into specific player
-        player->updateGamepad(gamepad);
+        if (gamepad.idx == 0)
+        {
+          player1->updateGamepad(gamepad);
+        }
+        else
+        {
+          player2->updateGamepad(gamepad);
+        }
       }
       updatePlayers(us, player.get());
     }

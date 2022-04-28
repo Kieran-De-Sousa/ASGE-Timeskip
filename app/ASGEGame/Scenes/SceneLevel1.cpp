@@ -434,14 +434,19 @@ void SceneLevel1::updateCamera(const ASGE::GameTime& us)
   player1Look.y = player1->getSprite()->yPos();
   player2Look.y = player2->getSprite()->yPos();
   // stopping player exit
-  if (player1->getSprite()->xPos() < player1Look.x - 960)
+  if (player1->getSprite()->xPos() < player1Look.x - 480)
   {
-    player1->getSprite()->xPos(player1Look.x - 960);
+    player1->getSprite()->xPos(player1Look.x - 480);
   }
 
-  if (player2->getSprite()->xPos() < player2Look.x - 960)
+  if (player1->getSprite()->yPos() < player1Look.y - 200)
   {
-    player2->getSprite()->xPos(player2Look.x - 960);
+    player1->getSprite()->yPos(player1Look.y - 200);
+  }
+
+  if (player2->getSprite()->xPos() < player2Look.x - 480)
+  {
+    player2->getSprite()->xPos(player2Look.x - 480);
   }
 
   camera_one.lookAt(player1Look);

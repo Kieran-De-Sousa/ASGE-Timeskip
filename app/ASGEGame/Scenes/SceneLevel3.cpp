@@ -454,42 +454,45 @@ void SceneLevel3::renderScene(const ASGE::GameTime& us)
 {
   if (state == TimeTravelState::PAST)
   {
-    for (unsigned int i = 0; i < tilesPastBackground.size(); ++i)
+    for (auto& pastBackground : tilesPastBackground)
     {
-      renderer->render(*tilesPastBackground[i]);
+      renderer->render(*pastBackground);
     }
-    for (unsigned int i = 0; i < PastTiles.size(); ++i)
+    for (auto& PastTile : PastTiles)
     {
-      renderer->render(*PastTiles[i]);
+      renderer->render(*PastTile);
     }
   }
-  else
+  if (state == TimeTravelState::PRESENT)
   {
-    for (unsigned int i = 0; i < tilesPresentBackground.size(); ++i)
+    for (auto& presentBackground : tilesPresentBackground)
     {
-      renderer->render(*tilesPresentBackground[i]);
+      renderer->render(*presentBackground);
     }
-    for (unsigned int i = 0; i < PresentTiles.size(); ++i)
+    for (auto& PresentTile : PresentTiles)
     {
-      renderer->render(*PresentTiles[i]);
+      renderer->render(*PresentTile);
     }
   }
 
-  renderer->render(*player1->getSprite());
-  renderer->render(*player2->getSprite());
-  renderer->render(*enemy1->getSprite());
-  renderer->render(*enemy2->getSprite());
-  renderer->render(*enemy3->getSprite());
-  renderer->render(*enemy4->getSprite());
-  renderer->render(*HealthPowerUp->getSprite());
-  /// Bullets
-  for (const auto& bullet : player1->getBullets())
+  for (auto& component : gameComponents)
   {
-    renderer->render(*bullet->getSprite());
-  }
-  for (const auto& bullet : player2->getBullets())
-  {
-    renderer->render(*bullet->getSprite());
+    if (
+      component->getComponentType() != GameComponent::ComponentType::UNKNOWN &&
+      component->getComponentType() != GameComponent::ComponentType::UI)
+    {
+      std::shared_ptr<Sprite> sprite = std::static_pointer_cast<Sprite>(component);
+      renderer->render(*sprite->getSprite());
+      if (component->getComponentType() == GameComponent::ComponentType::PLAYER)
+      {
+        std::shared_ptr<Player> player = std::static_pointer_cast<Player>(sprite);
+        /// Bullets
+        for (const auto& bullet : player->getBullets())
+        {
+          renderer->render(*bullet->getSprite());
+        }
+      }
+    }
   }
 }
 

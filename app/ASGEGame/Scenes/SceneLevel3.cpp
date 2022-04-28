@@ -172,6 +172,11 @@ void SceneLevel3::update(const ASGE::GameTime& us)
       }
       updatePlayers(us, player.get());
     }
+    else if (component_type == GameComponent::ComponentType::ENEMY)
+    {
+      std::shared_ptr<Enemy> enemy = std::static_pointer_cast<Enemy>(component);
+      checkEnemies(us, enemy.get());
+    }
     else if (component_type == GameComponent::ComponentType::UI)
     {
       std::shared_ptr<PlayerUI> ui = std::static_pointer_cast<PlayerUI>(component);
@@ -358,6 +363,26 @@ void SceneLevel3::updateCamera(const ASGE::GameTime& us)
 
     camera_two.lookAt(player2Look);
     camera_two.setZoom(2.0F);
+  }
+}
+
+void SceneLevel3::checkEnemies(const ASGE::GameTime& us, Enemy* enemy)
+{
+  for (const auto& bullet : player1->getBullets())
+  {
+    if (Helper::CollisionDetection::isInside(
+          bullet->getSprite()->getWorldBounds(), enemy->getSprite()->getWorldBounds()))
+    {
+      enemy->getSprite()->xPos(10000);
+    }
+  }
+  for (const auto& bullet : player2->getBullets())
+  {
+    if (Helper::CollisionDetection::isInside(
+          bullet->getSprite()->getWorldBounds(), enemy->getSprite()->getWorldBounds()))
+    {
+      enemy->getSprite()->xPos(10000);
+    }
   }
 }
 

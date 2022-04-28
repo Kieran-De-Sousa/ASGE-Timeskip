@@ -47,6 +47,7 @@ class SceneLevel3 : public Scene
 
   void updatePlayers(const ASGE::GameTime& us, Player* player);
   void updateCamera(const ASGE::GameTime& us);
+  void checkEnemies(const ASGE::GameTime& us, Enemy* enemy);
 
   void renderScene(const ASGE::GameTime& us);
 

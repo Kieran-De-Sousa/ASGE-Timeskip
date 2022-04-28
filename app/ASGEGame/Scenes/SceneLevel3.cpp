@@ -163,7 +163,7 @@ void SceneLevel3::update(const ASGE::GameTime& us)
       {
         if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_CIRCLE])
         {
-          setPauseScreen(true);
+          setPauseScreen(!sceneStatus.pause_scene);
         }
 
         if (gamepad.idx == 0)

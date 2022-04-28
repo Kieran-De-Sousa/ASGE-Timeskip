@@ -68,7 +68,7 @@ void ControlSchemeGamepad::generatePlayer1ControlScheme()
   LOOK_UP     = ASGE::GAMEPAD::BUTTON_Y;
   LOOK_DOWN   = ASGE::GAMEPAD::BUTTON_A;
   SHOOT       = ASGE::GAMEPAD::BUTTON_RIGHT_BUMPER;
-  TIME_TRAVEL = ASGE::GAMEPAD::BUTTON_LEFT_BUMPER;
+  TIME_TRAVEL = ASGE::GAMEPAD::BUTTON_Y;
 }
 /// Player 2
 void ControlSchemeGamepad::generatePlayer2ControlScheme()
@@ -82,5 +82,5 @@ void ControlSchemeGamepad::generatePlayer2ControlScheme()
   LOOK_UP     = ASGE::GAMEPAD::BUTTON_Y;
   LOOK_DOWN   = ASGE::GAMEPAD::BUTTON_A;
   SHOOT       = ASGE::GAMEPAD::BUTTON_RIGHT_BUMPER;
-  TIME_TRAVEL = ASGE::GAMEPAD::BUTTON_LEFT_BUMPER;
+  TIME_TRAVEL = ASGE::GAMEPAD::BUTTON_Y;
 }

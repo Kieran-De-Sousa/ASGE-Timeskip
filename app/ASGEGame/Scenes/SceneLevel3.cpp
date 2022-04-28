@@ -161,6 +161,11 @@ void SceneLevel3::update(const ASGE::GameTime& us)
       /// Retrieve all connected gamepads and store their states
       for (auto& gamepad : inputs->getGamePads())
       {
+        if (gamepad.buttons[ASGE::GAMEPAD::BUTTON_CIRCLE])
+        {
+          setPauseScreen(true);
+        }
+
         if (gamepad.idx == 0)
         {
           player1->updateGamepad(gamepad);

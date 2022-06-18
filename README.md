@@ -1,5 +1,6 @@
 # Timeskip
-[SCREENSHOT HERE]
+[![ASGE - Timeskip01](https://user-images.githubusercontent.com/72137017/174453006-6940d361-482c-4b4a-9d38-8178eb60ac66.png)
+](https://github.com/Kieran-De-Sousa/ASGE-Timeskip/blob/main/Screenshots/ASGE%20-%20Timeskip01.png)
 
 Description of Timeskip
 - What is it

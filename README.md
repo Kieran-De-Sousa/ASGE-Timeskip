@@ -1,4 +1,16 @@
-# Assignment 
+# Timeskip
+[SCREENSHOT HERE]
+
+Description of Timeskip
+- What is it
+- How it was made/tech
+- Issues/challenges and future expansion
+  - Extra animation
+  - Joystick control
+  - Rebindable Controls
+  - Raycast physics
+  - Raycast rendering
+  - Physics resolving based off array of collisions
  
 # Contributions:
 **[Aslı Baltaci](https://aslibaltaci.github.io/)**
